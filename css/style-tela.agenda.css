@@ -75,14 +75,15 @@ body {
 }
 
 /* MODAL */
-.modal {
+.container-modal {
     display: none;
+    background-color: var(--cor-branco);
     position: fixed;
     z-index: 1000;
-    left: 60%;
+    left: 55%;
     top: 50%;
-    transform: translate(-60%, -50%);
-    width: 50%;
+    transform: translate(-55%, -50%);
+    width: 30%;
     border: 1px solid #161514;
     height: auto;
     display: flex;
@@ -90,29 +91,7 @@ body {
     justify-content: center;
 }
 
-#abrirModal{
-    background-color: var(--cor-gradiente-escuro);
-    border: none;
-    color: var(--cor-branco);
-    border-radius: 5px;
-    padding: 10px 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    width: 20%;
-    text-align: center;
-}
-
-#abrirModal:hover{
-        background-color: var(--cor-gradiente-claro);
-        color: var(--cor-fonte);
-        transition: 0.5s ease-in-out;
-    }
-
-
-.botao-geral{
+.botao-geral-inclusao{
     background-color: var(--cor-gradiente-escuro);
     border: none;
     color: var(--cor-branco);
@@ -122,27 +101,15 @@ body {
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
-    width: 100%;
+    width: 40%;
     text-align: center;
 }
 
-.botao-geral:hover{
+.botao-geral-inclusao:hover{
     background-color: var(--cor-gradiente-claro);
     color: var(--cor-fonte);
     transition: 0.5s ease-in-out;
 }
-
-/* Conteúdo do Modal */
-.modal-conteudo {
-    background-color: #fff;
-    width: 90%;
-    padding: 30px;
-    border-radius: 10px;
-    text-align: left;
-    font-family: Arial, sans-serif;
-    position: relative;
-}
-
 
 /* Formulário */
 form {
@@ -166,3 +133,30 @@ input, select {
     font-size: 14px;
 }
 
+.botao-do-modal{
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+}
+
+.botao-geral{
+    background-color: var(--cor-gradiente-escuro);
+    border: none;
+    color: var(--cor-branco);
+    border-radius: 5px;
+    padding: 10px 25px;
+    margin: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    width: 35%;
+    text-align: center;
+}
+
+.botao-geral:hover{
+    background-color: var(--cor-gradiente-claro);
+    color: var(--cor-fonte);
+    transition: 0.5s ease-in-out;
+}

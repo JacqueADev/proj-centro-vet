@@ -20,7 +20,7 @@
 
     <div class="container">
         <h2>Atendimentos</h2>
-        <button class="botao-geral" id="abrirModal">+ Incluir consulta</button>
+        <button class="botao-geral-inclusao" id="abrir-Modal-Consulta">+ Incluir consulta</button>
         <table>
             <thead>
                 <tr>
@@ -37,7 +37,7 @@
         </table>
 
         <h2>Exames</h2>
-        <button class="botao-geral" id="abrirModal">+ Incluir exame</button>
+        <button class="botao-geral-inclusao" id="abrir-Modal-Exame">+ Incluir exame</button>
         <table>
             <thead>
                 <tr>
@@ -54,9 +54,9 @@
         </table>
     </div>
 
-    <!-- MODAL -->
-    <div id="modal" class="modal">
-        <div class="modal-conteudo">
+    <!-- Modal pra consulta -->
+    <div id="modalConsulta" class="container-modal">
+        
             <form id="formAtendimento">
                 <label>Data:</label>
                 <input type="date" id="inputData" required>
@@ -80,15 +80,48 @@
                     </select>
 
                 <div class="botao-do-modal">
-                    <button class="botao-geral" type="submit">Agendar</button>
-                <button class="botao-geral" type="submit">Cancelar</button>
+                    <button class="botao-geral" type="submit"  id="botao-agendamento-consulta">Agendar</button>
+                <button class="botao-geral" type="submit" id="fecharModalConsulta">Cancelar</button>
             </div>
             </form>
-        </div>
+        
     </div>
+
+    <!-- Modal para Exame -->
+<div id="modalExame" class="container-modal">
+    
+        <form id="formExame">
+            <label>Data:</label>
+            <input type="date" id="inputDataExame" required>
+
+            <label>Horário:</label>
+            <input type="time" id="inputHoraExame" required>
+
+            <label>Nome do Tutor:</label>
+            <input type="text" id="inputTutorExame" required>
+
+            <label>Nome do Pet:</label>
+            <input type="text" id="inputPetExame" required>
+
+            <label>Tipo de Atendimento:</label>
+            <select id="inputTipoExame">
+                <option value="Exame Raio X">Raio X</option>
+                <option value="Exame Eco Cardiograma">Eco Cardiograma</option>
+                <option value="Exame Ultrassom">Ultrassom</option>
+            </select>
+
+            <div class="botao-do-modal">
+                <button class="botao-geral" type="submit" id="botao-agendamento-exame">Agendar</button>
+                <button class="botao-geral" type="button" id="fecharModalExame">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
     <script src="js/tela-agenda.js"></script>
 </body>
 </html>
+
+
 
 <!--O QUE PRECISA SER FEITO: 
 
