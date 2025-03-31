@@ -1,7 +1,7 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
 
     // LOGIN
-    document.getElementById('botao-login').addEventListener('click', function(event) {
+    document.getElementById('botao-login').addEventListener('click', function (event) {
         event.preventDefault();
 
         // Captura inputs
@@ -24,5 +24,8 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Usuário ou senha incorretos. Tente novamente.");
         }
     });
+
+
+
 });
 

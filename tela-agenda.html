@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Centro Veterinário Integrativo Jhonatan Silvestre</title>
-    <link rel="stylesheet" href="css/style-tela.agenda.css">
-</head>
-<body>
 
+<script src="js/tela-agenda.js"></script>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema Centro Veterinário Integrativo Jhonatan Silvestre</title>
+    <link rel="stylesheet" href="css/style-tela.agenda.css" />
+</head>
+
+<body>
     <div class="container-logo">
-        <img src="assets/logo-sem-fundo.png" alt="" class="logo">
+        <img src="assets/logo-sem-fundo.png" alt="" class="logo" />
     </div>
 
     <div class="container-lateral">
         <div class="barra-lateral">
-            <button onclick="window.location.href='index.html'" class="botao-lateral">Voltar</button>
+            <button onclick="window.location.href='index.html'" class="botao-lateral">
+                Voltar
+            </button>
         </div>
     </div>
 
     <div class="container">
         <h2>Atendimentos</h2>
-        <button class="botao-geral-inclusao" id="abrir-Modal-Consulta">+ Incluir consulta</button>
+        <button class="botao-geral-inclusao abrir-modal" data-modal-target="modal-1">+ Incluir consulta</button>
         <table>
             <thead>
                 <tr>
-                    <th>Data  </th>
-                    <th>Hora  </th>
-                    <th>Paciente  </th>
-                    <th>Procedimento  </th>
-                    <th> </th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Paciente</th>
+                    <th>Procedimento</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="tabelaConsultas">
@@ -37,15 +42,17 @@
         </table>
 
         <h2>Exames</h2>
-        <button class="botao-geral-inclusao" id="abrir-Modal-Exame">+ Incluir exame</button>
+        <button class="botao-geral-inclusao abrir-modal" data-modal-target="modal-2">+ Incluir exame</button>
+        + Incluir exame
+        </button>
         <table>
             <thead>
                 <tr>
-                    <th>Data  </th>
-                    <th>Hora  </th>
-                    <th>Paciente  </th>
-                    <th>Procedimento  </th>
-                    <th>  </th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Paciente</th>
+                    <th>Procedimento</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody id="tabelaExames">
@@ -55,71 +62,91 @@
     </div>
 
     <!-- Modal pra consulta -->
-    <div id="modalConsulta" class="container-modal">
-        
-            <form id="formAtendimento">
-                <label>Data:</label>
-                <input type="date" id="inputData" required>
+    <div id="modal-1" class="jw-modal" aria-hidden="true">
+        <div class="jw-modal-body" role="dialog">
+            <div id="modalConsulta" class="container-modal">
+                <form id="formAtendimento">
+                    <label>Data:</label>
+                    <input type="date" id="inputData" required />
 
-                <label>Horário:</label>
-                <input type="time" id="inputHora" required>
+                    <label>Horário:</label>
+                    <input type="time" id="inputHora" required />
 
-                <label>Nome do Tutor:</label>
-                <input type="text" id="inputTutor" required>
+                    <label>Nome do Tutor:</label>
+                    <input type="text" id="inputTutor" required />
 
-                <label>Nome do Pet:</label>
-                <input type="text" id="inputPet" required>
+                    <label>Nome do Pet:</label>
+                    <input type="text" id="inputPet" required />
 
-                <label>Tipo de Atendimento:</label>
-                <select id="inputTipo">
-                    <option value="Consulta Rotina Clinica">Consulta Rotina - Clinica</option>
-                    <option value="Consulta Rotina Domiciliar">Consulta Rotina - Domiciliar</option>
-                    <option value="Emergência Clinica">Emergência - Clinica</option>
-                    <option value="Emergência Domiciliar">Emergência - Domiciliar</option>
-                    <option value="Retorno">Retorno</option>
+                    <label>Tipo de Atendimento:</label>
+                    <select id="inputTipo">
+                        <option value="Consulta Rotina Clinica">
+                            Consulta Rotina - Clinica
+                        </option>
+                        <option value="Consulta Rotina Domiciliar">
+                            Consulta Rotina - Domiciliar
+                        </option>
+                        <option value="Emergência Clinica">Emergência - Clinica</option>
+                        <option value="Emergência Domiciliar">
+                            Emergência - Domiciliar
+                        </option>
+                        <option value="Retorno">Retorno</option>
                     </select>
 
-                <div class="botao-do-modal">
-                    <button class="botao-geral" type="submit"  id="botao-agendamento-consulta">Agendar</button>
-                <button class="botao-geral" type="submit" id="fecharModalConsulta">Cancelar</button>
+                    <div class="botao-do-modal">
+                        <button class="botao-geral" type="submit" id="botao-agendamento-consulta">
+                            Agendar
+                        </button>
+                        <button class="botao-geral fechar-modal" type="button">Cancelar</button>
+                    </div>
+                </form>
             </div>
-            </form>
-        
+
+        </div>
     </div>
 
     <!-- Modal para Exame -->
-<div id="modalExame" class="container-modal">
-    
-        <form id="formExame">
-            <label>Data:</label>
-            <input type="date" id="inputDataExame" required>
+    <div id="modal-2" class="jw-modal" aria-hidden="true">
+        <div class="jw-modal-body" role="dialog">
+            <div id="modalExame" class="container-modal">
+                <form id="formExame">
+                    <label>Data:</label>
+                    <input type="date" id="inputDataExame" required />
 
-            <label>Horário:</label>
-            <input type="time" id="inputHoraExame" required>
+                    <label>Horário:</label>
+                    <input type="time" id="inputHoraExame" required />
 
-            <label>Nome do Tutor:</label>
-            <input type="text" id="inputTutorExame" required>
+                    <label>Nome do Tutor:</label>
+                    <input type="text" id="inputTutorExame" required />
 
-            <label>Nome do Pet:</label>
-            <input type="text" id="inputPetExame" required>
+                    <label>Nome do Pet:</label>
+                    <input type="text" id="inputPetExame" required />
 
-            <label>Tipo de Atendimento:</label>
-            <select id="inputTipoExame">
-                <option value="Exame Raio X">Raio X</option>
-                <option value="Exame Eco Cardiograma">Eco Cardiograma</option>
-                <option value="Exame Ultrassom">Ultrassom</option>
-            </select>
+                    <label>Tipo de Atendimento:</label>
+                    <select id="inputTipoExame">
+                        <option value="Exame Raio X">Raio X</option>
+                        <option value="Exame Eco Cardiograma">Eco Cardiograma</option>
+                        <option value="Exame Ultrassom">Ultrassom</option>
+                    </select>
 
-            <div class="botao-do-modal">
-                <button class="botao-geral" type="submit" id="botao-agendamento-exame">Agendar</button>
-                <button class="botao-geral" type="button" id="fecharModalExame">Cancelar</button>
+                    <div class="botao-do-modal">
+                        <button class="botao-geral" type="submit" id="botao-agendamento-exame">
+                            Agendar
+                        </button>
+                        <button class="botao-geral fechar-modal" type="button">Cancelar</button>
+                    </div>
+                </form>
             </div>
-        </form>
+
+        </div>
     </div>
 
-    <script src="js/tela-agenda.js"></script>
+
+
 </body>
+
 </html>
+
 
 
 
@@ -135,4 +162,4 @@
 
 - na table no final do procedimento quando agendado, melhorar a aparência do lixinho que aparece caso ele queira deletar a consulta agendada e adicionar um lapiszinho ao lado pra ele poder clicar nele e editar dados se ele precisar.
 
-Ali na lateral, manter o button "voltar", mas acho que todos os outros buttons também precisam aparecer na lateral para que ele possa navegar direto, sem precisar ficar voltando. --> 
+Ali na lateral, manter o button "voltar", mas acho que todos os outros buttons também precisam aparecer na lateral para que ele possa navegar direto, sem precisar ficar voltando. -->
