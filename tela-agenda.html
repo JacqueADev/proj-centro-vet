@@ -66,7 +66,7 @@
         <div class="jw-modal-body" role="dialog">
             <div id="modalConsulta" class="container-modal">
                 <form id="formAtendimento">
-                    <label>Data:</label>
+                    <label class="dateLabel">Data:</label>
                     <input type="date" id="inputData" required />
 
                     <label>Horário:</label>
@@ -78,7 +78,7 @@
                     <label>Nome do Pet:</label>
                     <input type="text" id="inputPet" required />
 
-                    <label>Tipo de Atendimento:</label>
+                    <label>Tipo de Consulta:</label>
                     <select id="inputTipo">
                         <option value="Consulta Rotina Clinica">
                             Consulta Rotina - Clinica
@@ -110,7 +110,7 @@
         <div class="jw-modal-body" role="dialog">
             <div id="modalExame" class="container-modal">
                 <form id="formExame">
-                    <label>Data:</label>
+                    <label class="dateLabel">Data:</label>
                     <input type="date" id="inputDataExame" required />
 
                     <label>Horário:</label>
@@ -122,7 +122,7 @@
                     <label>Nome do Pet:</label>
                     <input type="text" id="inputPetExame" required />
 
-                    <label>Tipo de Atendimento:</label>
+                    <label>Exame a ser Realizado:</label>
                     <select id="inputTipoExame">
                         <option value="Exame Raio X">Raio X</option>
                         <option value="Exame Eco Cardiograma">Eco Cardiograma</option>
@@ -152,11 +152,10 @@
 
 <!--O QUE PRECISA SER FEITO: 
 
-- O modal só pode abrir na tela quando clicar nos buttons de incluir consulta ou incluir exame. E ao abrir em tela, tem que ter uma mask que deixe o restante da página mais äpagado"
+
 
 - O modal de incluir exame precisa ser diferente do incluir atendimento, manter os campos: data, hora, nome do tutor, nome do pet, mas no lugar de "tipo de atendimento" ter escrito" exame realizado" e ai colocar opções dos nomes dos exames que são feitos na clinica dele, tipo raio x, ultrassom, ecocardiograma... 
 
-- O button de "cancelar" no modal precisa servir pra fechar o modal
 
 - ajustar a table para que ela tenha um espaçamento entre os itens de cabeçalho e as tr com o titulo da coluna tenham coloração pra ficar bonitinho e aparecer como uma "lista"mais visual e clara. 
 

@@ -42,7 +42,7 @@ body.modal-open {
 }
 
 .jw-modal-body {
-  background: white;
+  background: #ffffff;
   padding: 20px;
   border-radius: 5px;
   max-width: 500px;
@@ -145,11 +145,15 @@ form {
   flex-direction: column;
   gap: 10px;
 }
-
+.dateLabel {
+  margin-top: 45px;
+}
 /* Labels */
 label {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 22px;
+
+  margin: 15px 0px;
 }
 
 /* Inputs */
@@ -159,7 +163,8 @@ select {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 18px;
+  margin-top: 15px;
 }
 
 .botao-do-modal {
