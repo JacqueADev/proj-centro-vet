@@ -132,3 +132,247 @@ body {
 .acoes .btn-icon i {
     color: #666;
 }
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal-form input, .modal-form button {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.modal-form button {
+    background-color: var(--cor-gradiente-escuro);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.modal-form button:hover {
+    background-color: var(--cor-gradiente-claro);
+    color: var(--cor-fonte);
+}
+
+/* Estilo para os botões de ação */
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.btn-icon.edit {
+    color: var(--cor-gradiente-mediano);
+}
+
+.btn-icon.delete {
+    color: #e74c3c;
+}
+
+.btn-icon.add {
+    color: #2ecc71;
+}
+
+.btn-icon:hover {
+    background-color: #f0f0f0;
+}
+
+/* Mensagem quando não há resultados */
+.sem-resultados {
+    text-align: center;
+    padding: 20px;
+    font-style: italic;
+    color: #666;
+}
+
+/* Estilos para o modal de adicionar pet */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #f8f8f8;
+    margin: 5% auto;
+    padding: 25px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modal h2 {
+    color: var(--cor-gradiente-escuro);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.form-group-duo {
+    display: flex;
+    gap: 15px;
+}
+
+.form-group-duo .form-group {
+    flex: 1;
+}
+
+.idade-container {
+    display: flex;
+    gap: 10px;
+}
+
+.idade-container input {
+    flex: 2;
+}
+
+.idade-container select {
+    flex: 1;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.form-buttons button[type="submit"] {
+    background-color: var(--cor-gradiente-escuro);
+    color: white;
+}
+
+.form-buttons button[type="submit"]:hover {
+    background-color: var(--cor-gradiente-claro);
+    color: var(--cor-fonte);
+}
+
+.form-buttons button[type="button"] {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.form-buttons button[type="button"]:hover {
+    background-color: #d0d0d0;
+}
+
+/* Estilos específicos para o modal de edição */
+fieldset {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+legend {
+    padding: 0 10px;
+    font-weight: bold;
+    color: var(--cor-gradiente-escuro);
+}
+
+.link-cep {
+    color: var(--cor-gradiente-mediano);
+    text-decoration: none;
+    font-size: 0.8em;
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+.link-cep:hover {
+    text-decoration: underline;
+}
