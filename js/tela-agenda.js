@@ -57,4 +57,43 @@ document.addEventListener("DOMContentLoaded", function () {
             window.location.href = "tela-pos-login.html";
         });
     }
+
+    // Adicionar consultas na tabela
+    document.getElementById("formAtendimento").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const data = document.getElementById("inputData").value;
+        const hora = document.getElementById("inputHora").value;
+        const tutor = document.getElementById("inputTutor").value;
+        const pet = document.getElementById("inputPet").value;
+        const tipo = document.getElementById("inputTipo").value;
+        
+        const tabela = document.getElementById("tabelaConsultas");
+        const novaLinha = tabela.insertRow();
+        novaLinha.innerHTML = `<td>${data}</td><td>${hora}</td><td>${tutor}</td><td>${pet}</td><td>${tipo}</td><td><button class='remover'>Excluir</button></td>`;
+        
+        closeModal();
+    });
+
+    // Adicionar exames na tabela
+    document.getElementById("formExame").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const data = document.getElementById("inputDataExame").value;
+        const hora = document.getElementById("inputHoraExame").value;
+        const tutor = document.getElementById("inputTutorExame").value;
+        const pet = document.getElementById("inputPetExame").value;
+        const exame = document.getElementById("inputTipoExame").value;
+        
+        const tabela = document.getElementById("tabelaExames");
+        const novaLinha = tabela.insertRow();
+        novaLinha.innerHTML = `<td>${data}</td><td>${hora}</td><td>${tutor}</td><td>${pet}</td><td>${exame}</td><td><button class='remover'>Excluir</button></td>`;
+        
+        closeModal();
+    });
+
+    // Remover itens da tabela
+    document.addEventListener("click", function (event) {
+        if (event.target.classList.contains("remover")) {
+            event.target.closest("tr").remove();
+        }
+    });
 });
