@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
-<script src="js/tela-agenda.js"></script>
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sistema Centro Veterinário Integrativo Jhonatan Silvestre</title>
     <link rel="stylesheet" href="css/style-tela.agenda.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
@@ -44,8 +42,6 @@
 
         <h2>Exames</h2>
         <button class="botao-geral-inclusao abrir-modal" data-modal-target="modal-2">+ Incluir exame</button>
-        
-        </button>
         <table>
             <thead>
                 <tr>
@@ -63,93 +59,97 @@
         </table>
     </div>
 
-    <!-- Modal pra consulta -->
+    <!-- Modal para Consulta - ATUALIZADO -->
     <div id="modal-1" class="jw-modal" aria-hidden="true">
-        <div class="jw-modal-body" role="dialog">
-            <div id="modalConsulta" class="container-modal">
-                <form id="formAtendimento">
-                    <label class="dateLabel">Data:</label>
-                    <input type="date" id="inputData" required />
-
-                    <label>Horário:</label>
-                    <input type="time" id="inputHora" required />
-
-                    <label>Nome do Tutor:</label>
-                    <input type="text" id="inputTutor" required />
-
-                    <label>Nome do Pet:</label>
-                    <input type="text" id="inputPet" required />
-
-                    <label>Tipo de Consulta:</label>
-                    <select id="inputTipo">
-                        <option value="Consulta Rotina Clinica">
-                            Consulta Rotina - Clinica
-                        </option>
-                        <option value="Consulta Rotina Domiciliar">
-                            Consulta Rotina - Domiciliar
-                        </option>
-                        <option value="Emergência Clinica">Emergência - Clinica</option>
-                        <option value="Emergência Domiciliar">
-                            Emergência - Domiciliar
-                        </option>
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Agendar Consulta</h2>
+            <form id="formAtendimento" class="modal-form">
+                <div class="form-group">
+                    <label for="inputData">Data*</label>
+                    <input type="date" id="inputData" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputHora">Horário*</label>
+                    <input type="time" id="inputHora" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputTutor">Nome do Tutor*</label>
+                    <input type="text" id="inputTutor" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputPet">Nome do Pet*</label>
+                    <input type="text" id="inputPet" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputTipo">Tipo de Consulta*</label>
+                    <select id="inputTipo" required>
+                        <option value="Consulta Rotina Clinica">Rotina - Clínica</option>
+                        <option value="Consulta Rotina Domiciliar">Rotina - Domiciliar</option>
+                        <option value="Emergência Clinica">Emergência - Clínica</option>
+                        <option value="Emergência Domiciliar">Emergência - Domiciliar</option>
                         <option value="Retorno">Retorno</option>
                     </select>
-
-                    <div class="botao-do-modal">
-                        <button class="botao-geral" type="submit" id="botao-agendamento-consulta">
-                            Agendar
-                        </button>
-                        <button class="botao-geral fechar-modal" type="button">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancelar" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-primario">Agendar</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- Modal para Exame -->
+    <!-- Modal para Exame - ATUALIZADO -->
     <div id="modal-2" class="jw-modal" aria-hidden="true">
-        <div class="jw-modal-body" role="dialog">
-            <div id="modalExame" class="container-modal">
-                <form id="formExame">
-                    <label class="dateLabel">Data:</label>
-                    <input type="date" id="inputDataExame" required />
-
-                    <label>Horário:</label>
-                    <input type="time" id="inputHoraExame" required />
-
-                    <label>Nome do Tutor:</label>
-                    <input type="text" id="inputTutorExame" required />
-
-                    <label>Nome do Pet:</label>
-                    <input type="text" id="inputPetExame" required />
-
-                    <label>Exame a ser Realizado:</label>
-                    <select id="inputTipoExame">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Agendar Exame</h2>
+            <form id="formExame" class="modal-form">
+                <div class="form-group">
+                    <label for="inputDataExame">Data*</label>
+                    <input type="date" id="inputDataExame" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputHoraExame">Horário*</label>
+                    <input type="time" id="inputHoraExame" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputTutorExame">Nome do Tutor*</label>
+                    <input type="text" id="inputTutorExame" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputPetExame">Nome do Pet*</label>
+                    <input type="text" id="inputPetExame" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputTipoExame">Exame a ser Realizado*</label>
+                    <select id="inputTipoExame" required>
                         <option value="Exame Raio X">Raio X</option>
                         <option value="Exame Eco Cardiograma">Eco Cardiograma</option>
                         <option value="Exame Ultrassom">Ultrassom</option>
                     </select>
-
-                    <div class="botao-do-modal">
-                        <button class="botao-geral" type="submit" id="botao-agendamento-exame">
-                            Agendar
-                        </button>
-                        <button class="botao-geral fechar-modal" type="button">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancelar" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-primario">Agendar</button>
+                </div>
+            </form>
         </div>
     </div>
 
-
-
+    <script src="js/tela-agenda.js"></script>
 </body>
-
 </html>
-
-
 
 
 <!--O QUE PRECISA SER FEITO: 
