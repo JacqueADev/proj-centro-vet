@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Centro Veterinário Integrativo Jhonatan Silvestre</title>
+    <link rel="stylesheet" href="css/style-tela-cadastrados.css">
+</head>
+<body>
+    <div class="container-logo">
+        <img src="assets/logo-sem-fundo.png" alt="" class="logo" />
+    </div>
+
+    <div class="container-lateral">
+        <div class="barra-lateral">
+            <button onclick="window.location.href='index.html'" class="botao-lateral">
+                Voltar
+            </button>
+        </div>
+    </div>
+
+
+     <!-- Conteúdo Principal -->
+     <main class="content">
+        <div class="top-bar">
+            <input type="text" placeholder="Digite o nome do tutor aqui" class="barra-de-pesquisa">
+            <button class="botao-buscar">
+                Buscar <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+        <!-- Tabela de Tutores -->
+        <table class="tabela-tutores">
+            <thead>
+                <tr>
+                    <th>Cod.</th>
+                    <th>Tutor</th>
+                    <th>Contato</th>
+                    <th>Pets</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#1</td>
+                    <td>xxxxx xxxxx</td>
+                    <td>(00) 00000-0000</td>
+                    <td><span class="pets">01</span></td>
+                    <td class="acoes">
+                        <button class="btn-icon"><i class="fas fa-plus"></i></button>
+                        <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                <!-- Repita as linhas para mais tutores -->
+            </tbody>
+        </table>
+    </main>
+</div>
+
+
+
+    <script src="js/cadastrados.js"></script>
+</body>
+</html>

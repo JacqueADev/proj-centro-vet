@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         const tabela = document.getElementById("tabelaConsultas");
         const novaLinha = tabela.insertRow();
-        novaLinha.innerHTML = `<td>${data}</td><td>${hora}</td><td>${tutor}</td><td>${pet}</td><td>${tipo}</td><td><button class='remover'>Excluir</button></td>`;
+        novaLinha.innerHTML = `<td>${data}</td><td>${hora}</td><td>${tutor}</td><td>${pet}</td><td>${tipo}</td><td><button style="background: none; border: none; cursor: pointer; padding: 5px;" class='remover'><img src="assets/lixeira.png" alt="Excluir" width="28"></button></td>`;
         
         closeModal();
     });
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         const tabela = document.getElementById("tabelaExames");
         const novaLinha = tabela.insertRow();
-        novaLinha.innerHTML = `<td>${data}</td><td>${hora}</td><td>${tutor}</td><td>${pet}</td><td>${exame}</td><td><button class='remover'>Excluir</button></td>`;
+        novaLinha.innerHTML = `<td>${data}</td><td>${hora}</td><td>${tutor}</td><td>${pet}</td><td>${exame}</td><td><button style="background: none; border: none; cursor: pointer; padding: 5px;" class='remover'><img src="assets/lixeira.png" alt="Excluir" width="28"></button></td>`;
         
         closeModal();
     });

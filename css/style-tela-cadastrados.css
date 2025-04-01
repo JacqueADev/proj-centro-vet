@@ -1,0 +1,134 @@
+:root{
+    --cor-fonte: #161514;
+    --cor-gradiente-escuro: #a37628;
+    --cor-gradiente-mediano:#c7974a;
+    --cor-gradiente-claro: #ebc88f;
+    --cor-branco: #FFFFFF;
+
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: var(--cor-fonte);  
+}
+
+
+body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 100vh;
+}
+
+.container-lateral{
+    display: flex;
+}
+
+.barra-lateral {
+    background-color: var(--cor-gradiente-mediano);
+    padding: 50px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+.botao-lateral {
+    background-color: var(--cor-gradiente-escuro);
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+
+.botao-lateral:hover{
+    background-color: var(--cor-gradiente-claro);
+    transition: 0.5s ease-in-out;
+}
+
+.container-logo {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.logo {
+    width: 150px;
+    height: 150px;
+}
+
+
+.content {
+    flex: 1;
+    padding: 20px;
+    margin-left: 50px;
+    margin-top: 90px; 
+}
+
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.barra-de-pesquisa {
+    width: 600px; 
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.botao-buscar {
+    padding: 10px 22px;
+    background-color: var(--cor-gradiente-escuro);
+    font-weight: bold;
+    color: var(--cor-branco);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.botao-buscar:hover {
+    background-color: var(--cor-gradiente-claro);
+    color: var(--cor-fonte);
+    transition: 0.3s;
+}
+/* Tabela */
+.tabela-tutores {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabela-tutores th, .tabela-tutores td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.pets {
+    background: url('paw-icon.png') no-repeat left center;
+    padding-left: 25px;
+}
+
+.acoes .btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0 5px;
+}
+
+.acoes .btn-icon i {
+    color: #666;
+}
