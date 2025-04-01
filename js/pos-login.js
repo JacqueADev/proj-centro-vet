@@ -8,4 +8,13 @@ document.addEventListener("DOMContentLoaded", function() {
         console.log("Redirecionando para a agenda...");
         window.location.href = "tela-agenda.html";
     });
+
+    // Redirecionamento para Cadastrados (NOVO)
+    const botaoCadastrados = document.getElementById("botao-cadastrados");
+    if (botaoCadastrados) {
+        botaoCadastrados.addEventListener("click", function() {
+            console.log("Redirecionando para cadastrados...");
+            window.location.href = "tela-cadastrados.html";
+        });
+    }
 });
