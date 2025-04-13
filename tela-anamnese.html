@@ -26,6 +26,10 @@
             <!-- Seção 1: Dados Básicos -->
             <section class="secao-anamnese">
                 <h2><i class="fas fa-user"></i> Dados do Atendimento</h2>
+                <div class="form-group">
+                    <label for="dataAtendimento">Data*</label>
+                    <input type="date" id="dataAtendimento" required>
+                </div>
                 <div class="form-group-duo">
                     <div class="form-group">
                         <label for="tutor">Tutor*</label>
@@ -34,9 +38,6 @@
                                 <option value="">Selecione um tutor</option>
                                 <!-- Opções serão preenchidas via JS -->
                             </select>
-                            <button type="button" class="btn-buscar" id="buscar-tutor">
-                                <i class="fas fa-search"></i>
-                            </button>
                         </div>
                     </div>
                     <div class="form-group">
@@ -46,10 +47,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="dataAtendimento">Data*</label>
-                    <input type="date" id="dataAtendimento" required>
-                </div>
+                
                 
                 <!-- Botão para buscar dados completos -->
                 <div class="form-group">
@@ -84,6 +82,10 @@
                             <!-- Preenchido via JavaScript -->
                         </tbody>
                     </table>
+                    <!-- Adicione este link abaixo da tabela -->
+                    <div class="link-atendimentos">
+                        <a href="atendimentos-anteriores.html" id="link-atendimentos-anteriores" target="_blank">Acessar atendimentos anteriores</a>
+                    </div>
                 </div>
             </section>
 
@@ -216,6 +218,8 @@
         </form>
     </main>
 
+
     <script src="js/anamnese.js"></script>
+    <script src="js/dados-ficticios.js"></script>
 </body>
 </html>

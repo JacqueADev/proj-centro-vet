@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
         tutores.forEach(tutor => {
             const option = document.createElement('option');
             option.value = tutor.id;
-            option.textContent = `${tutor.nome} (${tutor.telefone})`;
+            option.textContent = `${tutor.nome}`;
             tutorSelect.appendChild(option);
         });
     };
@@ -181,10 +181,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
         
-        // Botão de buscar tutor (opcional)
-        document.getElementById('buscar-tutor').addEventListener('click', function() {
-            alert('Funcionalidade de busca avançada pode ser implementada aqui');
-        });
         
         // Submit do formulário
         document.getElementById('formAnamnese').addEventListener('submit', function(e) {

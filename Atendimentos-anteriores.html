@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atendimentos Anteriores</title>
+    <link rel="stylesheet" href="css/style-anamnese.css">
+    <style>
+        .container-atendimentos {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .voltar-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: var(--cor-gradiente-mediano);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-atendimentos">
+        <a href="javascript:window.close()" class="voltar-btn">Voltar</a>
+        <h1>Atendimentos Anteriores</h1>
+        <div id="pet-info-header"></div>
+        <div id="lista-atendimentos"></div>
+    </div>
+
+    <script src="js/atendimentos-anteriores.js"></script>
+</body>
+</html>
