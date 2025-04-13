@@ -21,7 +21,201 @@
         </div>
     </div>
 
-    
+    <main class="content">
+        <form id="formAnamnese" class="form-anamnese">
+            <!-- Seção 1: Dados Básicos -->
+            <section class="secao-anamnese">
+                <h2><i class="fas fa-user"></i> Dados do Atendimento</h2>
+                <div class="form-group-duo">
+                    <div class="form-group">
+                        <label for="tutor">Tutor*</label>
+                        <div class="select-with-search">
+                            <select id="tutor" required>
+                                <option value="">Selecione um tutor</option>
+                                <!-- Opções serão preenchidas via JS -->
+                            </select>
+                            <button type="button" class="btn-buscar" id="buscar-tutor">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pet">Pet*</label>
+                        <select id="pet" required disabled>
+                            <option value="">Primeiro selecione um tutor</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="dataAtendimento">Data*</label>
+                    <input type="date" id="dataAtendimento" required>
+                </div>
+                
+                <!-- Botão para buscar dados completos -->
+                <div class="form-group">
+                    <button type="button" id="buscar-dados" class="btn-primario" disabled>
+                        <i class="fas fa-search"></i> Buscar Dados Completos
+                    </button>
+                </div>
+                
+                <!-- Seção de informações do pet -->
+                <div id="info-pet" style="display: none;">
+                    <h3>Dados Cadastrais do Pet</h3>
+                    <div class="pet-info-grid">
+                        <div><strong>Espécie:</strong> <span id="pet-especie"></span></div>
+                        <div><strong>Raça:</strong> <span id="pet-raca"></span></div>
+                        <div><strong>Idade:</strong> <span id="pet-idade"></span></div>
+                        <div><strong>Peso:</strong> <span id="pet-peso"></span></div>
+                        <div><strong>Sexo:</strong> <span id="pet-sexo"></span></div>
+                        <div><strong>Ambiente:</strong> <span id="pet-ambiente"></span></div>
+                    </div>
+                    
+                    <h3>Histórico de Saúde</h3>
+                    <table class="tabela-historico">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Vacina</th>
+                                <th>Vermífugo</th>
+                                <th>Peso (kg)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historico-body">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Seção 2: Anamnese -->
+            <section class="secao-anamnese">
+                <h2><i class="fas fa-clipboard-list"></i> Anamnese</h2>
+                
+                <div class="form-group">
+                    <label for="queixaPrincipal">Queixa principal*</label>
+                    <textarea id="queixaPrincipal" rows="3" required></textarea>
+                </div>
+
+                <!-- Sistema Digestório -->
+                <div class="sistema-group">
+                    <h3><i class="fas fa-stomach"></i> Sistema Digestório</h3>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="digestorio" value="vomito"> Vômito</label>
+                        <label><input type="checkbox" name="digestorio" value="regurgitacao"> Regurgitação</label>
+                        <label><input type="checkbox" name="digestorio" value="diarreia"> Diarréia</label>
+                        <label><input type="checkbox" name="digestorio" value="apetite"> Apetite alterado</label>
+                        <label><input type="checkbox" name="digestorio" value="agua"> Ingestão de água alterada</label>
+                        <div class="form-group">
+                            <label for="outrosDigestorio">Outros</label>
+                            <input type="text" id="outrosDigestorio">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sistema Cardiorespiratório -->
+                <div class="sistema-group">
+                    <h3><i class="fas fa-heartbeat"></i> Sistema Cardiorespiratório</h3>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="cardio" value="tosse"> Tosse</label>
+                        <label><input type="checkbox" name="cardio" value="cansaço"> Cansaço</label>
+                        <label><input type="checkbox" name="cardio" value="secrecao"> Secreção nasal</label>
+                        <div class="form-group">
+                            <label for="outrosCardio">Outros</label>
+                            <input type="text" id="outrosCardio">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção 3: Exame Físico -->
+                <section class="secao-anamnese">
+                    <h2><i class="fas fa-stethoscope"></i> Exame Físico</h2>
+                    
+                    <div class="form-group-duo">
+                        <div class="form-group">
+                            <label for="mucosa">Mucosa</label>
+                            <select id="mucosa">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cavidadeOral">Cavidade Oral</label>
+                            <select id="cavidadeOral">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group-duo">
+                        <div class="form-group">
+                            <label for="temperatura">Temperatura</label>
+                            <select id="temperatura">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hidratacao">Hidratação</label>
+                            <select id="hidratacao">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Seção 4: Financeiro -->
+                <section class="secao-anamnese">
+                    <h2><i class="fas fa-money-bill-wave"></i> Financeiro</h2>
+                    
+                    <div class="form-group">
+                        <label for="tipoAtendimento">Tipo de Atendimento*</label>
+                        <select id="tipoAtendimento" required>
+                            <option value="">Selecione</option>
+                            <option value="consulta_particular">Consulta Particular</option>
+                            <option value="emergencia">Emergência</option>
+                            <option value="guia_prever">Guia Prever</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Exames Solicitados</label>
+                        <div class="exames-container">
+                            <select id="exames" multiple>
+                                <option value="raio_x">Raio X (R$ 120,00)</option>
+                                <option value="ultrassom">Ultrassom (R$ 180,00)</option>
+                                <option value="eco">Eco Cardiograma (R$ 220,00)</option>
+                            </select>
+                            <div id="listaExames" class="lista-exames">
+                                <!-- Lista de exames selecionados será exibida aqui -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="formaPagamento">Forma de Pagamento*</label>
+                        <select id="formaPagamento" required>
+                            <option value="">Selecione</option>
+                            <option value="credito">Cartão Crédito</option>
+                            <option value="debito">Cartão Débito</option>
+                            <option value="dinheiro">Dinheiro</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                        <div id="outroPagamentoContainer" style="display: none;">
+                            <input type="text" id="outroPagamento" placeholder="Especifique">
+                        </div>
+                    </div>
+                </section>
+
+                <div class="form-buttons">
+                    <button type="button" class="btn-cancelar" onclick="window.location.href='tela-pos-login.html'">Cancelar</button>
+                    <button type="submit" class="btn-primario">Salvar Anamnese</button>
+                </div>
+            </section>
+        </form>
+    </main>
 
     <script src="js/anamnese.js"></script>
-    </body>
+</body>
+</html>
