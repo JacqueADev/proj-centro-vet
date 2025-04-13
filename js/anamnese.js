@@ -80,6 +80,12 @@ document.addEventListener("DOMContentLoaded", function() {
             historicoBody.appendChild(row);
         }
         
+        // Configura o link de atendimentos anteriores
+        const linkAtendimentos = document.getElementById('link-atendimentos-anteriores');
+        if (linkAtendimentos) {
+            linkAtendimentos.href = `atendimentos-anteriores.html?petId=${petData.id}`;
+        }
+        
         infoSection.style.display = 'block';
     };
 
@@ -181,7 +187,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
         
-        
         // Submit do formulário
         document.getElementById('formAnamnese').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -215,7 +220,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 exames: Array.from(document.getElementById('exames').selectedOptions).map(opt => opt.value),
                 tipoAtendimento: document.getElementById('tipoAtendimento').value,
                 formaPagamento: document.getElementById('formaPagamento').value,
-                outroPagamento: document.getElementById('outroPagamento').value
+                outroPagamento: document.getElementById('outroPagamento').value,
+                // Adiciona observações se necessário
+                observacoes: "" // Você pode adicionar um campo para observações se quiser
             };
             
             const anamneseSalva = salvarAnamnese(formData);
@@ -224,9 +231,6 @@ document.addEventListener("DOMContentLoaded", function() {
             alert('Anamnese salva com sucesso!');
             this.reset();
             document.getElementById('info-pet').style.display = 'none';
-            
-            // Opcional: redirecionar ou limpar formulário
-            // window.location.href = 'tela-pos-login.html';
         });
     };
 
