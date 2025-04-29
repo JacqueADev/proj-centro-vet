@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Cadastro - Centro Veterinário Integrativo</title>
+    <link rel="stylesheet" href="css/style-novo-cadastro.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>Novo Cadastro de Tutor</h2>
+            <form id="formNovoTutor" class="tutor-form">
+                <input type="hidden" id="tutorIdEditar">
+                
+                <fieldset>
+                    <legend>Dados Pessoais</legend>
+                    
+                    <div class="form-group">
+                        <label for="nomeTutor">Nome do Tutor*</label>
+                        <input type="text" id="nomeTutor" required>
+                    </div>
+                    
+                    <div class="form-group-duo">
+                        <div class="form-group">
+                            <label for="cpfTutor">CPF*</label>
+                            <input type="text" id="cpfTutor" required placeholder="000.000.000-00">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="rgTutor">RG</label>
+                            <input type="text" id="rgTutor">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefoneTutor">Telefone*</label>
+                        <input type="tel" id="telefoneTutor" required placeholder="(00) 00000-0000">
+                    </div>
+                </fieldset>
+                
+                <fieldset>
+                    <legend>Endereço</legend>
+                    
+                    <div class="form-group">
+                        <label for="cepTutor">CEP 
+                            <a href="https://buscacepinter.correios.com.br/" target="_blank" class="link-cep">(não sei o CEP)</a>
+                        </label>
+                        <input type="text" id="cepTutor" placeholder="00000-000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="enderecoTutor">Endereço*</label>
+                        <input type="text" id="enderecoTutor" required>
+                    </div>
+                    
+                    <div class="form-group-duo">
+                        <div class="form-group">
+                            <label for="bairroTutor">Bairro</label>
+                            <input type="text" id="bairroTutor">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cidadeTutor">Cidade</label>
+                            <input type="text" id="cidadeTutor">
+                        </div>
+                    </div>
+                </fieldset>
+                
+                <div class="form-group">
+                    <label for="comoConheceu">Como nos conheceu?</label>
+                    <select id="comoConheceu">
+                        <option value="">Selecione</option>
+                        <option value="rede-social">Rede Social</option>
+                        <option value="indicacao">Indicação</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                    <div id="containerIndicacao" style="display: none; margin-top: 10px;">
+                        <label for="nomeIndicacao">Nome de quem indicou:</label>
+                        <input type="text" id="nomeIndicacao">
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="cancelar">Cancelar</button>
+                    <button type="submit">Salvar Cadastro</button>
+                </div>
+            </form>
+            
+            <button id="adicionarPetBtn" class="btn-adicionar-pet">Adicionar Novo Pet</button>
+            <button id="iniciarAtendimentoBtn" class="btn-iniciar-atendimento" disabled>Iniciar novo atendimento</button>
+        </div>
+    </div>
+
+    <!-- Modal para adicionar pet -->
+    <div id="modalPet" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Adicionar Novo Pet</h2>
+            <form id="formPet" class="modal-form">
+                <input type="hidden" id="tutorId">
+                
+                <div class="form-group">
+                    <label for="nomePet">Nome do Pet</label>
+                    <input type="text" id="nomePet" required>
+                </div>
+                
+                <div class="form-group-duo">
+                    <div class="form-group">
+                        <label for="idade">Idade</label>
+                        <div class="idade-container">
+                            <input type="number" id="idade" min="0" required>
+                            <select id="idadeTipo">
+                                <option value="meses">meses</option>
+                                <option value="anos">anos</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sexo">Sexo</label>
+                        <select id="sexo" required>
+                            <option value="">Selecione</option>
+                            <option value="Fêmea">Fêmea</option>
+                            <option value="Macho">Macho</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group-duo">
+                    <div class="form-group">
+                        <label for="castrado">Castrado</label>
+                        <select id="castrado" required>
+                            <option value="">Selecione</option>
+                            <option value="Sim">Sim</option>
+                            <option value="Não">Não</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="especie">Espécie</label>
+                        <select id="especie" required>
+                            <option value="">Selecione</option>
+                            <option value="Cachorro">Cachorro</option>
+                            <option value="Gato">Gato</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="raca">Raça</label>
+                    <input type="text" id="raca" required>
+                </div>
+                
+                <div class="form-group-duo">
+                    <div class="form-group">
+                        <label for="pelagem">Pelagem</label>
+                        <input type="text" id="pelagem">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cor">Cor</label>
+                        <input type="text" id="cor">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="doencaExistente">Doença pré-existente</label>
+                    <select id="doencaExistente" required>
+                        <option value="Não">Não</option>
+                        <option value="Sim">Sim</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="observacao">Observação</label>
+                    <textarea id="observacao" rows="3"></textarea>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" id="cancelarPet">Cancelar</button>
+                    <button type="submit">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/novo-cadastro.js"></script>
+</body>
+</html>
