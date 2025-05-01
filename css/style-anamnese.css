@@ -111,59 +111,34 @@ body {
     font-size: 1.1rem;
 }
 
-/* Novos estilos para a seção financeira */
-.valor-atendimento-container {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-.exames-checkbox {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.resumo-financeiro {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 5px;
-}
-
-.resumo-financeiro h3 {
-    margin-bottom: 10px;
-    color: var(--cor-gradiente-escuro);
-}
-
-#listaServicos {
-    margin-bottom: 15px;
-}
-
-.total-container {
-    text-align: right;
-    font-size: 1.1em;
-    padding-top: 10px;
-    border-top: 1px solid #ddd;
-}
-
-/* Estilo para os inputs de cartão de crédito */
-#cartaoCreditoContainer {
-    margin-top: 15px;
-    padding: 15px;
-    background-color: #fff8e1;
-    border-radius: 5px;
-}
-
-/* Estilo para o input do valor final */
-#valorFinal {
-    background-color: #fff;
+/* Campo de Temperatura Simplificado */
+#temperatura {
+    width: 100%;
+    padding: 12px;
     border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
 }
 
-#valorFinal:focus {
+#temperatura:focus {
+    border-color: var(--cor-gradiente-mediano);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(199, 151, 74, 0.2);
+}
+
+/* Conduta Clínica */
+#condutaClinica {
+    min-height: 150px;
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+#condutaClinica:focus {
     border-color: var(--cor-gradiente-mediano);
     outline: none;
     box-shadow: 0 0 0 2px rgba(199, 151, 74, 0.2);
@@ -211,33 +186,6 @@ body {
 .outros-group input[type="text"] {
     width: 300px !important;
     margin-top: 0 !important;
-}
-
-/* Estilo para o container de temperatura */
-.temperatura-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.temperatura-input {
-    width: 100px !important;
-}
-
-.status-temperatura {
-    padding: 8px 12px;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-.status-normal {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.status-alterada {
-    background-color: #f8d7da;
-    color: #721c24;
 }
 
 /* Estilo para o container de medicação */
@@ -625,4 +573,75 @@ textarea.valid {
 .progress-step.completed::after {
     content: "✓";
     margin-left: 5px;
+}
+
+/* Novos estilos para a seção financeira */
+.valor-atendimento-container {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Estilo para os checkboxes de exames (alinhados à esquerda) */
+.exames-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start; /* Alinha os itens à esquerda */
+    text-align: left; /* Alinha o texto à esquerda */
+    margin-left: 0; /* Remove qualquer margem */
+    padding-left: 0; /* Remove qualquer padding */
+}
+
+.exames-checkbox label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    width: 100%;
+    justify-content: flex-start; /* Garante alinhamento à esquerda */
+}
+
+.resumo-financeiro {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.resumo-financeiro h3 {
+    margin-bottom: 10px;
+    color: var(--cor-gradiente-escuro);
+}
+
+#listaServicos {
+    margin-bottom: 15px;
+}
+
+.total-container {
+    text-align: right;
+    font-size: 1.1em;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+/* Estilo para os inputs de cartão de crédito */
+#cartaoCreditoContainer {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #fff8e1;
+    border-radius: 5px;
+}
+
+#valorFinal {
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+#valorFinal:focus {
+    border-color: var(--cor-gradiente-mediano);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(199, 151, 74, 0.2);
 }

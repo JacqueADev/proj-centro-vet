@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sistema Centro Veterinário Integrativo Jhonatan Silvestre</title>
+    <title>Sistema Centro Veterinário Integrativo</title>
     <link rel="stylesheet" href="css/style-anamnese.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -48,15 +48,12 @@
                     </div>
                 </div>
                 
-                
-                <!-- Botão para buscar dados completos -->
                 <div class="form-group">
                     <button type="button" id="buscar-dados" class="btn-primario" disabled>
                         <i class="fas fa-search"></i> Buscar Dados Completos
                     </button>
                 </div>
                 
-                <!-- Seção de informações do pet -->
                 <div id="info-pet" style="display: none;">
                     <h3>Dados Cadastrais do Pet</h3>
                     <div class="pet-info-grid">
@@ -82,330 +79,332 @@
                             <!-- Preenchido via JavaScript -->
                         </tbody>
                     </table>
-                    <!-- link abaixo da tabela -->
                     <div class="link-atendimentos">
                         <a href="atendimentos-anteriores.html" id="link-atendimentos-anteriores" target="_blank">Acessar atendimentos anteriores</a>
                     </div>
                 </div>
             </section>
 
-  <!-- Seção 2: Anamnese -->
-<section class="secao-anamnese">
-    <h2><i class="fas fa-clipboard-list"></i> Anamnese</h2>
-    
-    <div class="form-group">
-        <label for="queixaPrincipal">Queixa principal*</label>
-        <textarea id="queixaPrincipal" rows="3" required></textarea>
-    </div>
-    <!-- Campo de Temperatura -->
-    <div class="form-group-duo">
-        <div class="form-group">
-            <label for="temperatura">Temperatura (°C)</label>
-            <div class="temperatura-container">
-                <input type="number" id="temperatura" step="0.1" min="30" max="45" class="temperatura-input">
-                <span id="statusTemperatura" class="status-temperatura"></span>
-            </div>
-        </div>
-        
-        <!-- Campo de Medicação -->
-        <div class="form-group">
-            <label for="medicacao">Tomou alguma medicação recentemente?</label>
-            <div class="medicacao-container">
-                <select id="medicacao" class="medicacao-select">
-                    <option value="nao">Não</option>
-                    <option value="sim">Sim</option>
-                </select>
-                <input type="text" id="nomeMedicacao" class="medicacao-input" placeholder="Qual medicação?" style="display: none;">
-            </div>
-        </div>
-    </div>
-
-    <!-- DIVISÃO EM COLUNAS -->
-<div class="anamnese-columns-3">
-    <!-- Coluna 1 -->
-    <div class="anamnese-col-3">
-        <!-- Sistema Digestório -->
-        <div class="sistema-group">
-            <h3><i class="fas fa-utensils"></i> Sistema Digestório</h3>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="digestorio" value="vomito"> Vômito</label>
-                <label><input type="checkbox" name="digestorio" value="regurgitacao"> Regurgitação</label>
-                <label><input type="checkbox" name="digestorio" value="diarreia"> Diarréia</label>
-                <label><input type="checkbox" name="digestorio" value="apetite"> Apetite alterado</label>
-                <label><input type="checkbox" name="digestorio" value="agua"> Ingestão de água</label>
-                <div class="form-group outros-group">
-                    <label for="outrosDigestorio">Outros</label>
-                    <input type="text" id="outrosDigestorio">
+            <!-- Seção 2: Anamnese -->
+            <section class="secao-anamnese">
+                <h2><i class="fas fa-clipboard-list"></i> Anamnese</h2>
+                
+                <div class="form-group">
+                    <label for="queixaPrincipal">Queixa principal*</label>
+                    <textarea id="queixaPrincipal" rows="3" required></textarea>
                 </div>
-            </div>
-        </div>
-
-        <!-- Sistema Neurológico -->
-        <div class="sistema-group">
-            <h3><i class="fas fa-brain"></i> Sistema Neurológico</h3>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="neurologico" value="convulsao"> Convulsão</label>
-                <label><input type="checkbox" name="neurologico" value="ataxia"> Ataxia</label>
-                <label><input type="checkbox" name="neurologico" value="inclinacao_cabeca"> Inclinação de cabeça</label>
-                <div class="form-group outros-group">
-                    <label for="outrosNeurologico">Outros</label>
-                    <input type="text" id="outrosNeurologico">
+                
+                <div class="form-group-duo">
+                    <div class="form-group">
+                        <label for="temperatura">Temperatura (°C)</label>
+                        <input type="number" id="temperatura" step="0.1" min="30" max="45" 
+                               class="temperatura-input" placeholder="Ex: 38.5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="medicacao">Tomou alguma medicação recentemente?</label>
+                        <div class="medicacao-container">
+                            <select id="medicacao" class="medicacao-select">
+                                <option value="nao">Não</option>
+                                <option value="sim">Sim</option>
+                            </select>
+                            <input type="text" id="nomeMedicacao" class="medicacao-input" 
+                                   placeholder="Qual medicação?" style="display: none;">
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Sistema Locomotor -->
-        <div class="sistema-group">
-            <h3><i class="fas fa-walking"></i> Sistema Locomotor</h3>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="locomotor" value="dificuldade_locomocao"> Dificuldade de locomoção</label>
-                <label><input type="checkbox" name="locomotor" value="alteracao_postural"> Alteração postural</label>
-                <label><input type="checkbox" name="locomotor" value="fratura"> Fratura</label>
-                <div class="form-group outros-group">
-                    <label for="outrosLocomotor">Outros</label>
-                    <input type="text" id="outrosLocomotor">
+                <!-- DIVISÃO EM COLUNAS -->
+                <div class="anamnese-columns-3">
+                    <!-- Coluna 1 -->
+                    <div class="anamnese-col-3">
+                        <!-- Sistema Digestório -->
+                        <div class="sistema-group">
+                            <h3><i class="fas fa-utensils"></i> Sistema Digestório</h3>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="digestorio" value="vomito"> Vômito</label>
+                                <label><input type="checkbox" name="digestorio" value="regurgitacao"> Regurgitação</label>
+                                <label><input type="checkbox" name="digestorio" value="diarreia"> Diarréia</label>
+                                <label><input type="checkbox" name="digestorio" value="apetite"> Apetite alterado</label>
+                                <label><input type="checkbox" name="digestorio" value="agua"> Ingestão de água</label>
+                                <div class="form-group outros-group">
+                                    <label for="outrosDigestorio">Outros</label>
+                                    <input type="text" id="outrosDigestorio">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sistema Neurológico -->
+                        <div class="sistema-group">
+                            <h3><i class="fas fa-brain"></i> Sistema Neurológico</h3>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="neurologico" value="convulsao"> Convulsão</label>
+                                <label><input type="checkbox" name="neurologico" value="ataxia"> Ataxia</label>
+                                <label><input type="checkbox" name="neurologico" value="inclinacao_cabeca"> Inclinação de cabeça</label>
+                                <div class="form-group outros-group">
+                                    <label for="outrosNeurologico">Outros</label>
+                                    <input type="text" id="outrosNeurologico">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sistema Locomotor -->
+                        <div class="sistema-group">
+                            <h3><i class="fas fa-walking"></i> Sistema Locomotor</h3>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="locomotor" value="dificuldade_locomocao"> Dificuldade de locomoção</label>
+                                <label><input type="checkbox" name="locomotor" value="alteracao_postural"> Alteração postural</label>
+                                <label><input type="checkbox" name="locomotor" value="fratura"> Fratura</label>
+                                <div class="form-group outros-group">
+                                    <label for="outrosLocomotor">Outros</label>
+                                    <input type="text" id="outrosLocomotor">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna 2 -->
+                    <div class="anamnese-col-3">
+                        <!-- Pele -->
+                        <div class="sistema-group">
+                            <h3><i class="fas fa-band-aid"></i> Pele</h3>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="pele" value="prurido"> Prurido</label>
+                                <label><input type="checkbox" name="pele" value="ectoparasitas"> Ectoparasitas</label>
+                                <label><input type="checkbox" name="pele" value="queda_pelo"> Queda de pelo</label>
+                                <label><input type="checkbox" name="pele" value="alopecia"> Alopecia</label>
+                                <div class="form-group outros-group">
+                                    <label for="outrosPele">Outros</label>
+                                    <input type="text" id="outrosPele">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Olhos -->
+                        <div class="sistema-group">
+                            <h3><i class="fas fa-eye"></i> Olhos</h3>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="olhos" value="prurido"> Prurido</label>
+                                <label><input type="checkbox" name="olhos" value="secrecao"> Secreção</label>
+                                <label><input type="checkbox" name="olhos" value="deficit_visual"> Déficit visual</label>
+                                <div class="form-group outros-group">
+                                    <label for="outrosOlhos">Outros</label>
+                                    <input type="text" id="outrosOlhos">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ouvido -->
+                        <div class="sistema-group">
+                            <h3><i class="fas fa-deaf"></i> Ouvido</h3>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="ouvido" value="prurido"> Prurido</label>
+                                <label><input type="checkbox" name="ouvido" value="secrecao"> Secreção</label>
+                                <label><input type="checkbox" name="ouvido" value="dor"> Dor</label>
+                                <div class="form-group outros-group">
+                                    <label for="outrosOuvido">Outros</label>
+                                    <input type="text" id="outrosOuvido">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Coluna 3 -->
+                    <div class="anamnese-col-3">
+                        <!-- Sistema Cardiorespiratório -->
+                        <div class="sistema-group">
+                            <h3><i class="fas fa-heartbeat"></i> Sistema Cardiorespiratório</h3>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="cardio" value="tosse"> Tosse</label>
+                                <label><input type="checkbox" name="cardio" value="cansaço"> Cansaço</label>
+                                <label><input type="checkbox" name="cardio" value="secrecao"> Secreção nasal</label>
+                                <div class="form-group outros-group">
+                                    <label for="outrosCardio">Outros</label>
+                                    <input type="text" id="outrosCardio">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Coluna 2 -->
-    <div class="anamnese-col-3">
-        <!-- Pele -->
-        <div class="sistema-group">
-            <h3><i class="fas fa-band-aid"></i> Pele</h3>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="pele" value="prurido"> Prurido</label>
-                <label><input type="checkbox" name="pele" value="ectoparasitas"> Ectoparasitas</label>
-                <label><input type="checkbox" name="pele" value="queda_pelo"> Queda de pelo</label>
-                <label><input type="checkbox" name="pele" value="alopecia"> Alopecia</label>
-                <div class="form-group outros-group">
-                    <label for="outrosPele">Outros</label>
-                    <input type="text" id="outrosPele">
-                </div>
-            </div>
-        </div>
-
-        <!-- Olhos -->
-        <div class="sistema-group">
-            <h3><i class="fas fa-eye"></i> Olhos</h3>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="olhos" value="prurido"> Prurido</label>
-                <label><input type="checkbox" name="olhos" value="secrecao"> Secreção</label>
-                <label><input type="checkbox" name="olhos" value="deficit_visual"> Déficit visual</label>
-                <div class="form-group outros-group">
-                    <label for="outrosOlhos">Outros</label>
-                    <input type="text" id="outrosOlhos">
-                </div>
-            </div>
-        </div>
-
-        <!-- Ouvido -->
-        <div class="sistema-group">
-            <h3><i class="fas fa-deaf"></i> Ouvido</h3>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="ouvido" value="prurido"> Prurido</label>
-                <label><input type="checkbox" name="ouvido" value="secrecao"> Secreção</label>
-                <label><input type="checkbox" name="ouvido" value="dor"> Dor</label>
-                <div class="form-group outros-group">
-                    <label for="outrosOuvido">Outros</label>
-                    <input type="text" id="outrosOuvido">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Coluna 3 -->
-    <div class="anamnese-col-3">
-        <!-- Sistema Cardiorespiratório -->
-        <div class="sistema-group">
-            <h3><i class="fas fa-heartbeat"></i> Sistema Cardiorespiratório</h3>
-            <div class="checkbox-group">
-                <label><input type="checkbox" name="cardio" value="tosse"> Tosse</label>
-                <label><input type="checkbox" name="cardio" value="cansaço"> Cansaço</label>
-                <label><input type="checkbox" name="cardio" value="secrecao"> Secreção nasal</label>
-                <div class="form-group outros-group">
-                    <label for="outrosCardio">Outros</label>
-                    <input type="text" id="outrosCardio">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- FIM DA DIVISÃO EM COLUNAS -->
-
-    <!-- Seção 3: Exame Físico -->
-<section class="secao-anamnese">
-    <h2><i class="fas fa-stethoscope"></i> Exame Físico</h2>
-    
-    <div class="exame-fisico-columns">
-        <!-- Coluna 1 -->
-        <div class="exame-fisico-col">
-            <div class="form-group">
-                <label for="mucosa">Mucosa</label>
-                <select id="mucosa">
-                    <option value="normal">Normal</option>
-                    <option value="alterada">Alterada</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="pelagem">Pelagem</label>
-                <select id="pelagem">
-                    <option value="normal">Normal</option>
-                    <option value="alterada">Alterada</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="linfonodos">Linfonodos</label>
-                <select id="linfonodos">
-                    <option value="normal">Normal</option>
-                    <option value="alterada">Alterada</option>
-                </select>
-            </div>
-        </div>
-        
-        <!-- Coluna 2 -->
-        <div class="exame-fisico-col">
-            <div class="form-group">
-                <label for="cavidadeOral">Cavidade Oral</label>
-                <select id="cavidadeOral">
-                    <option value="normal">Normal</option>
-                    <option value="alterada">Alterada</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="hidratacao">Hidratação</label>
-                <select id="hidratacao">
-                    <option value="normal">Normal</option>
-                    <option value="alterada">Alterada</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="alimentacao">Alimentação</label>
-                <select id="alimentacao">
-                    <option value="normal">Normal</option>
-                    <option value="alterada">Alterada</option>
-                </select>
-            </div>
-        </div>
-        
-        <!-- Coluna 3 -->
-        <div class="exame-fisico-col">
-            <div class="form-group">
-                <label for="condutoAuditivo">Conduto Auditivo</label>
-                <select id="condutoAuditivo">
-                    <option value="normal">Normal</option>
-                    <option value="alterada">Alterada</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="oftalmo">Oftalmológico</label>
-                <select id="oftalmo">
-                    <option value="normal">Normal</option>
-                    <option value="alterada">Alterada</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="cavidadeNasal">Cavidade Nasal</label>
-                <select id="cavidadeNasal">
-                    <option value="normal">Normal</option>
-                    <option value="alterada">Alterada</option>
-                </select>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Seção 4: Financeiro -->
-<section class="secao-anamnese">
-    <h2><i class="fas fa-money-bill-wave"></i> Financeiro</h2>
-    
-    <div class="form-group">
-        <label for="tipoAtendimento">Tipo de Atendimento*</label>
-        <select id="tipoAtendimento" required>
-            <option value="">Selecione</option>
-            <option value="consulta_clinica">Consulta em clínica</option>
-            <option value="consulta_domiciliar">Consulta domiciliar</option>
-            <option value="retorno">Retorno</option>
-            <option value="emergencia">Emergência</option>
-            <option value="guia_prever">Guia Prever</option>
-        </select>
-        <div id="valorAtendimentoContainer" class="valor-atendimento-container" style="display: none;">
-            <span id="valorAtendimento"></span>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label>Exames Solicitados</label>
-        <div class="checkbox-group exames-checkbox">
-            <label><input type="checkbox" name="exames" value="raio_x" data-valor="120.00"> Raio X (R$ 120,00)</label>
-            <label><input type="checkbox" name="exames" value="ultrassom" data-valor="180.00"> Ultrassom (R$ 180,00)</label>
-            <label><input type="checkbox" name="exames" value="eco" data-valor="220.00"> Eco Cardiograma (R$ 220,00)</label>
-            <label><input type="checkbox" name="exames" value="exame_sangue" data-valor="250.00"> Exame de sangue (R$ 250,00)</label>
-            <label><input type="checkbox" name="exames" value="teste_fiv_felv" data-valor="120.00"> Teste FIV e FELV (R$ 120,00)</label>
-        </div>
-    </div>
-
-    <div class="resumo-financeiro">
-        <h3>Resumo Financeiro</h3>
-        <div id="listaServicos"></div>
-        <div class="total-container">
-            <strong>Total:</strong> <span id="totalGeral">R$ 0,00</span>
-        </div>
-    </div>
-    
-    <div class="form-group">
-        <label for="formaPagamento">Forma de Pagamento*</label>
-        <select id="formaPagamento" required>
-            <option value="">Selecione</option>
-            <option value="credito">Cartão Crédito</option>
-            <option value="debito">Cartão Débito</option>
-            <option value="dinheiro">Dinheiro</option>
-            <option value="pix">Pix</option>
-        </select>
-    </div>
-    
-    <div id="cartaoCreditoContainer" style="display: none;">
-        <div class="form-group-duo">
-            <div class="form-group">
-                <label for="valorTotal">Valor Total</label>
-                <input type="text" id="valorTotal" readonly>
-            </div>
-            <div class="form-group">
-                <label for="parcelas">Parcelas</label>
-                <select id="parcelas">
-                    <option value="1">1x</option>
-                    <option value="2">2x</option>
-                    <option value="3">3x</option>
-                    <option value="4">4x</option>
-                    <option value="5">5x</option>
-                    <option value="6">6x</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="valorFinal">Valor Final (da maquininha)</label>
-                <input type="text" id="valorFinal" placeholder="Digite o valor da maquininha">
-            </div>
-            <div class="form-group">
-                <label for="juros">Juros</label>
-                <input type="text" id="juros" readonly>
-            </div>
-        </div>
-    </div>
-    
-    
-</section>
-
-<div class="form-buttons">
-    <button type="button" class="btn-cancelar" onclick="window.location.href='tela-pos-login.html'">Cancelar</button>
-    <button type="submit" class="btn-primario">Salvar Anamnese</button>
-</div>
             </section>
+
+            <!-- Seção 3: Exame Físico -->
+            <section class="secao-anamnese">
+                <h2><i class="fas fa-stethoscope"></i> Exame Físico</h2>
+                
+                <div class="exame-fisico-columns">
+                    <!-- Coluna 1 -->
+                    <div class="exame-fisico-col">
+                        <div class="form-group">
+                            <label for="mucosa">Mucosa</label>
+                            <select id="mucosa">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="pelagem">Pelagem</label>
+                            <select id="pelagem">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="linfonodos">Linfonodos</label>
+                            <select id="linfonodos">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Coluna 2 -->
+                    <div class="exame-fisico-col">
+                        <div class="form-group">
+                            <label for="cavidadeOral">Cavidade Oral</label>
+                            <select id="cavidadeOral">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hidratacao">Hidratação</label>
+                            <select id="hidratacao">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="alimentacao">Alimentação</label>
+                            <select id="alimentacao">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Coluna 3 -->
+                    <div class="exame-fisico-col">
+                        <div class="form-group">
+                            <label for="condutoAuditivo">Conduto Auditivo</label>
+                            <select id="condutoAuditivo">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="oftalmo">Oftalmológico</label>
+                            <select id="oftalmo">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cavidadeNasal">Cavidade Nasal</label>
+                            <select id="cavidadeNasal">
+                                <option value="normal">Normal</option>
+                                <option value="alterada">Alterada</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 3.1: Conduta Clínica (NOVA SEÇÃO) -->
+            <section class="secao-anamnese">
+                <h2><i class="fas fa-notes-medical"></i> Conduta Clínica</h2>
+                
+                <div class="form-group">
+                    <label for="condutaClinica">Descreva a conduta clínica a ser adotada*</label>
+                    <textarea id="condutaClinica" rows="5" required placeholder="Ex: Prescrição de medicamentos, recomendações, procedimentos realizados, etc."></textarea>
+                </div>
+            </section>
+
+            <!-- Seção 4: Financeiro -->
+            <section class="secao-anamnese">
+                <h2><i class="fas fa-money-bill-wave"></i> Financeiro</h2>
+                
+                <div class="form-group">
+                    <label for="tipoAtendimento">Tipo de Atendimento*</label>
+                    <select id="tipoAtendimento" required>
+                        <option value="">Selecione</option>
+                        <option value="consulta_clinica">Consulta em clínica</option>
+                        <option value="consulta_domiciliar">Consulta domiciliar</option>
+                        <option value="retorno">Retorno</option>
+                        <option value="emergencia">Emergência</option>
+                        <option value="guia_prever">Guia Prever</option>
+                    </select>
+                    <div id="valorAtendimentoContainer" class="valor-atendimento-container" style="display: none;">
+                        <span id="valorAtendimento"></span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Exames Solicitados</label>
+                    <div class="checkbox-group exames-checkbox">
+                        <label><input type="checkbox" name="exames" value="raio_x" data-valor="120.00"> Raio X (R$ 120,00)</label>
+                        <label><input type="checkbox" name="exames" value="ultrassom" data-valor="180.00"> Ultrassom (R$ 180,00)</label>
+                        <label><input type="checkbox" name="exames" value="eco" data-valor="220.00"> Eco Cardiograma (R$ 220,00)</label>
+                        <label><input type="checkbox" name="exames" value="exame_sangue" data-valor="250.00"> Exame de sangue (R$ 250,00)</label>
+                        <label><input type="checkbox" name="exames" value="teste_fiv_felv" data-valor="120.00"> Teste FIV e FELV (R$ 120,00)</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="formaPagamento">Forma de Pagamento*</label>
+                    <select id="formaPagamento" required>
+                        <option value="">Selecione</option>
+                        <option value="credito">Cartão Crédito</option>
+                        <option value="debito">Cartão Débito</option>
+                        <option value="dinheiro">Dinheiro</option>
+                        <option value="pix">Pix</option>
+                    </select>
+                </div>
+                
+                <div id="cartaoCreditoContainer" style="display: none;">
+                    <div class="form-group-duo">
+                        <div class="form-group">
+                            <label for="valorTotal">Valor Total</label>
+                            <input type="text" id="valorTotal" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="parcelas">Parcelas</label>
+                            <select id="parcelas">
+                                <option value="1">1x</option>
+                                <option value="2">2x</option>
+                                <option value="3">3x</option>
+                                <option value="4">4x</option>
+                                <option value="5">5x</option>
+                                <option value="6">6x</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="valorFinal">Valor Final (da maquininha)</label>
+                            <input type="text" id="valorFinal" placeholder="Digite o valor da maquininha">
+                        </div>
+                        <div class="form-group">
+                            <label for="juros">Juros</label>
+                            <input type="text" id="juros" readonly>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="resumo-financeiro">
+                    <h3>Resumo Financeiro</h3>
+                    <div id="listaServicos"></div>
+                    <div class="total-container">
+                        <strong>Total:</strong> <span id="totalGeral">R$ 0,00</span>
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-buttons">
+                <button type="button" class="btn-cancelar" onclick="window.location.href='tela-pos-login.html'">Cancelar</button>
+                <button type="submit" class="btn-primario">Salvar Anamnese</button>
+            </div>
         </form>
     </main>
 
-
     <script src="js/anamnese.js"></script>
-    <script src="js/dados-ficticios.js"></script>
 </body>
 </html>
