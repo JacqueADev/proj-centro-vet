@@ -111,6 +111,63 @@ body {
     font-size: 1.1rem;
 }
 
+/* Novos estilos para a seção financeira */
+.valor-atendimento-container {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.exames-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.resumo-financeiro {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.resumo-financeiro h3 {
+    margin-bottom: 10px;
+    color: var(--cor-gradiente-escuro);
+}
+
+#listaServicos {
+    margin-bottom: 15px;
+}
+
+.total-container {
+    text-align: right;
+    font-size: 1.1em;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+/* Estilo para os inputs de cartão de crédito */
+#cartaoCreditoContainer {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #fff8e1;
+    border-radius: 5px;
+}
+
+/* Estilo para o input do valor final */
+#valorFinal {
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+#valorFinal:focus {
+    border-color: var(--cor-gradiente-mediano);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(199, 151, 74, 0.2);
+}
 
 /* Layout horizontal para sistemas */
 .sistema-group {
@@ -126,7 +183,7 @@ body {
 }
 
 .sistema-group h3 {
-    flex: 0 0 100%; /* Título ocupa linha inteira */
+    flex: 0 0 100%;
     margin-bottom: 10px;
 }
 
@@ -141,21 +198,20 @@ body {
     display: flex;
     align-items: center;
     gap: 5px;
-    white-space: nowrap; /* Evita quebra de linha */
+    white-space: nowrap;
 }
 
 .outros-group {
     display: flex;
     align-items: center;
     gap: 5px;
-    margin-left: auto; /* Alinha à direita */
+    margin-left: auto;
 }
 
 .outros-group input[type="text"] {
-    width: 300px !important; /* Largura fixa para o campo */
+    width: 300px !important;
     margin-top: 0 !important;
 }
-
 
 /* Estilo para o container de temperatura */
 .temperatura-container {
@@ -198,6 +254,7 @@ body {
 .medicacao-input {
     flex: 2;
 }
+
 /* Layout de colunas para exame físico */
 .exame-fisico-columns {
     display: flex;

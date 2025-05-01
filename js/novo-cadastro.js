@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Verifica e carrega dados fictícios se necessário
+    if (!localStorage.getItem('tutores') || !localStorage.getItem('pets')) {
+        carregarDadosFicticios();
+    }
+
     // Elementos do formulário
     const formNovoTutor = document.getElementById('formNovoTutor');
     const formPet = document.getElementById('formPet');
@@ -12,11 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const containerIndicacao = document.getElementById('containerIndicacao');
     
     comoConheceu.addEventListener('change', function() {
-        if (this.value === 'indicacao') {
-            containerIndicacao.style.display = 'block';
-        } else {
-            containerIndicacao.style.display = 'none';
-        }
+        containerIndicacao.style.display = this.value === 'indicacao' ? 'block' : 'none';
     });
     
     // Modal para adicionar pet
@@ -33,11 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalPet.style.display = 'block';
     }
     
-    spanClose.onclick = function() {
-        modalPet.style.display = 'none';
-    }
-    
-    btnCancelarPet.onclick = function() {
+    spanClose.onclick = btnCancelarPet.onclick = function() {
         modalPet.style.display = 'none';
     }
     
@@ -48,33 +45,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Máscaras para os campos
-    const cpfTutor = document.getElementById('cpfTutor');
-    const telefoneTutor = document.getElementById('telefoneTutor');
-    const cepTutor = document.getElementById('cepTutor');
-    
-    cpfTutor.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-        e.target.value = value;
-    });
-    
-    telefoneTutor.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
-        value = value.replace(/(\d)(\d{4})$/, '$1-$2');
-        e.target.value = value;
-    });
-    
-    cepTutor.addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        value = value.replace(/^(\d{5})(\d)/, '$1-$2');
-        e.target.value = value;
-    });
+    aplicarMascaras();
     
     // Botão cancelar do formulário principal
-    document.querySelector('.cancelar').addEventListener('click', function() {
+    document.querySelector('.btn-cancelar').addEventListener('click', function() {
         if (confirm('Deseja cancelar o cadastro? Todos os dados serão perdidos.')) {
             window.location.href = 'tela-pos-login.html';
         }
@@ -111,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tutorCadastrado = true;
         verificarBotoes();
         alert('Tutor cadastrado com sucesso!');
+        formNovoTutor.reset();
     });
 
     // Evento de submit para o formulário de pet
@@ -152,16 +127,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Função para verificar se pode habilitar o botão de atendimento
     function verificarBotoes() {
-        if (tutorCadastrado && petCadastrado) {
-            iniciarAtendimentoBtn.disabled = false;
-        }
+        iniciarAtendimentoBtn.disabled = !(tutorCadastrado && petCadastrado);
     }
 
     // Evento para o botão de iniciar atendimento
     iniciarAtendimentoBtn.addEventListener('click', function() {
-        // Salvar o tutorId e petId atuais para usar na anamnese
         localStorage.setItem('currentTutorId', tutorIdAtual);
-        // Aqui você pode adicionar lógica para pegar o último pet cadastrado
         window.location.href = 'tela-anamnese.html';
     });
 
@@ -176,5 +147,134 @@ document.addEventListener('DOMContentLoaded', function() {
         let pets = JSON.parse(localStorage.getItem('pets')) || [];
         pets.push(petData);
         localStorage.setItem('pets', JSON.stringify(pets));
+    }
+
+    // Função para carregar dados fictícios
+    function carregarDadosFicticios() {
+        console.log("Carregando dados fictícios iniciais...");
+        
+        // Dados fictícios de tutores
+        const tutores = [
+            {
+                id: "tutor_1",
+                nome: "Ana Carolina Mendes",
+                telefone: "(11) 98765-4321",
+                email: "ana.mendes@email.com",
+                endereco: "Rua das Acácias, 100 - São Paulo/SP",
+                dataCadastro: "2023-01-10T09:15:00"
+            },
+            {
+                id: "tutor_2",
+                nome: "Marcos Ribeiro",
+                telefone: "(11) 91234-5678",
+                email: "marcos.ribeiro@email.com",
+                endereco: "Av. Brasil, 2000 - São Paulo/SP",
+                dataCadastro: "2023-02-15T14:30:00"
+            },
+            {
+                id: "tutor_3",
+                nome: "Juliana Almeida",
+                telefone: "(11) 99876-5432",
+                email: "ju.almeida@email.com",
+                endereco: "Rua dos Pinheiros, 300 - São Paulo/SP",
+                dataCadastro: "2023-03-20T11:00:00"
+            }
+        ];
+
+        // Dados fictícios de pets
+        const pets = [
+            {
+                id: "pet_1",
+                tutorId: "tutor_1",
+                nome: "Bobby",
+                especie: "Cão",
+                raca: "Golden Retriever",
+                idade: "4 anos",
+                peso: 32.0,
+                sexo: "Macho",
+                ambiente: "Casa com quintal",
+                pelagem: "Dourado",
+                dataNascimento: "2019-05-15",
+                dataCadastro: "2023-01-10T09:30:00",
+                historico: []
+            },
+            {
+                id: "pet_2",
+                tutorId: "tutor_1",
+                nome: "Luna",
+                especie: "Gato",
+                raca: "Siamês",
+                idade: "2 anos",
+                peso: 4.0,
+                sexo: "Fêmea",
+                ambiente: "Apartamento",
+                pelagem: "Creme com pontos escuros",
+                dataNascimento: "2021-07-10",
+                dataCadastro: "2023-01-10T10:00:00",
+                historico: []
+            },
+            {
+                id: "pet_3",
+                tutorId: "tutor_2",
+                nome: "Thor",
+                especie: "Cão",
+                raca: "Bulldog Francês",
+                idade: "3 anos",
+                peso: 12.5,
+                sexo: "Macho",
+                ambiente: "Apartamento",
+                pelagem: "Tigrado",
+                dataNascimento: "2020-03-25",
+                dataCadastro: "2023-02-15T15:00:00",
+                historico: []
+            },
+            {
+                id: "pet_4",
+                tutorId: "tutor_3",
+                nome: "Mel",
+                especie: "Gato",
+                raca: "SRD",
+                idade: "5 meses",
+                peso: 2.1,
+                sexo: "Fêmea",
+                ambiente: "Apartamento",
+                pelagem: "Listrada",
+                dataNascimento: "2022-10-15",
+                dataCadastro: "2023-03-20T11:30:00",
+                historico: []
+            }
+        ];
+
+        localStorage.setItem('tutores', JSON.stringify(tutores));
+        localStorage.setItem('pets', JSON.stringify(pets));
+        console.log("Dados fictícios carregados com sucesso!");
+    }
+
+    // Função para aplicar máscaras nos campos
+    function aplicarMascaras() {
+        const cpfTutor = document.getElementById('cpfTutor');
+        const telefoneTutor = document.getElementById('telefoneTutor');
+        const cepTutor = document.getElementById('cepTutor');
+        
+        cpfTutor.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            e.target.value = value;
+        });
+        
+        telefoneTutor.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+            value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+            e.target.value = value;
+        });
+        
+        cepTutor.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+            e.target.value = value;
+        });
     }
 });

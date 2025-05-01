@@ -316,53 +316,90 @@
     </div>
 </section>
 
-                <!-- Seção 4: Financeiro -->
-                <section class="secao-anamnese">
-                    <h2><i class="fas fa-money-bill-wave"></i> Financeiro</h2>
-                    
-                    <div class="form-group">
-                        <label for="tipoAtendimento">Tipo de Atendimento*</label>
-                        <select id="tipoAtendimento" required>
-                            <option value="">Selecione</option>
-                            <option value="consulta_particular">Consulta Particular</option>
-                            <option value="emergencia">Emergência</option>
-                            <option value="guia_prever">Guia Prever</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Exames Solicitados</label>
-                        <div class="exames-container">
-                            <select id="exames" multiple>
-                                <option value="raio_x">Raio X (R$ 120,00)</option>
-                                <option value="ultrassom">Ultrassom (R$ 180,00)</option>
-                                <option value="eco">Eco Cardiograma (R$ 220,00)</option>
-                            </select>
-                            <div id="listaExames" class="lista-exames">
-                                <!-- Lista de exames selecionados será exibida aqui -->
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="formaPagamento">Forma de Pagamento*</label>
-                        <select id="formaPagamento" required>
-                            <option value="">Selecione</option>
-                            <option value="credito">Cartão Crédito</option>
-                            <option value="debito">Cartão Débito</option>
-                            <option value="dinheiro">Dinheiro</option>
-                            <option value="outro">Outro</option>
-                        </select>
-                        <div id="outroPagamentoContainer" style="display: none;">
-                            <input type="text" id="outroPagamento" placeholder="Especifique">
-                        </div>
-                    </div>
-                </section>
+<!-- Seção 4: Financeiro -->
+<section class="secao-anamnese">
+    <h2><i class="fas fa-money-bill-wave"></i> Financeiro</h2>
+    
+    <div class="form-group">
+        <label for="tipoAtendimento">Tipo de Atendimento*</label>
+        <select id="tipoAtendimento" required>
+            <option value="">Selecione</option>
+            <option value="consulta_clinica">Consulta em clínica</option>
+            <option value="consulta_domiciliar">Consulta domiciliar</option>
+            <option value="retorno">Retorno</option>
+            <option value="emergencia">Emergência</option>
+            <option value="guia_prever">Guia Prever</option>
+        </select>
+        <div id="valorAtendimentoContainer" class="valor-atendimento-container" style="display: none;">
+            <span id="valorAtendimento"></span>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label>Exames Solicitados</label>
+        <div class="checkbox-group exames-checkbox">
+            <label><input type="checkbox" name="exames" value="raio_x" data-valor="120.00"> Raio X (R$ 120,00)</label>
+            <label><input type="checkbox" name="exames" value="ultrassom" data-valor="180.00"> Ultrassom (R$ 180,00)</label>
+            <label><input type="checkbox" name="exames" value="eco" data-valor="220.00"> Eco Cardiograma (R$ 220,00)</label>
+            <label><input type="checkbox" name="exames" value="exame_sangue" data-valor="250.00"> Exame de sangue (R$ 250,00)</label>
+            <label><input type="checkbox" name="exames" value="teste_fiv_felv" data-valor="120.00"> Teste FIV e FELV (R$ 120,00)</label>
+        </div>
+    </div>
 
-                <div class="form-buttons">
-                    <button type="button" class="btn-cancelar" onclick="window.location.href='tela-pos-login.html'">Cancelar</button>
-                    <button type="submit" class="btn-primario">Salvar Anamnese</button>
-                </div>
+    <div class="resumo-financeiro">
+        <h3>Resumo Financeiro</h3>
+        <div id="listaServicos"></div>
+        <div class="total-container">
+            <strong>Total:</strong> <span id="totalGeral">R$ 0,00</span>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="formaPagamento">Forma de Pagamento*</label>
+        <select id="formaPagamento" required>
+            <option value="">Selecione</option>
+            <option value="credito">Cartão Crédito</option>
+            <option value="debito">Cartão Débito</option>
+            <option value="dinheiro">Dinheiro</option>
+            <option value="pix">Pix</option>
+        </select>
+    </div>
+    
+    <div id="cartaoCreditoContainer" style="display: none;">
+        <div class="form-group-duo">
+            <div class="form-group">
+                <label for="valorTotal">Valor Total</label>
+                <input type="text" id="valorTotal" readonly>
+            </div>
+            <div class="form-group">
+                <label for="parcelas">Parcelas</label>
+                <select id="parcelas">
+                    <option value="1">1x</option>
+                    <option value="2">2x</option>
+                    <option value="3">3x</option>
+                    <option value="4">4x</option>
+                    <option value="5">5x</option>
+                    <option value="6">6x</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="valorFinal">Valor Final (da maquininha)</label>
+                <input type="text" id="valorFinal" placeholder="Digite o valor da maquininha">
+            </div>
+            <div class="form-group">
+                <label for="juros">Juros</label>
+                <input type="text" id="juros" readonly>
+            </div>
+        </div>
+    </div>
+    
+    
+</section>
+
+<div class="form-buttons">
+    <button type="button" class="btn-cancelar" onclick="window.location.href='tela-pos-login.html'">Cancelar</button>
+    <button type="submit" class="btn-primario">Salvar Anamnese</button>
+</div>
             </section>
         </form>
     </main>
