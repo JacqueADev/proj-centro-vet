@@ -312,7 +312,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
         
-        // Submit do formulário (ATUALIZADO COM CONDUTA CLÍNICA)
+        // Submit do formulário (ATUALIZADO COM TODOS OS CAMPOS)
         document.getElementById('formAnamnese').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -338,19 +338,52 @@ document.addEventListener("DOMContentLoaded", function() {
                 tutorId: document.getElementById('tutor').value,
                 petId: document.getElementById('pet').value,
                 queixaPrincipal: document.getElementById('queixaPrincipal').value,
+                temperatura: document.getElementById('temperatura').value,
+                nomeMedicacao: document.getElementById('nomeMedicacao').value,
+                
+                // Sistemas da Anamnese
                 // Sistema Digestório
                 digestorio: Array.from(document.querySelectorAll('input[name="digestorio"]:checked')).map(cb => cb.value),
                 outrosDigestorio: document.getElementById('outrosDigestorio').value,
+                
+                // Sistema Neurológico
+                neurologico: Array.from(document.querySelectorAll('input[name="neurologico"]:checked')).map(cb => cb.value),
+                outrosNeurologico: document.getElementById('outrosNeurologico').value,
+                
+                // Sistema Locomotor
+                locomotor: Array.from(document.querySelectorAll('input[name="locomotor"]:checked')).map(cb => cb.value),
+                outrosLocomotor: document.getElementById('outrosLocomotor').value,
+                
+                // Pele
+                pele: Array.from(document.querySelectorAll('input[name="pele"]:checked')).map(cb => cb.value),
+                outrosPele: document.getElementById('outrosPele').value,
+                
+                // Olhos
+                olhos: Array.from(document.querySelectorAll('input[name="olhos"]:checked')).map(cb => cb.value),
+                outrosOlhos: document.getElementById('outrosOlhos').value,
+                
+                // Ouvido
+                ouvido: Array.from(document.querySelectorAll('input[name="ouvido"]:checked')).map(cb => cb.value),
+                outrosOuvido: document.getElementById('outrosOuvido').value,
+                
                 // Sistema Cardiorespiratório
                 cardio: Array.from(document.querySelectorAll('input[name="cardio"]:checked')).map(cb => cb.value),
                 outrosCardio: document.getElementById('outrosCardio').value,
-                // Exame Físico
+                
+                // Exame Físico completo
                 mucosa: document.getElementById('mucosa').value,
+                pelagem: document.getElementById('pelagem').value,
+                linfonodos: document.getElementById('linfonodos').value,
                 cavidadeOral: document.getElementById('cavidadeOral').value,
-                temperatura: document.getElementById('temperatura').value,
                 hidratacao: document.getElementById('hidratacao').value,
-                // Conduta Clínica (NOVO CAMPO)
+                alimentacao: document.getElementById('alimentacao').value,
+                condutoAuditivo: document.getElementById('condutoAuditivo').value,
+                oftalmo: document.getElementById('oftalmo').value,
+                cavidadeNasal: document.getElementById('cavidadeNasal').value,
+                
+                // Conduta Clínica
                 condutaClinica: document.getElementById('condutaClinica').value,
+                
                 // Financeiro
                 exames: examesSelecionados,
                 tipoAtendimento: document.getElementById('tipoAtendimento').value,
