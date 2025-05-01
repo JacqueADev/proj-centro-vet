@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Novo Cadastro - Centro Veterinário Integrativo</title>
-    <link rel="stylesheet" href="css/style-novo-cadastro.css">
+    <link rel="stylesheet" href="css/style-novo-cadastro.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
-    <div class="container">
-        <div class="form-container">
-            <h2>Novo Cadastro de Tutor</h2>
-            <form id="formNovoTutor" class="tutor-form">
-                <input type="hidden" id="tutorIdEditar">
+    <div class="container-logo">
+        <img src="assets/logo-sem-fundo.png" alt="" class="logo" />
+    </div>
+
+    <div class="container-lateral">
+        <div class="barra-lateral">
+            <button onclick="window.location.href='index.html'" class="botao-lateral">
+                Voltar
+            </button>
+        </div>
+    </div>
+
+    <main class="content">
+        <form id="formNovoTutor" class="form-anamnese">
+            <section class="secao-anamnese">
+                <h2><i class="fas fa-user-plus"></i> Novo Cadastro de Tutor</h2>
                 
-                <fieldset>
-                    <legend>Dados Pessoais</legend>
+                <fieldset class="fieldset-custom">
+                    <legend><i class="fas fa-id-card"></i> Dados Pessoais</legend>
                     
                     <div class="form-group">
                         <label for="nomeTutor">Nome do Tutor*</label>
@@ -39,8 +52,8 @@
                     </div>
                 </fieldset>
                 
-                <fieldset>
-                    <legend>Endereço</legend>
+                <fieldset class="fieldset-custom">
+                    <legend><i class="fas fa-map-marker-alt"></i> Endereço</legend>
                     
                     <div class="form-group">
                         <label for="cepTutor">CEP 
@@ -82,32 +95,38 @@
                 </div>
                 
                 <div class="form-buttons">
-                    <button type="button" class="cancelar">Cancelar</button>
-                    <button type="submit">Salvar Cadastro</button>
+                    <button type="button" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-primario">Salvar Cadastro</button>
                 </div>
-            </form>
-            
-            <button id="adicionarPetBtn" class="btn-adicionar-pet">Adicionar Novo Pet</button>
-            <button id="iniciarAtendimentoBtn" class="btn-iniciar-atendimento" disabled>Iniciar novo atendimento</button>
+            </section>
+        </form>
+        
+        <div class="botoes-abaixo-form">
+            <button id="adicionarPetBtn" class="btn-primario">
+                <i class="fas fa-plus"></i> Adicionar Novo Pet
+            </button>
+            <button id="iniciarAtendimentoBtn" class="btn-primario" disabled>
+                <i class="fas fa-stethoscope"></i> Iniciar novo atendimento
+            </button>
         </div>
-    </div>
+    </main>
 
     <!-- Modal para adicionar pet -->
     <div id="modalPet" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Adicionar Novo Pet</h2>
+            <h2><i class="fas fa-paw"></i> Adicionar Novo Pet</h2>
             <form id="formPet" class="modal-form">
                 <input type="hidden" id="tutorId">
                 
                 <div class="form-group">
-                    <label for="nomePet">Nome do Pet</label>
+                    <label for="nomePet">Nome do Pet*</label>
                     <input type="text" id="nomePet" required>
                 </div>
                 
                 <div class="form-group-duo">
                     <div class="form-group">
-                        <label for="idade">Idade</label>
+                        <label for="idade">Idade*</label>
                         <div class="idade-container">
                             <input type="number" id="idade" min="0" required>
                             <select id="idadeTipo">
@@ -118,7 +137,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="sexo">Sexo</label>
+                        <label for="sexo">Sexo*</label>
                         <select id="sexo" required>
                             <option value="">Selecione</option>
                             <option value="Fêmea">Fêmea</option>
@@ -129,7 +148,7 @@
                 
                 <div class="form-group-duo">
                     <div class="form-group">
-                        <label for="castrado">Castrado</label>
+                        <label for="castrado">Castrado*</label>
                         <select id="castrado" required>
                             <option value="">Selecione</option>
                             <option value="Sim">Sim</option>
@@ -138,7 +157,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="especie">Espécie</label>
+                        <label for="especie">Espécie*</label>
                         <select id="especie" required>
                             <option value="">Selecione</option>
                             <option value="Cachorro">Cachorro</option>
@@ -149,7 +168,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="raca">Raça</label>
+                    <label for="raca">Raça*</label>
                     <input type="text" id="raca" required>
                 </div>
                 
@@ -166,7 +185,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="doencaExistente">Doença pré-existente</label>
+                    <label for="doencaExistente">Doença pré-existente*</label>
                     <select id="doencaExistente" required>
                         <option value="Não">Não</option>
                         <option value="Sim">Sim</option>
@@ -179,8 +198,8 @@
                 </div>
                 
                 <div class="form-buttons">
-                    <button type="button" id="cancelarPet">Cancelar</button>
-                    <button type="submit">Registrar</button>
+                    <button type="button" id="cancelarPet" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-primario">Registrar</button>
                 </div>
             </form>
         </div>
