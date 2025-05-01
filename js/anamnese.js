@@ -144,16 +144,18 @@ document.addEventListener("DOMContentLoaded", function() {
         listaExames.appendChild(totalElement);
     };
 
-    // Mostra/oculta campo de medicação
-    const toggleMedicacao = () => {
-        const medicacaoSelect = document.getElementById('medicacao');
-        const nomeMedicacaoInput = document.getElementById('nomeMedicacao');
-        nomeMedicacaoInput.style.display = medicacaoSelect.value === 'sim' ? 'block' : 'none';
+    // Mostra/oculta campo de pagamento personalizado
+    const togglePagamentoCustom = () => {
+        const formaPagamento = document.getElementById('formaPagamento');
+        const container = document.getElementById('outroPagamentoContainer');
+        
+        container.style.display = formaPagamento.value === 'outro' ? 'block' : 'none';
     };
 
-    // Atualiza valores do cartão de crédito
+    // Atualiza valores do cartão de crédito (FUNÇÃO CORRIGIDA)
     const atualizarValorCartao = (total) => {
         const valorFinalInput = document.getElementById('valorFinal');
+        // Remove formatação e converte para número
         const valorFinal = valorFinalInput.value ? 
             parseFloat(valorFinalInput.value.replace(/[^\d,]/g, '').replace(',', '.')) : 
             0;
@@ -178,6 +180,7 @@ document.addEventListener("DOMContentLoaded", function() {
         listaServicos.innerHTML = '';
         let total = 0;
         
+        // Adiciona atendimento ao resumo
         if (tipoAtendimento && precosAtendimento[tipoAtendimento] !== undefined) {
             const valorAtendimento = precosAtendimento[tipoAtendimento];
             if (valorAtendimento > 0) {
@@ -188,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
         
+        // Adiciona exames ao resumo
         examesSelecionados.forEach(exame => {
             const valorExame = parseFloat(exame.dataset.valor);
             const item = document.createElement('div');
@@ -196,8 +200,10 @@ document.addEventListener("DOMContentLoaded", function() {
             total += valorExame;
         });
         
+        // Atualiza total geral
         totalGeral.textContent = formatarMoeda(total);
         
+        // Atualiza campos de cartão de crédito se necessário
         if (document.getElementById('formaPagamento').value === 'credito') {
             atualizarValorCartao(total);
         }
@@ -209,6 +215,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const salvarAnamnese = (formData) => {
         const anamneses = JSON.parse(localStorage.getItem('anamneses')) || [];
         
+        // Mapeia os valores antigos para os novos quando necessário
         if (formData.tipoAtendimento === 'consulta_particular') {
             formData.tipoAtendimento = 'consulta_clinica';
         }
@@ -230,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const init = () => {
         carregarTutores();
         
-        // Configura eventos
+        // Mostra valor do atendimento quando selecionado
         document.getElementById('tipoAtendimento').addEventListener('change', function() {
             const container = document.getElementById('valorAtendimentoContainer');
             const valorSpan = document.getElementById('valorAtendimento');
@@ -246,26 +253,32 @@ document.addEventListener("DOMContentLoaded", function() {
             atualizarResumoFinanceiro();
         });
         
+        // Mostra/oculta campos de cartão de crédito
         document.getElementById('formaPagamento').addEventListener('change', function() {
             const container = document.getElementById('cartaoCreditoContainer');
             container.style.display = this.value === 'credito' ? 'block' : 'none';
             atualizarResumoFinanceiro();
         });
         
-        document.getElementById('medicacao').addEventListener('change', toggleMedicacao);
-        
+        // Configura eventos de exames (agora são checkboxes)
         document.querySelectorAll('input[name="exames"]').forEach(checkbox => {
             checkbox.addEventListener('change', atualizarResumoFinanceiro);
         });
         
+        // Event listener para o campo Valor Final (CORRIGIDO)
         document.getElementById('valorFinal').addEventListener('input', function(e) {
+            // Permite apenas números e vírgula
             let value = this.value.replace(/[^\d,]/g, '');
+            
+            // Garante que há no máximo 2 dígitos após a vírgula
             if (value.includes(',')) {
                 const parts = value.split(',');
                 value = parts[0] + ',' + parts[1].slice(0, 2);
             }
+            
             this.value = 'R$ ' + value;
             
+            // Atualiza os juros
             const total = parseFloat(
                 document.getElementById('totalGeral').textContent
                     .replace(/[^\d,]/g, '')
@@ -277,15 +290,18 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
         
+        // Quando seleciona um tutor
         document.getElementById('tutor').addEventListener('change', function() {
             carregarPets(this.value);
         });
         
+        // Quando seleciona um pet
         document.getElementById('pet').addEventListener('change', function() {
             const btnBuscar = document.getElementById('buscar-dados');
             btnBuscar.disabled = !this.value || this.value === '';
         });
         
+        // Botão de buscar dados completos
         document.getElementById('buscar-dados').addEventListener('click', function() {
             const petSelect = document.getElementById('pet');
             const selectedOption = petSelect.options[petSelect.selectedIndex];
@@ -296,10 +312,11 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
         
-        // Submit do formulário
+        // Submit do formulário (ATUALIZADO COM CONDUTA CLÍNICA)
         document.getElementById('formAnamnese').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Validação básica (incluindo o novo campo obrigatório)
             if (!document.getElementById('tutor').value || 
                 !document.getElementById('pet').value || 
                 !document.getElementById('dataAtendimento').value || 
@@ -309,26 +326,33 @@ document.addEventListener("DOMContentLoaded", function() {
                 return;
             }
             
+            const examesSelecionados = Array.from(document.querySelectorAll('input[name="exames"]:checked')).map(cb => {
+                return {
+                    nome: cb.parentElement.textContent.trim(),
+                    valor: parseFloat(cb.dataset.valor)
+                };
+            });
+            
             const formData = {
                 dataAtendimento: document.getElementById('dataAtendimento').value,
                 tutorId: document.getElementById('tutor').value,
                 petId: document.getElementById('pet').value,
                 queixaPrincipal: document.getElementById('queixaPrincipal').value,
+                // Sistema Digestório
                 digestorio: Array.from(document.querySelectorAll('input[name="digestorio"]:checked')).map(cb => cb.value),
                 outrosDigestorio: document.getElementById('outrosDigestorio').value,
+                // Sistema Cardiorespiratório
                 cardio: Array.from(document.querySelectorAll('input[name="cardio"]:checked')).map(cb => cb.value),
                 outrosCardio: document.getElementById('outrosCardio').value,
+                // Exame Físico
                 mucosa: document.getElementById('mucosa').value,
                 cavidadeOral: document.getElementById('cavidadeOral').value,
-                temperatura: document.getElementById('temperatura').value, // Campo simplificado
+                temperatura: document.getElementById('temperatura').value,
                 hidratacao: document.getElementById('hidratacao').value,
+                // Conduta Clínica (NOVO CAMPO)
                 condutaClinica: document.getElementById('condutaClinica').value,
-                exames: Array.from(document.querySelectorAll('input[name="exames"]:checked')).map(cb => {
-                    return {
-                        nome: cb.parentElement.textContent.trim(),
-                        valor: parseFloat(cb.dataset.valor)
-                    };
-                }),
+                // Financeiro
+                exames: examesSelecionados,
                 tipoAtendimento: document.getElementById('tipoAtendimento').value,
                 valorAtendimento: precosAtendimento[document.getElementById('tipoAtendimento').value] || 0,
                 formaPagamento: document.getElementById('formaPagamento').value,
