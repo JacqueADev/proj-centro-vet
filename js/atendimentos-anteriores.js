@@ -136,10 +136,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     <img src="${anexo.conteudo}" alt="${anexo.nome}">
                     <span class="anexo-nome">${anexo.nome}</span>
                     <div class="anexo-acoes">
-                        <a href="${anexo.conteudo}" target="_blank" class="btn-anexo">
+                        <button class="btn-anexo" onclick="visualizarAnexo('${anexo.id}')">
                             <i class="fas fa-eye"></i> Visualizar
-                        </a>
-                        <button class="btn-anexo" onclick="removerAnexo('${anexo.id}')">
+                        </button>
+                        <button class="btn-anexo" onclick="downloadAnexo('${anexo.id}')">
+                            <i class="fas fa-download"></i> Baixar
+                        </button>
+                        <button class="btn-anexo btn-remover" onclick="removerAnexo('${anexo.id}')">
                             <i class="fas fa-trash"></i> Remover
                         </button>
                     </div>
@@ -151,10 +154,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                     <span class="anexo-nome">${anexo.nome}</span>
                     <div class="anexo-acoes">
-                        <a href="${anexo.conteudo}" target="_blank" class="btn-anexo">
+                        <button class="btn-anexo" onclick="visualizarAnexo('${anexo.id}')">
                             <i class="fas fa-eye"></i> Visualizar
-                        </a>
-                        <button class="btn-anexo" onclick="removerAnexo('${anexo.id}')">
+                        </button>
+                        <button class="btn-anexo" onclick="downloadAnexo('${anexo.id}')">
+                            <i class="fas fa-download"></i> Baixar
+                        </button>
+                        <button class="btn-anexo btn-remover" onclick="removerAnexo('${anexo.id}')">
                             <i class="fas fa-trash"></i> Remover
                         </button>
                     </div>
@@ -165,7 +171,98 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Função para adicionar anexos
+    // Função para visualizar anexos
+    window.visualizarAnexo = function(anexoId) {
+        const anexo = anexos.find(a => a.id === anexoId);
+        if (!anexo) return;
+
+        if (anexo.tipo.startsWith('image/')) {
+            // Para imagens: abre em nova aba
+            const novaAba = window.open('', '_blank');
+            novaAba.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${anexo.nome}</title>
+                    <style>
+                        body { margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f5f5f5; }
+                        img { max-width: 90%; max-height: 90vh; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+                    </style>
+                </head>
+                <body>
+                    <img src="${anexo.conteudo}" alt="${anexo.nome}">
+                </body>
+                </html>
+            `);
+        } else {
+            // Para PDF: usa embed
+            const novaAba = window.open('', '_blank');
+            novaAba.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>${anexo.nome}</title>
+                    <style>
+                        body { margin: 0; padding: 0; }
+                        embed { width: 100%; height: 100vh; }
+                    </style>
+                </head>
+                <body>
+                    <embed src="${anexo.conteudo}" type="application/pdf" width="100%" height="100%">
+                </body>
+                </html>
+            `);
+        }
+    };
+
+    // Função para baixar anexos
+    window.downloadAnexo = function(anexoId) {
+        const anexo = anexos.find(a => a.id === anexoId);
+        if (!anexo) return;
+
+        // Extrai o tipo MIME e extensão do arquivo
+        const mimeType = anexo.tipo;
+        const extension = mimeType.split('/')[1] || (mimeType === 'application/pdf' ? 'pdf' : 'bin');
+        
+        // Converte o Base64 para Blob
+        const byteCharacters = atob(anexo.conteudo.split(',')[1]);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], {type: mimeType});
+        
+        // Cria o link de download
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = anexo.nome.endsWith(`.${extension}`) ? anexo.nome : `${anexo.nome}.${extension}`;
+        
+        // Dispara o download
+        document.body.appendChild(link);
+        link.click();
+        
+        // Limpeza
+        setTimeout(() => {
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }, 100);
+    };
+
+    // Função para remover anexos
+    window.removerAnexo = function(anexoId) {
+        if (confirm('Tem certeza que deseja remover este anexo?')) {
+            const index = anexos.findIndex(a => a.id === anexoId);
+            if (index !== -1) {
+                anexos.splice(index, 1);
+                localStorage.setItem('anexos', JSON.stringify(anexos));
+                carregarAnexos(atendimentos[atendimentoAtual].id);
+            }
+        }
+    };
+
+    // Função para upload de anexos
     document.getElementById('upload-anexo').addEventListener('change', function(e) {
         const files = e.target.files;
         if (!files || files.length === 0) return;
@@ -220,18 +317,6 @@ document.addEventListener("DOMContentLoaded", function() {
             exibirAtendimento(atendimentoAtual + 1);
         }
     });
-
-    // Função para remover anexo (deve ser global para ser chamada pelo onclick)
-    window.removerAnexo = function(anexoId) {
-        if (confirm('Tem certeza que deseja remover este anexo?')) {
-            const index = anexos.findIndex(a => a.id === anexoId);
-            if (index !== -1) {
-                anexos.splice(index, 1);
-                localStorage.setItem('anexos', JSON.stringify(anexos));
-                carregarAnexos(atendimentos[atendimentoAtual].id);
-            }
-        }
-    };
 
     // Funções auxiliares
     function formatarData(dataISO) {
