@@ -5,32 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atendimentos Anteriores</title>
     <link rel="stylesheet" href="css/style-atendimentos-anteriores.css">
-    <style>
-        .container-atendimentos {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .voltar-btn {
-            display: inline-block;
-            margin-bottom: 20px;
-            padding: 10px 15px;
-            background-color: var(--cor-gradiente-mediano);
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container-atendimentos">
-        <a href="javascript:window.close()" class="voltar-btn">Voltar</a>
+        <a href="javascript:window.close()" class="voltar-btn">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </a>
         <h1>Atendimentos Anteriores</h1>
         <div id="pet-info-header"></div>
-        <div id="lista-atendimentos"></div>
+        
+        <!-- Navegação entre atendimentos -->
+        <div class="navegacao-atendimentos">
+            <button id="btn-anterior" class="nav-btn"><i class="fas fa-chevron-left"></i> Anterior</button>
+            <span id="contador-atendimentos">1/1</span>
+            <button id="btn-proximo" class="nav-btn">Próximo <i class="fas fa-chevron-right"></i></button>
+        </div>
+        
+        <!-- Container do atendimento atual -->
+        <div id="atendimento-container"></div>
+        
+        <!-- Seção de anexos -->
+        <div class="anexos-container">
+            <h3><i class="fas fa-paperclip"></i> Anexos</h3>
+            <div id="lista-anexos" class="lista-anexos"></div>
+            <div class="upload-area">
+                <input type="file" id="upload-anexo" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                <label for="upload-anexo" class="upload-btn">
+                    <i class="fas fa-cloud-upload-alt"></i> Adicionar Anexos (PDF ou Imagens)
+                </label>
+            </div>
+        </div>
     </div>
 
     <script src="js/atendimentos-anteriores.js"></script>

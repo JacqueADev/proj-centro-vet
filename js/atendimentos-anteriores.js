@@ -13,13 +13,14 @@ document.addEventListener("DOMContentLoaded", function() {
     const pets = JSON.parse(localStorage.getItem('pets')) || [];
     const anamneses = JSON.parse(localStorage.getItem('anamneses')) || [];
     const tutores = JSON.parse(localStorage.getItem('tutores')) || [];
+    const anexos = JSON.parse(localStorage.getItem('anexos')) || [];
 
     // Encontra o pet e seu tutor
     const pet = pets.find(p => p.id === petId);
     const tutor = tutores.find(t => t.id === pet?.tutorId);
 
     if (!pet) {
-        document.getElementById('lista-atendimentos').innerHTML = '<p>Nenhum atendimento anterior encontrado.</p>';
+        document.getElementById('atendimento-container').innerHTML = '<p>Nenhum atendimento anterior encontrado.</p>';
         return;
     }
 
@@ -30,73 +31,207 @@ document.addEventListener("DOMContentLoaded", function() {
         <hr>
     `;
 
-    // Filtra as anamneses deste pet
+    // Filtra as anamneses deste pet e ordena por data (mais recente primeiro)
     const atendimentos = anamneses.filter(a => a.petId === petId)
                                  .sort((a, b) => new Date(b.dataAtendimento) - new Date(a.dataAtendimento));
 
-    const listaAtendimentos = document.getElementById('lista-atendimentos');
+    let atendimentoAtual = 0;
 
-    if (atendimentos.length === 0) {
-        listaAtendimentos.innerHTML = '<p>Nenhum atendimento anterior registrado para este pet.</p>';
-        return;
-    }
+    // Função para exibir o atendimento atual
+    function exibirAtendimento(index) {
+        const container = document.getElementById('atendimento-container');
+        
+        if (atendimentos.length === 0) {
+            container.innerHTML = '<p>Nenhum atendimento anterior registrado para este pet.</p>';
+            return;
+        }
 
-    // Cria a lista de atendimentos com todos os dados
-    atendimentos.forEach(atendimento => {
-        const atendimentoDiv = document.createElement('div');
-        atendimentoDiv.className = 'atendimento-item';
+        if (index < 0) index = 0;
+        if (index >= atendimentos.length) index = atendimentos.length - 1;
+        
+        atendimentoAtual = index;
+        const atendimento = atendimentos[atendimentoAtual];
         
         // Formata os exames para mostrar nome e valor
         const examesFormatados = atendimento.exames?.map(exame => 
             `${exame.nome} (${formatarMoeda(exame.valor)})`).join(', ') || 'Nenhum';
         
-        atendimentoDiv.innerHTML = `
-            <h3>Atendimento em ${formatarData(atendimento.dataAtendimento)}</h3>
-            <div class="detalhes-atendimento">
-                <h4>Dados Básicos:</h4>
-                <p><strong>Queixa principal:</strong> ${atendimento.queixaPrincipal || 'Não registrado'}</p>
-                <p><strong>Temperatura:</strong> ${atendimento.temperatura || 'Não registrada'} °C</p>
-                <p><strong>Medicação recente:</strong> ${atendimento.nomeMedicacao || 'Nenhuma'}</p>
-                
-                <h4>Anamnese:</h4>
-                <p><strong>Sistema Digestório:</strong> ${formatarLista(atendimento.digestorio)} ${atendimento.outrosDigestorio ? `(Outros: ${atendimento.outrosDigestorio})` : ''}</p>
-                <p><strong>Sistema Neurológico:</strong> ${formatarLista(atendimento.neurologico)} ${atendimento.outrosNeurologico ? `(Outros: ${atendimento.outrosNeurologico})` : ''}</p>
-                <p><strong>Sistema Locomotor:</strong> ${formatarLista(atendimento.locomotor)} ${atendimento.outrosLocomotor ? `(Outros: ${atendimento.outrosLocomotor})` : ''}</p>
-                <p><strong>Pele:</strong> ${formatarLista(atendimento.pele)} ${atendimento.outrosPele ? `(Outros: ${atendimento.outrosPele})` : ''}</p>
-                <p><strong>Olhos:</strong> ${formatarLista(atendimento.olhos)} ${atendimento.outrosOlhos ? `(Outros: ${atendimento.outrosOlhos})` : ''}</p>
-                <p><strong>Ouvido:</strong> ${formatarLista(atendimento.ouvido)} ${atendimento.outrosOuvido ? `(Outros: ${atendimento.outrosOuvido})` : ''}</p>
-                <p><strong>Sistema Cardiorespiratório:</strong> ${formatarLista(atendimento.cardio)} ${atendimento.outrosCardio ? `(Outros: ${atendimento.outrosCardio})` : ''}</p>
-                
-                <h4>Exame Físico:</h4>
-                <p><strong>Mucosa:</strong> ${atendimento.mucosa || 'Não avaliada'}</p>
-                <p><strong>Pelagem:</strong> ${atendimento.pelagem || 'Não avaliada'}</p>
-                <p><strong>Linfonodos:</strong> ${atendimento.linfonodos || 'Não avaliados'}</p>
-                <p><strong>Cavidade Oral:</strong> ${atendimento.cavidadeOral || 'Não avaliada'}</p>
-                <p><strong>Hidratação:</strong> ${atendimento.hidratacao || 'Não avaliada'}</p>
-                <p><strong>Alimentação:</strong> ${atendimento.alimentacao || 'Não avaliada'}</p>
-                <p><strong>Conduto Auditivo:</strong> ${atendimento.condutoAuditivo || 'Não avaliado'}</p>
-                <p><strong>Oftalmológico:</strong> ${atendimento.oftalmo || 'Não avaliado'}</p>
-                <p><strong>Cavidade Nasal:</strong> ${atendimento.cavidadeNasal || 'Não avaliada'}</p>
-                
-                <h4>Conduta Clínica:</h4>
-                <p>${atendimento.condutaClinica || 'Não registrada'}</p>
-                
-                <h4>Financeiro:</h4>
-                <p><strong>Tipo de Atendimento:</strong> ${formatarTipoAtendimento(atendimento.tipoAtendimento)}</p>
-                <p><strong>Exames solicitados:</strong> ${examesFormatados}</p>
-                <p><strong>Forma de Pagamento:</strong> ${formatarFormaPagamento(atendimento.formaPagamento)}</p>
-                ${atendimento.formaPagamento === 'credito' ? `
-                    <p><strong>Parcelas:</strong> ${atendimento.parcelas}x</p>
+        container.innerHTML = `
+            <div class="atendimento-item">
+                <h3>Atendimento em ${formatarData(atendimento.dataAtendimento)}</h3>
+                <div class="detalhes-atendimento">
+                    <h4>Dados Básicos:</h4>
+                    <p><strong>Queixa principal:</strong> ${atendimento.queixaPrincipal || 'Não registrado'}</p>
+                    <p><strong>Temperatura:</strong> ${atendimento.temperatura || 'Não registrada'} °C</p>
+                    <p><strong>Medicação recente:</strong> ${atendimento.nomeMedicacao || 'Nenhuma'}</p>
+                    
+                    <h4>Anamnese:</h4>
+                    <p><strong>Sistema Digestório:</strong> ${formatarLista(atendimento.digestorio)} ${atendimento.outrosDigestorio ? `(Outros: ${atendimento.outrosDigestorio})` : ''}</p>
+                    <p><strong>Sistema Neurológico:</strong> ${formatarLista(atendimento.neurologico)} ${atendimento.outrosNeurologico ? `(Outros: ${atendimento.outrosNeurologico})` : ''}</p>
+                    <p><strong>Sistema Locomotor:</strong> ${formatarLista(atendimento.locomotor)} ${atendimento.outrosLocomotor ? `(Outros: ${atendimento.outrosLocomotor})` : ''}</p>
+                    <p><strong>Pele:</strong> ${formatarLista(atendimento.pele)} ${atendimento.outrosPele ? `(Outros: ${atendimento.outrosPele})` : ''}</p>
+                    <p><strong>Olhos:</strong> ${formatarLista(atendimento.olhos)} ${atendimento.outrosOlhos ? `(Outros: ${atendimento.outrosOlhos})` : ''}</p>
+                    <p><strong>Ouvido:</strong> ${formatarLista(atendimento.ouvido)} ${atendimento.outrosOuvido ? `(Outros: ${atendimento.outrosOuvido})` : ''}</p>
+                    <p><strong>Sistema Cardiorespiratório:</strong> ${formatarLista(atendimento.cardio)} ${atendimento.outrosCardio ? `(Outros: ${atendimento.outrosCardio})` : ''}</p>
+                    
+                    <h4>Exame Físico:</h4>
+                    <p><strong>Mucosa:</strong> ${atendimento.mucosa || 'Não avaliada'}</p>
+                    <p><strong>Pelagem:</strong> ${atendimento.pelagem || 'Não avaliada'}</p>
+                    <p><strong>Linfonodos:</strong> ${atendimento.linfonodos || 'Não avaliados'}</p>
+                    <p><strong>Cavidade Oral:</strong> ${atendimento.cavidadeOral || 'Não avaliada'}</p>
+                    <p><strong>Hidratação:</strong> ${atendimento.hidratacao || 'Não avaliada'}</p>
+                    <p><strong>Alimentação:</strong> ${atendimento.alimentacao || 'Não avaliada'}</p>
+                    <p><strong>Conduto Auditivo:</strong> ${atendimento.condutoAuditivo || 'Não avaliado'}</p>
+                    <p><strong>Oftalmológico:</strong> ${atendimento.oftalmo || 'Não avaliado'}</p>
+                    <p><strong>Cavidade Nasal:</strong> ${atendimento.cavidadeNasal || 'Não avaliada'}</p>
+                    
+                    <h4>Conduta Clínica:</h4>
+                    <p>${atendimento.condutaClinica || 'Não registrada'}</p>
+                    
+                    <h4>Financeiro:</h4>
+                    <p><strong>Tipo de Atendimento:</strong> ${formatarTipoAtendimento(atendimento.tipoAtendimento)}</p>
+                    <p><strong>Exames solicitados:</strong> ${examesFormatados}</p>
+                    <p><strong>Forma de Pagamento:</strong> ${formatarFormaPagamento(atendimento.formaPagamento)}</p>
+                    ${atendimento.formaPagamento === 'credito' ? `
+                        <p><strong>Parcelas:</strong> ${atendimento.parcelas}x</p>
+                        <p><strong>Valor Total:</strong> ${formatarMoeda(atendimento.valorTotal)}</p>
+                        <p><strong>Valor Final (maquininha):</strong> ${formatarMoeda(atendimento.valorFinal)}</p>
+                        <p><strong>Juros:</strong> ${formatarMoeda(atendimento.juros)}</p>
+                    ` : ''}
                     <p><strong>Valor Total:</strong> ${formatarMoeda(atendimento.valorTotal)}</p>
-                    <p><strong>Valor Final (maquininha):</strong> ${formatarMoeda(atendimento.valorFinal)}</p>
-                    <p><strong>Juros:</strong> ${formatarMoeda(atendimento.juros)}</p>
-                ` : ''}
-                <p><strong>Valor Total:</strong> ${formatarMoeda(atendimento.valorTotal)}</p>
+                </div>
             </div>
-            <hr>
         `;
-        listaAtendimentos.appendChild(atendimentoDiv);
+        
+        // Atualiza o contador
+        document.getElementById('contador-atendimentos').textContent = 
+            `${atendimentoAtual + 1}/${atendimentos.length}`;
+        
+        // Atualiza os botões de navegação
+        document.getElementById('btn-anterior').disabled = atendimentoAtual === 0;
+        document.getElementById('btn-proximo').disabled = atendimentoAtual === atendimentos.length - 1;
+        
+        // Carrega os anexos para este atendimento
+        carregarAnexos(atendimento.id);
+    }
+
+    // Função para carregar anexos
+    function carregarAnexos(atendimentoId) {
+        const listaAnexos = document.getElementById('lista-anexos');
+        listaAnexos.innerHTML = '';
+        
+        const anexosDoAtendimento = anexos.filter(a => a.atendimentoId === atendimentoId);
+        
+        if (anexosDoAtendimento.length === 0) {
+            listaAnexos.innerHTML = '<p>Nenhum anexo encontrado para este atendimento.</p>';
+            return;
+        }
+        
+        anexosDoAtendimento.forEach(anexo => {
+            const anexoItem = document.createElement('div');
+            anexoItem.className = 'anexo-item';
+            
+            if (anexo.tipo.startsWith('image/')) {
+                anexoItem.innerHTML = `
+                    <img src="${anexo.conteudo}" alt="${anexo.nome}">
+                    <span class="anexo-nome">${anexo.nome}</span>
+                    <div class="anexo-acoes">
+                        <a href="${anexo.conteudo}" target="_blank" class="btn-anexo">
+                            <i class="fas fa-eye"></i> Visualizar
+                        </a>
+                        <button class="btn-anexo" onclick="removerAnexo('${anexo.id}')">
+                            <i class="fas fa-trash"></i> Remover
+                        </button>
+                    </div>
+                `;
+            } else {
+                anexoItem.innerHTML = `
+                    <div class="anexo-icon">
+                        <i class="fas fa-file-pdf" style="font-size: 48px; color: #e74c3c;"></i>
+                    </div>
+                    <span class="anexo-nome">${anexo.nome}</span>
+                    <div class="anexo-acoes">
+                        <a href="${anexo.conteudo}" target="_blank" class="btn-anexo">
+                            <i class="fas fa-eye"></i> Visualizar
+                        </a>
+                        <button class="btn-anexo" onclick="removerAnexo('${anexo.id}')">
+                            <i class="fas fa-trash"></i> Remover
+                        </button>
+                    </div>
+                `;
+            }
+            
+            listaAnexos.appendChild(anexoItem);
+        });
+    }
+
+    // Função para adicionar anexos
+    document.getElementById('upload-anexo').addEventListener('change', function(e) {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+        
+        const atendimentoId = atendimentos[atendimentoAtual].id;
+        
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            
+            // Verifica se é PDF ou imagem
+            if (!file.type.match('application/pdf') && !file.type.match('image.*')) {
+                alert('Por favor, selecione apenas arquivos PDF ou imagens (JPG, PNG).');
+                continue;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const novoAnexo = {
+                    id: Date.now().toString() + i,
+                    atendimentoId: atendimentoId,
+                    nome: file.name,
+                    tipo: file.type,
+                    conteudo: e.target.result,
+                    dataUpload: new Date().toISOString()
+                };
+                
+                // Adiciona ao localStorage
+                anexos.push(novoAnexo);
+                localStorage.setItem('anexos', JSON.stringify(anexos));
+                
+                // Recarrega a lista de anexos
+                carregarAnexos(atendimentoId);
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        // Limpa o input para permitir novos uploads
+        e.target.value = '';
     });
+
+    // Navegação entre atendimentos
+    document.getElementById('btn-anterior').addEventListener('click', function() {
+        if (atendimentoAtual > 0) {
+            exibirAtendimento(atendimentoAtual - 1);
+        }
+    });
+
+    document.getElementById('btn-proximo').addEventListener('click', function() {
+        if (atendimentoAtual < atendimentos.length - 1) {
+            exibirAtendimento(atendimentoAtual + 1);
+        }
+    });
+
+    // Função para remover anexo (deve ser global para ser chamada pelo onclick)
+    window.removerAnexo = function(anexoId) {
+        if (confirm('Tem certeza que deseja remover este anexo?')) {
+            const index = anexos.findIndex(a => a.id === anexoId);
+            if (index !== -1) {
+                anexos.splice(index, 1);
+                localStorage.setItem('anexos', JSON.stringify(anexos));
+                carregarAnexos(atendimentos[atendimentoAtual].id);
+            }
+        }
+    };
 
     // Funções auxiliares
     function formatarData(dataISO) {
@@ -134,4 +269,7 @@ document.addEventListener("DOMContentLoaded", function() {
         };
         return formas[forma] || forma || 'Não especificada';
     }
+
+    // Inicia exibindo o primeiro atendimento
+    exibirAtendimento(0);
 });
