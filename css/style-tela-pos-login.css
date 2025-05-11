@@ -1,10 +1,12 @@
-:root{
+:root {
     --cor-fonte: #161514;
     --cor-gradiente-escuro: #a37628;
-    --cor-gradiente-mediano:#c7974a;
+    --cor-gradiente-mediano: #c7974a;
     --cor-gradiente-claro: #ebc88f;
     --cor-branco: #FFFFFF;
-
+    --cor-whatsapp: #25D366;
+    --cor-alerta: #e74c3c;
+    --cor-aviso: #f39c12;
 }
 
 * {
@@ -12,55 +14,243 @@
     padding: 0;
     box-sizing: border-box;
     color: var(--cor-fonte);  
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 
 body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    height: 100vh;
+    min-height: 100vh;
+    background-color: #f5f5f5;
 }
 
-.container-lateral{
+.container-lateral {
     display: flex;
 }
 
 .barra-lateral {
     background-color: var(--cor-gradiente-mediano);
-    padding: 50px;
+    padding: 50px 20px;
     height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 30px;
+    gap: 15px;
+    width: 220px;
+    position: fixed;
 }
 
 .botao-lateral {
     background-color: var(--cor-gradiente-escuro);
     border: none;
     border-radius: 5px;
-    padding: 10px 20px;
-    margin-top: 20px;
+    padding: 12px 15px;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 15px;
     cursor: pointer;
     width: 100%;
     text-align: center;
+    color: white;
+    transition: all 0.3s;
 }
 
-.botao-lateral:hover{
+.botao-lateral:hover {
     background-color: var(--cor-gradiente-claro);
-    transition: 0.5s ease-in-out;
+    color: var(--cor-fonte);
 }
 
 .container-logo {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
 }
 
 .logo {
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
+}
+
+.container-principal {
+    flex: 1;
+    padding: 30px;
+    margin-left: 220px;
+    margin-top: 20px;
+}
+
+.container-principal h1 {
+    color: var(--cor-gradiente-escuro);
+    margin-bottom: 25px;
+    font-size: 28px;
+    border-bottom: 2px solid var(--cor-gradiente-claro);
+    padding-bottom: 10px;
+}
+
+.filtros {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.filtros input, .filtros select {
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    min-width: 250px;
+}
+
+.lista-pets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card-pet {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+}
+
+.card-pet:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.card-pet h3 {
+    color: var(--cor-gradiente-escuro);
+    margin-bottom: 10px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-pet h3 i {
+    font-size: 18px;
+}
+
+.card-pet p {
+    margin: 6px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.card-pet .info-vacina {
+    margin: 15px 0;
+    padding: 12px;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    font-size: 13px;
+}
+
+.card-pet .status {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status.vencido {
+    background-color: var(--cor-alerta);
+    color: white;
+}
+
+.status.proximo {
+    background-color: var(--cor-aviso);
+    color: white;
+}
+
+.status.ok {
+    background-color: #2ecc71;
+    color: white;
+}
+
+.botao-whatsapp {
+    background: var(--cor-whatsapp);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.botao-whatsapp:hover {
+    background: #128C7E;
+}
+
+.botao-whatsapp i {
+    font-size: 18px;
+}
+
+.sem-registros {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 16px;
+}
+
+@media (max-width: 768px) {
+    .barra-lateral {
+        width: 180px;
+        padding: 30px 15px;
+    }
+    
+    .container-principal {
+        margin-left: 180px;
+        padding: 20px;
+    }
+    
+    .filtros {
+        flex-direction: column;
+    }
+    
+    .filtros input, .filtros select {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .barra-lateral {
+        width: 100%;
+        height: auto;
+        position: relative;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 15px;
+    }
+    
+    .container-principal {
+        margin-left: 0;
+    }
+    
+    .container-logo {
+        position: relative;
+        top: auto;
+        right: auto;
+        text-align: center;
+        margin: 15px 0;
+    }
+    
+    .logo {
+        width: 100px;
+        height: 100px;
+    }
 }
