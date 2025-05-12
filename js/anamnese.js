@@ -237,6 +237,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const init = () => {
         carregarTutores();
         
+        // Configura o botão Voltar
+        document.getElementById('botao-voltar')?.addEventListener('click', function() {
+            window.location.href = 'tela-pos-login.html';
+        });
+        
         // Mostra valor do atendimento quando selecionado
         document.getElementById('tipoAtendimento').addEventListener('change', function() {
             const container = document.getElementById('valorAtendimentoContainer');

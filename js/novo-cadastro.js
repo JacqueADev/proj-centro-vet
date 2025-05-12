@@ -32,17 +32,17 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         modalPet.style.display = 'block';
-    }
+    };
     
     spanClose.onclick = btnCancelarPet.onclick = function() {
         modalPet.style.display = 'none';
-    }
+    };
     
     window.onclick = function(event) {
         if (event.target == modalPet) {
             modalPet.style.display = 'none';
         }
-    }
+    };
     
     // Máscaras para os campos
     aplicarMascaras();
@@ -53,6 +53,15 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'tela-pos-login.html';
         }
     });
+
+    // ===== CORREÇÃO DO BOTÃO "VOLTAR" ===== //
+    // Substitui o onclick do HTML por JavaScript
+    const botaoVoltar = document.querySelector('.barra-lateral .botao-lateral');
+    if (botaoVoltar) {
+        botaoVoltar.addEventListener('click', function() {
+            window.location.href = 'tela-pos-login.html';
+        });
+    }
 
     // Evento de submit para o formulário de tutor
     formNovoTutor.addEventListener('submit', function(e) {

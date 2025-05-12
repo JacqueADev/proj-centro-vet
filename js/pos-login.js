@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Redirecionamentos existentes
+    // Redirecionamentos
     const botaoAgenda = document.getElementById("botao-agenda");
     if (botaoAgenda) {
         botaoAgenda.addEventListener("click", function() {
@@ -18,6 +18,14 @@ document.addEventListener("DOMContentLoaded", function() {
     if (botaoNovoAtendimento) {
         botaoNovoAtendimento.addEventListener("click", function() {
             window.location.href = "tela-anamnese.html";
+        });
+    }
+
+    // **NOVO** Redirecionamento para "Novo Cadastro"
+    const botaoNovoCadastro = document.getElementById("botao-novoCadastro");
+    if (botaoNovoCadastro) {
+        botaoNovoCadastro.addEventListener("click", function() {
+            window.location.href = "tela-novo-cadastro.html";
         });
     }
 

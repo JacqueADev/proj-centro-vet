@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Adicionando o redirecionamento do botão Voltar
+    const botaoVoltar = document.getElementById('botao-voltar');
+    if (botaoVoltar) {
+        botaoVoltar.addEventListener('click', function() {
+            window.location.href = 'tela-pos-login.html';
+        });
+    }
+
     // Elementos do DOM
     const inputPesquisa = document.getElementById('inputPesquisa');
     const botaoBuscar = document.getElementById('botaoBuscar');
@@ -65,7 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    
     // Elementos do modal
     const modalPet = document.getElementById('modalPet');
     const btnCancelarPet = document.getElementById('cancelarPet');
@@ -100,22 +107,19 @@ document.addEventListener('DOMContentLoaded', function() {
     formPet.addEventListener('submit', function(e) {
         e.preventDefault();
         
-
         // Obter os valores do formulário
         const tutorId = document.getElementById('tutorId').value;
         const nomePet = document.getElementById('nomePet').value;
         const idade = document.getElementById('idade').value;
         const idadeTipo = document.getElementById('idadeTipo').value;
         const sexo = document.getElementById('sexo').value;
-        // ... (obter todos os outros campos)
         
-        //  chamada para o backend
+        // Simular chamada para o backend
         console.log('Dados do novo pet:', {
             tutorId,
             nomePet,
             idade: `${idade} ${idadeTipo}`,
             sexo,
-            // ... (todos os outros campos)
         });
 
         // Simular cadastro bem-sucedido
@@ -128,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
         fecharModalPet();
         alert(`Pet ${nomePet} cadastrado com sucesso!`);
     });
-
 
     // Funções de ação (serão chamadas quando os botões forem clicados)
     window.adicionarPet = function(idTutor) {
@@ -151,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
     window.editarTutor = function(idTutor) {
         const tutor = tutores.find(t => t.id === idTutor);
         
-        // formulário com os dados do tutor
+        // Preencher formulário com os dados do tutor
         document.getElementById('tutorIdEditar').value = tutor.id;
         document.getElementById('nomeTutor').value = tutor.nome || '';
         document.getElementById('cpfTutor').value = tutor.cpf || '';
@@ -163,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('cidadeTutor').value = tutor.cidade || '';
         document.getElementById('comoConheceu').value = tutor.comoConheceu || '';
         
-        // Aparece o campo de indicação
+        // Mostrar campo de indicação se necessário
         if (tutor.comoConheceu === 'indicacao') {
             document.getElementById('containerIndicacao').style.display = 'block';
             document.getElementById('nomeIndicacao').value = tutor.nomeIndicacao || '';
@@ -184,47 +187,47 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Função para mostrar/ocultar campo de indicação
-window.mostrarCampoIndicacao = function() {
-    const comoConheceu = document.getElementById('comoConheceu').value;
-    const containerIndicacao = document.getElementById('containerIndicacao');
-    containerIndicacao.style.display = comoConheceu === 'indicacao' ? 'block' : 'none';
-};
-
-// Função para fechar o modal de edição
-window.fecharModalEditar = function() {
-    document.getElementById('modalEditarTutor').style.display = 'none';
-};
-
-// Processar o formulário de edição (coloque ANTES do fechamento do DOMContentLoaded)
-document.getElementById('formEditarTutor').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const tutorId = document.getElementById('tutorIdEditar').value;
-    const dadosAtualizados = {
-        nome: document.getElementById('nomeTutor').value,
-        cpf: document.getElementById('cpfTutor').value,
-        rg: document.getElementById('rgTutor').value,
-        telefone: document.getElementById('telefoneTutor').value,
-        cep: document.getElementById('cepTutor').value,
-        endereco: document.getElementById('enderecoTutor').value,
-        bairro: document.getElementById('bairroTutor').value,
-        cidade: document.getElementById('cidadeTutor').value,
-        comoConheceu: document.getElementById('comoConheceu').value,
-        nomeIndicacao: document.getElementById('comoConheceu').value === 'indicacao' 
-                      ? document.getElementById('nomeIndicacao').value 
-                      : ''
+    window.mostrarCampoIndicacao = function() {
+        const comoConheceu = document.getElementById('comoConheceu').value;
+        const containerIndicacao = document.getElementById('containerIndicacao');
+        containerIndicacao.style.display = comoConheceu === 'indicacao' ? 'block' : 'none';
     };
-    
-    // Atualizar os dados do tutor
-    const tutorIndex = tutores.findIndex(t => t.id == tutorId);
-    if (tutorIndex !== -1) {
-        tutores[tutorIndex] = { ...tutores[tutorIndex], ...dadosAtualizados };
-        buscarTutores();
-    }
-    
-    fecharModalEditar();
-    alert('Dados do tutor atualizados com sucesso!');
-});
+
+    // Função para fechar o modal de edição
+    window.fecharModalEditar = function() {
+        document.getElementById('modalEditarTutor').style.display = 'none';
+    };
+
+    // Processar o formulário de edição
+    document.getElementById('formEditarTutor').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const tutorId = document.getElementById('tutorIdEditar').value;
+        const dadosAtualizados = {
+            nome: document.getElementById('nomeTutor').value,
+            cpf: document.getElementById('cpfTutor').value,
+            rg: document.getElementById('rgTutor').value,
+            telefone: document.getElementById('telefoneTutor').value,
+            cep: document.getElementById('cepTutor').value,
+            endereco: document.getElementById('enderecoTutor').value,
+            bairro: document.getElementById('bairroTutor').value,
+            cidade: document.getElementById('cidadeTutor').value,
+            comoConheceu: document.getElementById('comoConheceu').value,
+            nomeIndicacao: document.getElementById('comoConheceu').value === 'indicacao' 
+                          ? document.getElementById('nomeIndicacao').value 
+                          : ''
+        };
+        
+        // Atualizar os dados do tutor
+        const tutorIndex = tutores.findIndex(t => t.id == tutorId);
+        if (tutorIndex !== -1) {
+            tutores[tutorIndex] = { ...tutores[tutorIndex], ...dadosAtualizados };
+            buscarTutores();
+        }
+        
+        fecharModalEditar();
+        alert('Dados do tutor atualizados com sucesso!');
+    });
 
     // Renderiza a tabela vazia inicialmente
     renderizarTabela([]);
