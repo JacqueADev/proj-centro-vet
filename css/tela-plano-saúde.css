@@ -8,7 +8,10 @@
     --cor-alerta: #e74c3c;
     --cor-aviso: #f39c12;
     --cor-sucesso: #2ecc71;
+    --cor-info: #3498db;
     --cor-sombra: rgba(0, 0, 0, 0.1);
+    --cor-fundo: #f5f5f5;
+    --cor-borda: #e0e0e0;
 }
 
 /* Reset e Estilos Globais */
@@ -23,7 +26,7 @@
 body {
     display: flex;
     min-height: 100vh;
-    background-color: #f5f5f5;
+    background-color: var(--cor-fundo);
     position: relative;
 }
 
@@ -117,7 +120,7 @@ body {
 .filtros select {
     padding: 10px 15px;
     border-radius: 5px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--cor-borda);
     font-size: 14px;
     min-width: 250px;
     transition: all 0.3s;
@@ -151,7 +154,7 @@ body {
     color: var(--cor-fonte);
 }
 
-/* Tabelas */
+/* Tabelas Principais */
 .lista-tutores {
     width: 100%;
     margin-top: 20px;
@@ -159,7 +162,7 @@ body {
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 10px var(--cor-sombra);
-    border: 1px solid #eee;
+    border: 1px solid var(--cor-borda);
 }
 
 .tabela-tutores {
@@ -172,7 +175,7 @@ body {
 .tabela-tutores td {
     padding: 12px 15px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--cor-borda);
 }
 
 .tabela-tutores th {
@@ -257,7 +260,7 @@ body {
 .info-tutor {
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--cor-borda);
 }
 
 .info-tutor h3 {
@@ -266,36 +269,61 @@ body {
     font-size: 22px;
 }
 
-.pets-plano {
-    margin-bottom: 20px;
+.info-tutor p {
+    color: var(--cor-fonte);
+    line-height: 1.6;
 }
 
-.pets-plano h3 {
+/* Seções do Modal */
+.secao-tabela {
+    margin-bottom: 25px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border: 1px solid var(--cor-borda);
+}
+
+.secao-tabela h3 {
     color: var(--cor-gradiente-escuro);
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     font-size: 18px;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.pets-plano ul {
-    list-style-type: none;
-    padding-left: 0;
+/* Tabelas Detalhadas */
+.tabela-detalhes {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
 }
 
-.pets-plano li {
-    padding: 10px;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background-color 0.3s;
+.tabela-detalhes th, 
+.tabela-detalhes td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--cor-borda);
 }
 
-.pets-plano li:hover {
+.tabela-detalhes th {
+    background-color: var(--cor-gradiente-claro);
+    color: var(--cor-fonte);
+    font-weight: 600;
+}
+
+.tabela-detalhes tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
+.tabela-detalhes tr:hover {
+    background-color: rgba(235, 200, 143, 0.1);
+}
+
 /* Informações do Plano */
-.info-plano {
+.info-plano-container {
     background-color: #f9f9f9;
     border-radius: 8px;
     padding: 15px;
@@ -303,7 +331,7 @@ body {
     border-left: 4px solid var(--cor-gradiente-mediano);
 }
 
-.info-plano h3 {
+.info-plano-container h3 {
     color: var(--cor-gradiente-escuro);
     margin-bottom: 10px;
     display: flex;
@@ -311,18 +339,18 @@ body {
     gap: 8px;
 }
 
-.info-plano ul {
+.info-plano-container ul {
     margin: 10px 0;
     padding-left: 20px;
 }
 
-.info-plano li {
+.info-plano-container li {
     margin-bottom: 5px;
     position: relative;
     padding-left: 15px;
 }
 
-.info-plano li::before {
+.info-plano-container li::before {
     content: "•";
     color: var(--cor-gradiente-mediano);
     font-weight: bold;
@@ -341,7 +369,76 @@ body {
     margin: 5px 0;
 }
 
-/* Tabela de Procedimentos */
+/* Pets no Plano */
+.pets-plano ul {
+    list-style-type: none;
+    padding-left: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+.pets-plano li {
+    padding: 12px;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    border: 1px solid var(--cor-borda);
+    transition: all 0.3s;
+}
+
+.pets-plano li:hover {
+    background-color: rgba(235, 200, 143, 0.1);
+    transform: translateY(-2px);
+}
+
+.pet-info {
+    margin-bottom: 5px;
+}
+
+.pet-info strong {
+    color: var(--cor-gradiente-escuro);
+}
+
+.pet-details {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-top: 3px;
+}
+
+.pet-extra {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.pet-peso {
+    color: var(--cor-info);
+    font-weight: bold;
+}
+
+.pet-sexo {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.pet-sexo.macho {
+    background-color: #d4e6ff;
+    color: #1a73e8;
+}
+
+.pet-sexo.fêmea {
+    background-color: #ffd4e5;
+    color: #d81b60;
+}
+
+/* Histórico de Procedimentos */
+.historico-procedimentos {
+    margin-top: 25px;
+}
+
 .tabela-procedimentos {
     width: 100%;
     border-collapse: collapse;
@@ -352,14 +449,12 @@ body {
 .tabela-procedimentos td {
     padding: 10px 12px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--cor-borda);
 }
 
 .tabela-procedimentos th {
     background-color: var(--cor-gradiente-claro);
     color: var(--cor-fonte);
-    position: sticky;
-    top: 0;
 }
 
 .tabela-procedimentos tr:nth-child(even) {
@@ -367,7 +462,7 @@ body {
 }
 
 .tabela-procedimentos tr:hover {
-    background-color: rgba(235, 200, 143, 0.2);
+    background-color: rgba(235, 200, 143, 0.1);
 }
 
 /* Botões de Ação */
@@ -402,15 +497,16 @@ body {
     background-color: var(--cor-gradiente-escuro);
 }
 
-/* Status */
+/* Status e Indicadores */
 .status-plano {
     padding: 3px 10px;
     border-radius: 12px;
     font-size: 12px;
     font-weight: bold;
     color: white;
-    display: inline-block;
-    text-transform: capitalize;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .status-ativo {
@@ -425,7 +521,6 @@ body {
     background-color: var(--cor-aviso);
 }
 
-/* Classes de Estado */
 .td-coberto {
     color: var(--cor-sucesso);
     font-weight: bold;
@@ -436,6 +531,37 @@ body {
     font-weight: bold;
 }
 
+.texto-alerta {
+    color: var(--cor-alerta);
+    font-weight: bold;
+}
+
+/* Ícones */
+.fas {
+    margin-right: 5px;
+}
+
+.fa-check {
+    color: var(--cor-sucesso);
+}
+
+.fa-times {
+    color: var(--cor-alerta);
+}
+
+.fa-check-circle {
+    color: var(--cor-sucesso);
+}
+
+.fa-money-bill-wave {
+    color: var(--cor-info);
+}
+
+.fa-clock {
+    color: var(--cor-aviso);
+}
+
+/* Mensagens de Estado */
 .sem-dados {
     text-align: center;
     padding: 20px;
@@ -443,15 +569,21 @@ body {
     font-style: italic;
 }
 
+.loading-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
 .loading {
     display: inline-block;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     border: 3px solid rgba(163, 118, 40, 0.3);
     border-radius: 50%;
     border-top-color: var(--cor-gradiente-escuro);
-    animation: spin 1s ease-in-out infinite;
-    margin-right: 8px;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -459,6 +591,12 @@ body {
 }
 
 /* Responsividade */
+@media (max-width: 1200px) {
+    .modal-conteudo {
+        width: 90%;
+    }
+}
+
 @media (max-width: 992px) {
     .barra-lateral {
         width: 180px;
@@ -470,8 +608,12 @@ body {
         padding: 20px;
     }
     
-    .modal-conteudo {
-        width: 90%;
+    .detalhes-plano {
+        grid-template-columns: 1fr;
+    }
+    
+    .pets-plano ul {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -514,7 +656,8 @@ body {
     }
     
     .tabela-tutores, 
-    .tabela-procedimentos {
+    .tabela-procedimentos,
+    .tabela-detalhes {
         display: block;
         overflow-x: auto;
     }
@@ -530,12 +673,18 @@ body {
     .tabela-tutores th, 
     .tabela-tutores td,
     .tabela-procedimentos th,
-    .tabela-procedimentos td {
+    .tabela-procedimentos td,
+    .tabela-detalhes th,
+    .tabela-detalhes td {
         padding: 8px;
         font-size: 13px;
     }
     
-    .detalhes-plano {
-        grid-template-columns: 1fr;
+    .info-tutor h3 {
+        font-size: 18px;
+    }
+    
+    .secao-tabela h3 {
+        font-size: 16px;
     }
 }

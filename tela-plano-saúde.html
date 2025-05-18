@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Centro Veterinário - Planos de Saúde</title>
+    <title>Sistema Centro Veterinário Integrativo Jhonatan Silvestre</title>
     <link rel="stylesheet" href="css/tela-plano-saúde.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -51,21 +51,111 @@
             </table>
         </div>
         
-        <!-- Modal para detalhes do tutor -->
+        <!-- Modal para detalhes do tutor - VERSÃO ATUALIZADA -->
         <div id="modal-tutor" class="modal">
             <div class="modal-conteudo">
                 <span class="fechar-modal">&times;</span>
                 <h2 id="titulo-modal">Detalhes do Tutor</h2>
+                
                 <div class="info-tutor">
                     <h3 id="nome-tutor-modal"></h3>
                     <p id="contato-tutor-modal"></p>
                 </div>
+                
+                <!-- Seção de informações do plano -->
+                <div class="info-plano-container">
+                    <!-- Preenchido dinamicamente -->
+                </div>
+                
+                <!-- Seção de pets no plano -->
                 <div class="pets-plano">
-                    <h3>Pets no Plano</h3>
+                    <h3><i class="fas fa-paw"></i> Pets no Plano</h3>
                     <ul id="lista-pets-plano"></ul>
                 </div>
+                
+                <!-- Tabela de consultas disponíveis -->
+                <div class="secao-tabela">
+                    <h3><i class="fas fa-calendar-check"></i> Consultas Disponíveis</h3>
+                    <table class="tabela-detalhes">
+                        <thead>
+                            <tr>
+                                <th>Pet</th>
+                                <th>Ano</th>
+                                <th>Consultas Inclusas</th>
+                                <th>Consultas Utilizadas</th>
+                                <th>Retornos Inclusos</th>
+                                <th>Retornos Utilizados</th>
+                                <th>Saldo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-consultas">
+                            <!-- Preenchido dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Tabela de vacinas -->
+                <div class="secao-tabela">
+                    <h3><i class="fas fa-syringe"></i> Vacinas e Procedimentos Básicos</h3>
+                    <table class="tabela-detalhes">
+                        <thead>
+                            <tr>
+                                <th>Pet</th>
+                                <th>V10</th>
+                                <th>Antirábica</th>
+                                <th>V8</th>
+                                <th>Microchip</th>
+                                <th>Vermifugação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-vacinas">
+                            <!-- Preenchido dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Tabela de tratamentos integrativos -->
+                <div class="secao-tabela">
+                    <h3><i class="fas fa-spa"></i> Tratamentos Integrativos</h3>
+                    <table class="tabela-detalhes">
+                        <thead>
+                            <tr>
+                                <th>Pet</th>
+                                <th>Reiki</th>
+                                <th>Cristal Terapia</th>
+                                <th>Acupuntura</th>
+                                <th>Florais</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-tratamentos">
+                            <!-- Preenchido dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Tabela de procedimentos especiais -->
+                <div class="secao-tabela">
+                    <h3><i class="fas fa-procedures"></i> Procedimentos Especiais</h3>
+                    <table class="tabela-detalhes">
+                        <thead>
+                            <tr>
+                                <th>Pet</th>
+                                <th>Drenagem de Abcessos</th>
+                                <th>Abdominocentese</th>
+                                <th>Curativos</th>
+                                <th>Uso da Sala</th>
+                                <th>Hemograma</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-procedimentos-especiais">
+                            <!-- Preenchido dinamicamente -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Histórico de procedimentos (existente) -->
                 <div class="historico-procedimentos">
-                    <h3>Histórico de Procedimentos</h3>
+                    <h3><i class="fas fa-history"></i> Histórico Completo de Procedimentos</h3>
                     <table class="tabela-procedimentos">
                         <thead>
                             <tr>
@@ -84,6 +174,6 @@
     </div>
     
     <script src="js/dados-ficticios.js"></script>
-    <script src="js/tela-plano-saúde.js"></script> <!-- Novo arquivo JS corrigido -->
+    <script src="js/tela-plano-saúde.js"></script>
 </body>
 </html>

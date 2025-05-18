@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } catch (error) {
             console.error('Erro ao carregar planos:', error);
+            alert('Erro ao carregar a lista de planos');
         }
     }
     
@@ -50,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             // Mostra loading
             corpoTabelaTutores.innerHTML = '<tr><td colspan="5" class="loading-message"><div class="loading"></div> Carregando...</td></tr>';
+            listaTutores.style.display = 'block';
             
             // Simula um delay para demonstração (remover em produção)
             setTimeout(() => {
@@ -113,9 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     corpoTabelaTutores.innerHTML = '<tr><td colspan="5" class="sem-dados">Nenhum tutor encontrado para este plano</td></tr>';
                 }
-                
-                // Mostra a tabela
-                listaTutores.style.display = 'block';
             }, 500); // Delay simulado - remover em produção
         } catch (error) {
             console.error('Erro ao buscar tutores:', error);
@@ -138,7 +137,198 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // =============================================
-    // 5. FUNÇÃO PARA ABRIR DETALHES DO TUTOR (MODAL)
+    // 5. FUNÇÃO PARA OBTER LIMITES DO PLANO
+    // =============================================
+    
+    function obterLimitesPlano(planoId) {
+        const limites = {
+            consultas: 4,
+            retornos: 2,
+            drenagem: 1,
+            abdominocentese: 1,
+            curativos: 5,
+            uso_sala: 2,
+            hemogramas: 2,
+            reiki: 4,
+            cristal: 4,
+            acupuntura: 4,
+            florais: 4
+        };
+
+        // Ajusta os limites conforme o tipo de plano
+        switch(planoId) {
+            case 'plano_1': // Básico
+                limites.consultas = 2;
+                limites.retornos = 2;
+                limites.drenagem = 0;
+                limites.abdominocentese = 0;
+                limites.hemogramas = 0;
+                break;
+            case 'plano_2': // Intermediário
+                limites.consultas = 4;
+                limites.retornos = 3;
+                limites.hemogramas = 1;
+                break;
+            case 'plano_3': // Premium
+                limites.consultas = 6;
+                limites.retornos = 4;
+                limites.hemogramas = 2;
+                break;
+            case 'plano_4': // Super Premium
+                limites.consultas = 999; // Ilimitado
+                limites.retornos = 999;
+                limites.hemogramas = 999;
+                break;
+            case 'plano_5': // Silvestres
+                limites.consultas = 3;
+                limites.retornos = 2;
+                break;
+        }
+
+        return limites;
+    }
+
+    // =============================================
+    // 6. FUNÇÃO PARA PREENCHER TABELAS ADICIONAIS
+    // =============================================
+    
+    function preencherTabelasAdicionais(tutorId, planoId) {
+        try {
+            const tutor = tutores.find(t => t.id === tutorId);
+            const plano = planos.find(p => p.id === planoId);
+            const petsNoPlano = pets.filter(pet => pet.tutorId === tutorId && (pet.planoId === planoId || tutor.planoId === planoId));
+            const anoAtual = new Date().getFullYear();
+            const limites = obterLimitesPlano(planoId);
+
+            // Preenche informações do plano
+            const infoPlanoContainer = document.querySelector('.info-plano-container');
+            infoPlanoContainer.innerHTML = `
+                <h3><i class="fas fa-info-circle"></i> Detalhes do Plano ${plano.nome}</h3>
+                <p>${plano.descricao}</p>
+                <div class="detalhes-plano">
+                    <p><strong><i class="fas fa-tag"></i> Valor:</strong> R$ ${plano.valorMensal.toFixed(2)}/mês</p>
+                    <p><strong><i class="fas fa-calendar-alt"></i> Status:</strong> 
+                        <span class="status-plano status-${tutor.statusPlano || 'ativo'}">
+                            ${tutor.statusPlano || 'ativo'}
+                        </span>
+                    </p>
+                    <p><strong><i class="fas fa-calendar-times"></i> Vencimento:</strong> 
+                        ${tutor.dataVencimentoPlano ? new Date(tutor.dataVencimentoPlano).toLocaleDateString('pt-BR') : 'Não informado'}
+                    </p>
+                </div>
+            `;
+
+            // Tabela de consultas disponíveis
+            const tabelaConsultas = document.getElementById('tabela-consultas');
+            tabelaConsultas.innerHTML = petsNoPlano.map(pet => {
+                const consultasPet = anamneses.filter(a => a.petId === pet.id && a.tipoAtendimento.includes('consulta'));
+                const consultasAno = consultasPet.filter(c => new Date(c.dataAtendimento).getFullYear() === anoAtual);
+                const retornosAno = consultasAno.filter(c => c.queixaPrincipal && c.queixaPrincipal.includes('retorno'));
+                
+                const saldoConsultas = limites.consultas - consultasAno.length;
+                const saldoRetornos = limites.retornos - retornosAno.length;
+
+                return `
+                    <tr>
+                        <td>${pet.nome}</td>
+                        <td>${anoAtual}</td>
+                        <td>${limites.consultas}</td>
+                        <td>${consultasAno.length}</td>
+                        <td>${limites.retornos}</td>
+                        <td>${retornosAno.length}</td>
+                        <td class="${saldoConsultas < 1 ? 'texto-alerta' : ''}">
+                            ${saldoConsultas} consulta(s), ${saldoRetornos} retorno(s)
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Tabela de vacinas
+            const tabelaVacinas = document.getElementById('tabela-vacinas');
+            tabelaVacinas.innerHTML = petsNoPlano.map(pet => {
+                const historicoPet = pet.historico || [];
+                const vacinas = {
+                    v10: historicoPet.some(h => h.vacina && h.vacina.includes('V10')),
+                    antirabica: historicoPet.some(h => h.vacina && h.vacina.includes('Raiva')),
+                    v8: historicoPet.some(h => h.vacina && h.vacina.includes('V8')),
+                    microchip: historicoPet.some(h => h.procedimento && h.procedimento.includes('Microchip')),
+                    vermifugo: historicoPet.some(h => h.vermifugo)
+                };
+
+                return `
+                    <tr>
+                        <td>${pet.nome}</td>
+                        <td>${vacinas.v10 ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'}</td>
+                        <td>${vacinas.antirabica ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'}</td>
+                        <td>${vacinas.v8 ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'}</td>
+                        <td>${vacinas.microchip ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'}</td>
+                        <td>${vacinas.vermifugo ? '<i class="fas fa-check"></i>' : '<i class="fas fa-times"></i>'}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Tabela de tratamentos integrativos
+            const tabelaTratamentos = document.getElementById('tabela-tratamentos');
+            tabelaTratamentos.innerHTML = petsNoPlano.map(pet => {
+                const historicoAno = anamneses.filter(a => 
+                    a.petId === pet.id && 
+                    new Date(a.dataAtendimento).getFullYear() === anoAtual
+                );
+                
+                const tratamentos = {
+                    reiki: historicoAno.filter(h => h.observacoes && h.observacoes.includes('Reiki')).length,
+                    cristal: historicoAno.filter(h => h.observacoes && h.observacoes.includes('Cristal')).length,
+                    acupuntura: historicoAno.filter(h => h.observacoes && h.observacoes.includes('Acupuntura')).length,
+                    florais: historicoAno.filter(h => h.observacoes && h.observacoes.includes('Florais')).length
+                };
+
+                return `
+                    <tr>
+                        <td>${pet.nome}</td>
+                        <td>${tratamentos.reiki}/${limites.reiki}</td>
+                        <td>${tratamentos.cristal}/${limites.cristal}</td>
+                        <td>${tratamentos.acupuntura}/${limites.acupuntura}</td>
+                        <td>${tratamentos.florais}/${limites.florais}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Tabela de procedimentos especiais
+            const tabelaProcedimentosEspeciais = document.getElementById('tabela-procedimentos-especiais');
+            tabelaProcedimentosEspeciais.innerHTML = petsNoPlano.map(pet => {
+                const historicoAno = anamneses.filter(a => 
+                    a.petId === pet.id && 
+                    new Date(a.dataAtendimento).getFullYear() === anoAtual
+                );
+                
+                const procedimentos = {
+                    drenagem: historicoAno.filter(h => h.procedimento && h.procedimento.includes('Drenagem')).length,
+                    abdominocentese: historicoAno.filter(h => h.procedimento && h.procedimento.includes('Abdominocentese')).length,
+                    curativos: historicoAno.filter(h => h.procedimento && h.procedimento.includes('Curativo')).length,
+                    usoSala: historicoAno.filter(h => h.procedimento && h.procedimento.includes('Sala')).length,
+                    hemogramas: historicoAno.filter(h => h.exames && h.exames.includes('Hemograma')).length
+                };
+
+                return `
+                    <tr>
+                        <td>${pet.nome}</td>
+                        <td>${procedimentos.drenagem}/${limites.drenagem}</td>
+                        <td>${procedimentos.abdominocentese}/${limites.abdominocentese}</td>
+                        <td>${procedimentos.curativos}/${limites.curativos}</td>
+                        <td>${procedimentos.usoSala}/${limites.uso_sala}</td>
+                        <td>${procedimentos.hemogramas}/${limites.hemogramas}</td>
+                    </tr>
+                `;
+            }).join('');
+
+        } catch (error) {
+            console.error('Erro ao preencher tabelas adicionais:', error);
+            alert('Ocorreu um erro ao carregar os detalhes adicionais');
+        }
+    }
+
+    // =============================================
+    // 7. FUNÇÃO PARA ABRIR DETALHES DO TUTOR (MODAL)
     // =============================================
     
     window.abrirDetalhesTutor = function(tutorId, planoId) {
@@ -148,6 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!tutor || !plano) {
                 console.error('Tutor ou plano não encontrado');
+                alert('Tutor ou plano não encontrado');
                 return;
             }
             
@@ -192,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 listaPets.innerHTML = '<li class="sem-dados"><i class="fas fa-paw"></i> Nenhum pet encontrado neste plano</li>';
             }
             
-            // Preenche a tabela de procedimentos
+            // Preenche a tabela de procedimentos históricos
             const corpoProcedimentos = document.getElementById('corpo-tabela-procedimentos');
             corpoProcedimentos.innerHTML = '';
             
@@ -237,38 +428,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
             }
             
-            // Adiciona informações sobre o plano
-            const infoPlanoExistente = modal.querySelector('.info-plano');
-            if (infoPlanoExistente) {
-                infoPlanoExistente.remove();
-            }
-            
-            const infoPlano = document.createElement('div');
-            infoPlano.className = 'info-plano';
-            infoPlano.innerHTML = `
-                <h3><i class="fas fa-heart"></i> Benefícios do Plano ${plano.nome}</h3>
-                <ul>
-                    ${plano.beneficios.map(b => `<li><i class="fas fa-check"></i> ${b}</li>`).join('')}
-                </ul>
-                <div class="detalhes-plano">
-                    <p><strong><i class="fas fa-tag"></i> Valor mensal:</strong> R$ ${plano.valorMensal.toFixed(2).replace('.', ',')}</p>
-                    <p><strong><i class="fas fa-calendar-check"></i> Status:</strong> 
-                        <span class="status-plano status-${tutor.statusPlano || 'ativo'}">
-                            ${tutor.statusPlano || 'ativo'}
-                        </span>
-                    </p>
-                    <p><strong><i class="fas fa-calendar-times"></i> Vencimento:</strong> 
-                        ${tutor.dataVencimentoPlano ? new Date(tutor.dataVencimentoPlano).toLocaleDateString('pt-BR') : 'Não informado'}
-                    </p>
-                </div>
-            `;
-            
-            // Insere antes da tabela de procedimentos
-            const historicoSection = document.querySelector('.historico-procedimentos');
-            historicoSection.insertBefore(infoPlano, historicoSection.firstChild);
+            // Preenche todas as tabelas adicionais
+            preencherTabelasAdicionais(tutorId, planoId);
             
             // Exibe o modal
             modal.style.display = 'block';
+
         } catch (error) {
             console.error('Erro ao abrir detalhes do tutor:', error);
             alert('Ocorreu um erro ao carregar os detalhes do tutor');
@@ -276,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     // =============================================
-    // 6. CONFIGURAÇÃO DE EVENTOS
+    // 8. CONFIGURAÇÃO DE EVENTOS
     // =============================================
     
     // Evento de busca
@@ -305,7 +470,7 @@ document.addEventListener('DOMContentLoaded', function() {
     carregarPlanos();
     
     // =============================================
-    // 7. FUNCIONALIDADES EXISTENTES (VACINAÇÃO)
+    // 9. FUNCIONALIDADES EXISTENTES (VACINAÇÃO)
     // =============================================
     
     // Função para verificar status de vacinação (mantida da versão anterior)
