@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Centro Veterinário - Planos de Saúde</title>
+    <link rel="stylesheet" href="css/tela-plano-saúde.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container-logo">
+        <img src="assets/logo-sem-fundo.png" alt="Logo" class="logo">
+    </div>
+    
+    <div class="container-lateral">
+        <div class="barra-lateral">
+            <button id="botao-agenda" class="botao-lateral">Agenda</button>
+            <button id="botao-cadastrados" class="botao-lateral">Cadastrados</button>
+            <button id="botao-novo-atendimento" class="botao-lateral">Novo atendimento</button>
+            <button id="botao-novoCadastro" class="botao-lateral">Novo Cadastro</button>
+            <button id="botao-registroAnual" class="botao-lateral">Registro Anual</button>
+        </div>
+    </div>
+    
+    <div class="container-principal">
+        <h1>Controle de Planos de Saúde</h1>
+        <div class="filtros">
+            <select id="filtro-plano">
+                <option value="">Selecione um plano</option>
+                <!-- Opções serão preenchidas via JavaScript -->
+            </select>
+            <button id="botao-buscar" class="botao-lupa">
+                <i class="fas fa-search"></i> Buscar
+            </button>
+        </div>
+        
+        <div id="lista-tutores" class="lista-tutores" style="display: none;">
+            <table class="tabela-tutores">
+                <thead>
+                    <tr>
+                        <th>Cod.</th>
+                        <th>Tutor</th>
+                        <th>Contato</th>
+                        <th>Pets</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpo-tabela-tutores">
+                    <!-- Dados serão inseridos via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Modal para detalhes do tutor -->
+        <div id="modal-tutor" class="modal">
+            <div class="modal-conteudo">
+                <span class="fechar-modal">&times;</span>
+                <h2 id="titulo-modal">Detalhes do Tutor</h2>
+                <div class="info-tutor">
+                    <h3 id="nome-tutor-modal"></h3>
+                    <p id="contato-tutor-modal"></p>
+                </div>
+                <div class="pets-plano">
+                    <h3>Pets no Plano</h3>
+                    <ul id="lista-pets-plano"></ul>
+                </div>
+                <div class="historico-procedimentos">
+                    <h3>Histórico de Procedimentos</h3>
+                    <table class="tabela-procedimentos">
+                        <thead>
+                            <tr>
+                                <th>Pet</th>
+                                <th>Data</th>
+                                <th>Procedimento</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela-procedimentos"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/dados-ficticios.js"></script>
+    <script src="js/tela-plano-saúde.js"></script> <!-- Novo arquivo JS corrigido -->
+</body>
+</html>
