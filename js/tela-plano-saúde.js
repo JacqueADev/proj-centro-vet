@@ -1,6 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
     // =============================================
-    // 1. INICIALIZAÇÃO E CARREGAMENTO DE DADOS
+    // 1. CONFIGURAÇÃO DO BOTÃO VOLTAR
+    // =============================================
+    const botaoVoltar = document.getElementById('botao-voltar');
+    if (botaoVoltar) {
+        botaoVoltar.addEventListener('click', function() {
+            window.location.href = "tela-pos-login.html";
+        });
+    }
+
+    // =============================================
+    // 2. INICIALIZAÇÃO E CARREGAMENTO DE DADOS
     // =============================================
     
     // Carrega todos os dados do localStorage
@@ -22,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =============================================
-    // 2. FUNÇÃO PARA CARREGAR PLANOS NO SELECT
+    // 3. FUNÇÃO PARA CARREGAR PLANOS NO SELECT
     // =============================================
     
     function carregarPlanos() {
@@ -44,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // =============================================
-    // 3. FUNÇÃO PARA BUSCAR TUTORES POR PLANO
+    // 4. FUNÇÃO PARA BUSCAR TUTORES POR PLANO
     // =============================================
     
     function buscarTutoresPorPlano(planoId) {
@@ -123,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // =============================================
-    // 4. FUNÇÃO PARA ADICIONAR EVENTOS AOS TUTORES
+    // 5. FUNÇÃO PARA ADICIONAR EVENTOS AOS TUTORES
     // =============================================
     
     function adicionarEventosTutores() {
@@ -137,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // =============================================
-    // 5. FUNÇÃO PARA OBTER LIMITES DO PLANO
+    // 6. FUNÇÃO PARA OBTER LIMITES DO PLANO
     // =============================================
     
     function obterLimitesPlano(planoId) {
@@ -189,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =============================================
-    // 6. FUNÇÃO PARA PREENCHER TABELAS ADICIONAIS
+    // 7. FUNÇÃO PARA PREENCHER TABELAS ADICIONAIS
     // =============================================
     
     function preencherTabelasAdicionais(tutorId, planoId) {
@@ -328,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // =============================================
-    // 7. FUNÇÃO PARA ABRIR DETALHES DO TUTOR (MODAL)
+    // 8. FUNÇÃO PARA ABRIR DETALHES DO TUTOR (MODAL)
     // =============================================
     
     window.abrirDetalhesTutor = function(tutorId, planoId) {
@@ -441,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     // =============================================
-    // 8. CONFIGURAÇÃO DE EVENTOS
+    // 9. CONFIGURAÇÃO DE EVENTOS
     // =============================================
     
     // Evento de busca
@@ -470,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
     carregarPlanos();
     
     // =============================================
-    // 9. FUNCIONALIDADES EXISTENTES (VACINAÇÃO)
+    // 10. FUNCIONALIDADES EXISTENTES (VACINAÇÃO)
     // =============================================
     
     // Função para verificar status de vacinação (mantida da versão anterior)

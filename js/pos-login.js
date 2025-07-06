@@ -21,11 +21,25 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // **NOVO** Redirecionamento para "Novo Cadastro"
     const botaoNovoCadastro = document.getElementById("botao-novoCadastro");
     if (botaoNovoCadastro) {
         botaoNovoCadastro.addEventListener("click", function() {
             window.location.href = "tela-novo-cadastro.html";
+        });
+    }
+
+    const botaoRegistroAnual = document.getElementById("botao-registroAnual");
+    if (botaoRegistroAnual) {
+        botaoRegistroAnual.addEventListener("click", function() {
+            window.location.href = "tela-pos-login.html"; // Ou a página específica para registro anual
+        });
+    }
+
+    // NOVO BOTÃO - Redirecionamento para "Plano"
+    const botaoPlano = document.getElementById("botao-plano");
+    if (botaoPlano) {
+        botaoPlano.addEventListener("click", function() {
+            window.location.href = "tela-plano-saúde.html";
         });
     }
 

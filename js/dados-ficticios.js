@@ -1,145 +1,135 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // Verifica se já existem dados no localStorage
     if (!localStorage.getItem('tutores') || 
         !localStorage.getItem('pets') || 
         !localStorage.getItem('anamneses') ||
         !localStorage.getItem('planos')) {
         
-        console.log("Criando dados fictícios no localStorage...");
-        
-        // =============================================
-        // 1. DADOS FICTÍCIOS DE PLANOS DE SAÚDE (NOVO)
-        // =============================================
+        console.log("Carregando dados fictícios completos...");
+
+        /* ========== PLANOS DE SAÚDE ========== */
         const planos = [
             {
                 id: "plano_1",
-                nome: "Básico 2.0",
-                descricao: "Consultas básicas e vacinas simples",
+                nome: "Básico",
+                descricao: "Cobertura essencial para cuidados básicos",
                 valorMensal: 89.90,
-                beneficios: ["4 consultas/ano", "Vacinação básica", "Desconto em exames"],
-                cobertura: ["Consultas rotineiras", "Vacinação anual", "Desconto 20% em exames"]
+                beneficios: ["4 consultas/ano", "Vacinação básica"],
+                cobertura: ["Consultas", "Vacinas anuais"]
             },
             {
                 id: "plano_2",
-                nome: "Intermediário 4.0",
-                descricao: "Cobertura ampliada para cuidados essenciais",
+                nome: "Intermediário",
+                descricao: "Cobertura ampla para prevenção",
                 valorMensal: 129.90,
-                beneficios: ["6 consultas/ano", "Vacinação completa", "1 exame laboratorial/ano"],
-                cobertura: ["Consultas ilimitadas", "Vacinação completa", "1 exame anual incluído"]
+                beneficios: ["6 consultas/ano", "1 exame anual"],
+                cobertura: ["Consultas", "Exames básicos"]
             },
             {
                 id: "plano_3",
-                nome: "Premiun 6.0",
-                descricao: "Cobertura completa para pets exigentes",
-                valorMensal: 189.90,
-                beneficios: ["Consultas ilimitadas", "Vacinação premium", "2 exames laboratoriais/ano", "Desconto em internações"],
-                cobertura: ["Consultas 24h", "Procedimentos cirúrgicos", "2 exames anuais", "Internação com desconto"]
-            },
-            {
-                id: "plano_4",
-                nome: "Super Premiun 8.0",
-                descricao: "Cobertura total com benefícios exclusivos",
-                valorMensal: 259.90,
-                beneficios: ["Consultas ilimitadas", "Procedimentos cirúrgicos", "Exames ilimitados", "Internações cobertas", "Telemedicina"],
-                cobertura: ["Cobertura total", "Cirurgias inclusas", "Exames ilimitados", "Internação 100% coberta"]
-            },
-            {
-                id: "plano_5",
-                nome: "Silvestres 5.0",
-                descricao: "Plano especial para animais silvestres",
-                valorMensal: 159.90,
-                beneficios: ["4 consultas/ano", "Exames específicos", "Desconto em medicamentos"],
-                cobertura: ["Consultas especializadas", "Exames específicos", "Desconto em medicamentos"]
+                nome: "Premium",
+                descricao: "Cobertura completa com atendimento 24h",
+                valorMensal: 199.90,
+                beneficios: ["Consultas ilimitadas", "Exames laboratoriais"],
+                cobertura: ["Emergências", "Cirurgias"]
             }
         ];
 
-        // =============================================
-        // 2. DADOS FICTÍCIOS DE TUTORES (ATUALIZADO)
-        // =============================================
+        /* ========== TUTORES ========== */
         const tutores = [
             {
                 id: "tutor_1",
-                nome: "Ana Carolina Mendes",
-                telefone: "(11) 98765-4321",
-                email: "ana.mendes@email.com",
-                endereco: "Rua das Acácias, 100 - São Paulo/SP",
-                dataCadastro: "2023-01-10T09:15:00",
-                planoId: "plano_2",  // Plano Intermediário 4.0
+                nome: "Ana Silva",
+                cpf: "111.222.333-44",
+                rg: "22.333.444-5",
+                telefone: "(11) 99999-1111",
+                email: "ana.silva@email.com",
+                endereco: "Rua das Flores, 100",
+                bairro: "Centro",
+                cidade: "São Paulo",
+                cep: "01001-000",
+                comoConheceu: "indicacao",
+                nomeIndicacao: "Carlos Santos",
+                adesaoPlano: "sim",
+                planoId: "plano_2",
                 statusPlano: "ativo",
-                dataVencimentoPlano: "2024-12-31"
+                dataCadastro: "2023-01-15T10:00:00"
             },
             {
                 id: "tutor_2",
-                nome: "Marcos Ribeiro",
-                telefone: "(11) 91234-5678",
-                email: "marcos.ribeiro@email.com",
-                endereco: "Av. Brasil, 2000 - São Paulo/SP",
-                dataCadastro: "2023-02-15T14:30:00",
-                planoId: "plano_3",  // Plano Premiun 6.0
-                statusPlano: "ativo",
-                dataVencimentoPlano: "2024-11-30"
+                nome: "Bruno Oliveira",
+                cpf: "222.333.444-55",
+                rg: "33.444.555-6",
+                telefone: "(21) 98888-2222",
+                email: "bruno.oliveira@email.com",
+                endereco: "Av. Brasil, 200",
+                bairro: "Copacabana",
+                cidade: "Rio de Janeiro",
+                cep: "22010-000",
+                comoConheceu: "rede-social",
+                nomeIndicacao: "",
+                adesaoPlano: "nao",
+                planoId: "",
+                statusPlano: "inativo",
+                dataCadastro: "2023-02-20T14:30:00"
             },
             {
                 id: "tutor_3",
-                nome: "Juliana Almeida",
-                telefone: "(11) 99876-5432",
-                email: "ju.almeida@email.com",
-                endereco: "Rua dos Pinheiros, 300 - São Paulo/SP",
-                dataCadastro: "2023-03-20T11:00:00",
-                planoId: "plano_1",  // Plano Básico 2.0
+                nome: "Carla Mendes",
+                cpf: "333.444.555-66",
+                rg: "44.555.666-7",
+                telefone: "(31) 97777-3333",
+                email: "carla.mendes@email.com",
+                endereco: "Rua da Paz, 300",
+                bairro: "Savassi",
+                cidade: "Belo Horizonte",
+                cep: "30110-000",
+                comoConheceu: "outros",
+                nomeIndicacao: "",
+                adesaoPlano: "sim",
+                planoId: "plano_3",
                 statusPlano: "ativo",
-                dataVencimentoPlano: "2024-10-15"
+                dataCadastro: "2023-03-10T09:15:00"
             },
             {
                 id: "tutor_4",
-                nome: "Carlos Eduardo",
-                telefone: "(11) 94567-8901",
-                email: "carlos.edu@email.com",
-                endereco: "Rua das Flores, 45 - São Paulo/SP",
-                dataCadastro: "2023-04-05T16:20:00",
-                planoId: "plano_5",  // Plano Silvestres 5.0
+                nome: "Daniel Souza",
+                cpf: "444.555.666-77",
+                rg: "55.666.777-8",
+                telefone: "(41) 96666-4444",
+                email: "daniel.souza@email.com",
+                endereco: "Av. Paraná, 400",
+                bairro: "Batel",
+                cidade: "Curitiba",
+                cep: "80240-000",
+                comoConheceu: "indicacao",
+                nomeIndicacao: "Fernanda Lima",
+                adesaoPlano: "sim",
+                planoId: "plano_1",
                 statusPlano: "ativo",
-                dataVencimentoPlano: "2024-09-20"
+                dataCadastro: "2023-04-05T16:45:00"
             }
         ];
 
-        // =============================================
-        // 3. DADOS FICTÍCIOS DE PETS (ATUALIZADO)
-        // =============================================
+        /* ========== PETS ========== */
         const pets = [
-            // Pets da Ana (tutor_1) - Plano Intermediário 4.0
+            // Pets da Ana Silva
             {
                 id: "pet_1",
                 tutorId: "tutor_1",
-                nome: "Bobby",
-                especie: "Cão",
-                raca: "Golden Retriever",
-                idade: "4 anos",
-                peso: 32.0,
+                nome: "Rex",
+                especie: "Cachorro",
+                raca: "Labrador",
+                idade: "3 anos",
+                peso: 28.5,
                 sexo: "Macho",
-                ambiente: "Casa com quintal",
-                pelagem: "Dourado",
-                dataNascimento: "2019-05-15",
-                dataCadastro: "2023-01-10T09:30:00",
-                planoId: "plano_2", // Herda do tutor mas pode ter plano específico
-                historico: [
-                    {
-                        data: "2023-01-15T00:00:00",
-                        tipo: "consulta_plano",
-                        vacina: "V10",
-                        vermifugo: "Drontal Plus",
-                        peso: 30.5,
-                        observacoes: "Pet saudável"
-                    },
-                    {
-                        data: "2023-04-20T00:00:00",
-                        tipo: "consulta_plano",
-                        vacina: "Raiva",
-                        vermifugo: "Vermivet",
-                        peso: 31.8,
-                        observacoes: "Peso dentro do esperado"
-                    }
-                ]
+                castrado: "Sim",
+                pelagem: "Curta",
+                cor: "Preto",
+                doencaExistente: "Não",
+                observacao: "Alergia a picada de pulga",
+                planoId: "plano_2",
+                dataCadastro: "2023-01-15T10:30:00",
+                historico: []
             },
             {
                 id: "pet_2",
@@ -148,212 +138,175 @@ document.addEventListener("DOMContentLoaded", function() {
                 especie: "Gato",
                 raca: "Siamês",
                 idade: "2 anos",
-                peso: 4.0,
+                peso: 4.2,
                 sexo: "Fêmea",
-                ambiente: "Apartamento",
-                pelagem: "Creme com pontos escuros",
-                dataNascimento: "2021-07-10",
-                dataCadastro: "2023-01-10T10:00:00",
-                planoId: "plano_3", // Plano diferente do tutor (Premiun 6.0)
-                historico: [
-                    {
-                        data: "2023-02-10T00:00:00",
-                        tipo: "consulta_plano",
-                        vacina: "V4",
-                        vermifugo: "Drontal",
-                        peso: 3.8,
-                        observacoes: "Castração marcada"
-                    }
-                ]
+                castrado: "Sim",
+                pelagem: "Curta",
+                cor: "Marrom e branco",
+                doencaExistente: "Não",
+                observacao: "",
+                planoId: "",
+                dataCadastro: "2023-01-20T11:00:00",
+                historico: []
             },
             
-            // Pets do Marcos (tutor_2) - Plano Premiun 6.0
+            // Pets do Bruno Oliveira
             {
                 id: "pet_3",
                 tutorId: "tutor_2",
                 nome: "Thor",
-                especie: "Cão",
+                especie: "Cachorro",
                 raca: "Bulldog Francês",
-                idade: "3 anos",
-                peso: 12.5,
+                idade: "4 anos",
+                peso: 12.0,
                 sexo: "Macho",
-                ambiente: "Apartamento",
-                pelagem: "Tigrado",
-                dataNascimento: "2020-03-25",
-                dataCadastro: "2023-02-15T15:00:00",
-                planoId: "plano_3", // Mesmo plano do tutor
-                historico: [
-                    {
-                        data: "2023-03-01T00:00:00",
-                        tipo: "consulta_plano",
-                        vacina: "V8",
-                        vermifugo: "Endogard",
-                        peso: 12.0,
-                        observacoes: "Problema respiratório monitorar"
-                    },
-                    {
-                        data: "2023-06-15T00:00:00",
-                        tipo: "procedimento_plano",
-                        procedimento: "Limpeza dentária",
-                        observacoes: "Realizada com sucesso"
-                    }
-                ]
+                castrado: "Não",
+                pelagem: "Curta",
+                cor: "Branco e preto",
+                doencaExistente: "Sim",
+                observacao: "Problemas respiratórios",
+                planoId: "",
+                dataCadastro: "2023-02-20T15:00:00",
+                historico: []
             },
             
-            // Pets da Juliana (tutor_3) - Plano Básico 2.0
+            // Pets da Carla Mendes
             {
                 id: "pet_4",
                 tutorId: "tutor_3",
                 nome: "Mel",
                 especie: "Gato",
-                raca: "SRD",
-                idade: "5 meses",
-                peso: 2.1,
+                raca: "Persa",
+                idade: "5 anos",
+                peso: 5.8,
                 sexo: "Fêmea",
-                ambiente: "Apartamento",
-                pelagem: "Listrada",
-                dataNascimento: "2022-10-15",
-                dataCadastro: "2023-03-20T11:30:00",
-                planoId: "plano_1", // Mesmo plano do tutor
-                historico: [
-                    {
-                        data: "2023-04-05T00:00:00",
-                        tipo: "consulta_particular",
-                        vacina: "V3",
-                        observacoes: "Primeira consulta - saudável"
-                    }
-                ]
+                castrado: "Sim",
+                pelagem: "Longa",
+                cor: "Cinza",
+                doencaExistente: "Não",
+                observacao: "Necessita escovação diária",
+                planoId: "plano_3",
+                dataCadastro: "2023-03-10T09:30:00",
+                historico: []
             },
-            
-            // Pets do Carlos (tutor_4) - Plano Silvestres 5.0
             {
                 id: "pet_5",
-                tutorId: "tutor_4",
-                nome: "Zeca",
-                especie: "Papagaio",
-                raca: "Verdadeiro",
-                idade: "8 anos",
-                peso: 0.4,
+                tutorId: "tutor_3",
+                nome: "Bob",
+                especie: "Cachorro",
+                raca: "Poodle",
+                idade: "7 anos",
+                peso: 6.5,
                 sexo: "Macho",
-                ambiente: "Gaiola grande",
-                pelagem: "Verde e amarelo",
-                dataNascimento: "2015-11-20",
+                castrado: "Sim",
+                pelagem: "Encaracolada",
+                cor: "Branco",
+                doencaExistente: "Sim",
+                observacao: "Problemas dentários",
+                planoId: "plano_3",
+                dataCadastro: "2023-03-12T10:15:00",
+                historico: []
+            },
+            
+            // Pets do Daniel Souza
+            {
+                id: "pet_6",
+                tutorId: "tutor_4",
+                nome: "Nina",
+                especie: "Cachorro",
+                raca: "Vira-lata",
+                idade: "1 ano",
+                peso: 8.0,
+                sexo: "Fêmea",
+                castrado: "Não",
+                pelagem: "Curta",
+                cor: "Caramelo",
+                doencaExistente: "Não",
+                observacao: "Adotada em abrigo",
+                planoId: "plano_1",
                 dataCadastro: "2023-04-05T17:00:00",
-                planoId: "plano_5", // Plano Silvestres
-                historico: [
-                    {
-                        data: "2023-05-10T00:00:00",
-                        tipo: "consulta_plano",
-                        observacoes: "Check-up anual - saudável"
-                    }
-                ]
+                historico: []
             }
         ];
 
-        // =============================================
-        // 4. DADOS FICTÍCIOS DE ANAMNESES (ATUALIZADO)
-        // =============================================
+        /* ========== ANAMNESES ========== */
         const anamneses = [
+            // Atendimentos do Rex (pet_1)
             {
                 id: "anamnese_1",
-                dataCriacao: "2023-06-15T10:30:00",
-                dataAtendimento: "2023-06-15",
                 tutorId: "tutor_1",
                 petId: "pet_1",
-                queixaPrincipal: "O cão está vomitando desde ontem à noite",
-                digestorio: ["vomito", "apetite"],
-                outrosDigestorio: "",
-                cardio: [],
-                outrosCardio: "",
-                mucosa: "normal",
-                cavidadeOral: "normal",
-                temperatura: "alterada",
-                hidratacao: "alterada",
-                exames: ["raio_x", "ultrassom"],
+                dataAtendimento: "2023-05-10",
+                queixaPrincipal: "Consulta de rotina",
+                diagnostico: "Saudável",
+                tratamento: "Vacina V10",
+                observacoes: "Peso estável",
                 tipoAtendimento: "consulta_plano",
-                formaPagamento: "plano_saude",
-                status: "concluido",
-                observacoes: "Prescrito antiemético e dieta leve por 48h"
+                status: "concluido"
             },
             {
                 id: "anamnese_2",
-                dataCriacao: "2023-07-20T14:15:00",
-                dataAtendimento: "2023-07-20",
-                tutorId: "tutor_2",
-                petId: "pet_3",
-                queixaPrincipal: "O cão está com tosse há três dias",
-                digestorio: [],
-                outrosDigestorio: "",
-                cardio: ["tosse"],
-                outrosCardio: "",
-                mucosa: "normal",
-                cavidadeOral: "normal",
-                temperatura: "normal",
-                hidratacao: "normal",
-                exames: [],
+                tutorId: "tutor_1",
+                petId: "pet_1",
+                dataAtendimento: "2023-08-15",
+                queixaPrincipal: "Coceira excessiva",
+                diagnostico: "Dermatite alérgica",
+                tratamento: "Antihistamínico",
+                observacoes: "Trocar shampoo",
                 tipoAtendimento: "consulta_plano",
-                formaPagamento: "plano_saude",
-                status: "concluido",
-                observacoes: "Prescrito xarope para tosse"
+                status: "concluido"
             },
+            
+            // Atendimento do Thor (pet_3)
             {
                 id: "anamnese_3",
-                dataCriacao: "2023-08-10T11:20:00",
-                dataAtendimento: "2023-08-10",
-                tutorId: "tutor_3",
-                petId: "pet_4",
-                queixaPrincipal: "Consulta de rotina para filhote",
-                digestorio: [],
-                outrosDigestorio: "",
-                cardio: [],
-                outrosCardio: "",
-                mucosa: "normal",
-                cavidadeOral: "normal",
-                temperatura: "normal",
-                hidratacao: "normal",
-                exames: [],
+                tutorId: "tutor_2",
+                petId: "pet_3",
+                dataAtendimento: "2023-06-20",
+                queixaPrincipal: "Dificuldade respiratória",
+                diagnostico: "Síndrome braquicefálica",
+                tratamento: "Cirurgia indicada",
+                observacoes: "Monitorar crises",
                 tipoAtendimento: "consulta_particular",
-                formaPagamento: "credito",
-                status: "concluido",
-                observacoes: "Vacinação atualizada e orientações para filhote"
+                status: "pendente"
             },
+            
+            // Atendimento da Mel (pet_4)
             {
                 id: "anamnese_4",
-                dataCriacao: "2023-09-05T09:45:00",
-                dataAtendimento: "2023-09-05",
-                tutorId: "tutor_4",
-                petId: "pet_5",
-                queixaPrincipal: "Ave está com penas opacas",
-                digestorio: [],
-                outrosDigestorio: "",
-                cardio: [],
-                outrosCardio: "",
-                mucosa: "normal",
-                cavidadeOral: "normal",
-                temperatura: "normal",
-                hidratacao: "normal",
-                exames: ["exame_sangue"],
+                tutorId: "tutor_3",
+                petId: "pet_4",
+                dataAtendimento: "2023-07-05",
+                queixaPrincipal: "Queda de pelo",
+                diagnostico: "Tricobezoar",
+                tratamento: "Laxante felino",
+                observacoes: "Escovar diariamente",
                 tipoAtendimento: "consulta_plano",
-                formaPagamento: "plano_saude",
-                status: "concluido",
-                observacoes: "Suplementação vitamínica prescrita"
+                status: "concluido"
+            },
+            
+            // Atendimento do Bob (pet_5)
+            {
+                id: "anamnese_5",
+                tutorId: "tutor_3",
+                petId: "pet_5",
+                dataAtendimento: "2023-09-10",
+                queixaPrincipal: "Mau hálito",
+                diagnostico: "Doença periodontal",
+                tratamento: "Limpeza dentária",
+                observacoes: "Agendar procedimento",
+                tipoAtendimento: "consulta_plano",
+                status: "pendente"
             }
         ];
 
-        // =============================================
-        // 5. SALVA TODOS OS DADOS NO LOCALSTORAGE
-        // =============================================
+        // Salvando todos os dados no localStorage
+        localStorage.setItem('planos', JSON.stringify(planos));
         localStorage.setItem('tutores', JSON.stringify(tutores));
         localStorage.setItem('pets', JSON.stringify(pets));
         localStorage.setItem('anamneses', JSON.stringify(anamneses));
-        localStorage.setItem('planos', JSON.stringify(planos));
-        
-        console.log("Dados fictícios criados com sucesso!");
-        console.log("Tutores:", tutores);
-        console.log("Pets:", pets);
-        console.log("Anamneses:", anamneses);
-        console.log("Planos:", planos);
-    } else {
-        console.log("Dados já existem no localStorage.");
+
+        console.log("Base de dados fictícia carregada com sucesso!");
+        console.log(`Tutores: ${tutores.length} | Pets: ${pets.length} | Anamneses: ${anamneses.length}`);
     }
 });
