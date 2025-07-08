@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const spanClose = document.querySelector('.close');
     const comoConheceu = document.getElementById('comoConheceu');
     const containerIndicacao = document.getElementById('containerIndicacao');
+    const aderiuPlanoCheckbox = document.getElementById('aderiuPlano');
+    const planoPetContainer = document.getElementById('planoPetContainer');
+    const planoPetSelect = document.getElementById('planoPet');
+    const dataAderiuPlano = document.getElementById('dataAderiuPlano');
     
     // Variáveis de estado
     let tutorCadastrado = false;
@@ -35,6 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         modalPet.style.display = 'block';
+        // Define a data atual no campo de cadastro
+        document.getElementById('dataCadastroPet').value = formatarData(new Date());
     });
 
     spanClose.addEventListener('click', fecharModalPet);
@@ -56,11 +62,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // 5. Máscaras para os campos
     aplicarMascaras();
 
-    // 6. Submit do formulário de tutor
+    // 6. Controle do checkbox de adesão ao plano do pet
+    aderiuPlanoCheckbox.addEventListener('change', function() {
+        planoPetContainer.style.display = this.checked ? 'block' : 'none';
+        planoPetSelect.required = this.checked;
+        dataAderiuPlano.required = this.checked;
+        
+        if (this.checked) {
+            // Definir a data atual como padrão
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            dataAderiuPlano.value = formattedDate;
+        }
+    });
+
+    // 7. Submit do formulário de tutor
     formNovoTutor.addEventListener('submit', function(e) {
         e.preventDefault();
         
         tutorIdAtual = 'tutor_' + Date.now();
+        const dataCadastro = new Date();
         
         const tutorData = {
             id: tutorIdAtual,
@@ -78,22 +99,27 @@ document.addEventListener('DOMContentLoaded', function() {
                           ? document.getElementById('nomeIndicacao').value 
                           : '',
             adesaoPlano: document.getElementById('adesaoPlano').value,
-            dataCadastro: new Date().toISOString(),
+            dataCadastro: dataCadastro.toISOString(),
             planoId: "",
             statusPlano: "inativo",
             dataVencimentoPlano: ""
         };
 
+        // Mostra a data de cadastro formatada
+        document.getElementById('dataCadastroTutor').value = formatarData(dataCadastro);
+
         salvarTutor(tutorData);
         tutorCadastrado = true;
         verificarBotoes();
         alert('Tutor cadastrado com sucesso!');
-        formNovoTutor.reset();
     });
 
-    // 7. Submit do formulário de pet
+    // 8. Submit do formulário de pet
     formPet.addEventListener('submit', function(e) {
         e.preventDefault();
+        
+        const aderiuPlano = aderiuPlanoCheckbox.checked;
+        const dataCadastro = new Date();
         
         const petData = {
             id: 'pet_' + Date.now(),
@@ -108,7 +134,10 @@ document.addEventListener('DOMContentLoaded', function() {
             cor: document.getElementById('cor').value,
             doencaExistente: document.getElementById('doencaExistente').value,
             observacao: document.getElementById('observacao').value,
-            dataCadastro: new Date().toISOString(),
+            dataCadastro: dataCadastro.toISOString(),
+            aderiuPlano: aderiuPlano,
+            planoPet: aderiuPlano ? document.getElementById('planoPet').value : null,
+            dataAderiuPlano: aderiuPlano ? document.getElementById('dataAderiuPlano').value : null,
             historico: []
         };
 
@@ -118,9 +147,11 @@ document.addEventListener('DOMContentLoaded', function() {
         modalPet.style.display = 'none';
         alert('Pet cadastrado com sucesso!');
         formPet.reset();
+        aderiuPlanoCheckbox.checked = false;
+        planoPetContainer.style.display = 'none';
     });
 
-    // 8. Botão iniciar atendimento
+    // 9. Botão iniciar atendimento
     iniciarAtendimentoBtn.addEventListener('click', function() {
         localStorage.setItem('currentTutorId', tutorIdAtual);
         window.location.href = 'tela-anamnese.html';
@@ -137,12 +168,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function salvarTutor(tutorData) {
         const tutores = JSON.parse(localStorage.getItem('tutores')) || [];
+        // Adiciona a data de cadastro se não existir
+        if (!tutorData.dataCadastro) {
+            tutorData.dataCadastro = new Date().toISOString();
+        }
         tutores.push(tutorData);
         localStorage.setItem('tutores', JSON.stringify(tutores));
     }
 
     function salvarPet(petData) {
         const pets = JSON.parse(localStorage.getItem('pets')) || [];
+        // Garante que a data de cadastro está definida
+        if (!petData.dataCadastro) {
+            petData.dataCadastro = new Date().toISOString();
+        }
         pets.push(petData);
         localStorage.setItem('pets', JSON.stringify(pets));
     }
@@ -170,6 +209,19 @@ document.addEventListener('DOMContentLoaded', function() {
             let value = e.target.value.replace(/\D/g, '');
             value = value.replace(/^(\d{5})(\d)/, '$1-$2');
             e.target.value = value;
+        });
+    }
+
+    function formatarData(data) {
+        if (!data) return '';
+        
+        const dateObj = new Date(data);
+        return dateObj.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
     }
 });

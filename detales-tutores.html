@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Tutor - Centro Veterinário Integrativo</title>
+    <link rel="stylesheet" href="css/style-detales-tutores.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container-logo">
+        <img src="assets/logo-sem-fundo.png" alt="" class="logo">
+    </div>
+
+    <div class="container-lateral">
+        <div class="barra-lateral">
+            <button id="botao-voltar" class="botao-lateral">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+        </div>
+    </div>
+
+    <main class="content">
+        <div class="cabecalho-tutor">
+            <div class="info-tutor">
+                <h1 id="nome-tutor"></h1>
+                <div class="detalhes-contato">
+                    <p><i class="fas fa-phone"></i> <span id="telefone-tutor"></span></p>
+                    <p><i class="fas fa-envelope"></i> <span id="email-tutor"></span></p>
+                    <p><i class="fas fa-map-marker-alt"></i> <span id="endereco-tutor"></span></p>
+                </div>
+            </div>
+            <button id="editar-tutor" class="btn-editar">
+                <i class="fas fa-edit"></i> Editar Cadastro
+            </button>
+        </div>
+
+        <div class="secao-pets">
+            <h2><i class="fas fa-paw"></i> Pets do Tutor</h2>
+            <div id="lista-pets" class="cards-pets">
+                <!-- Cards serão preenchidos via JavaScript -->
+            </div>
+        </div>
+
+        <!-- Modal de Edição do Pet -->
+        <div id="modalPet" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2 id="titulo-modal-pet"><i class="fas fa-paw"></i> Editar Pet</h2>
+                <form id="formPet" class="modal-form">
+                    <input type="hidden" id="petId">
+                    
+                    <!-- Os mesmos campos do formulário de pet, mas para edição -->
+                    <div class="form-group">
+                        <label for="nomePet">Nome do Pet*</label>
+                        <input type="text" id="nomePet" required>
+                    </div>
+                    
+                    <!-- ... (todos os outros campos do formulário de pet) ... -->
+                    
+                    <div class="form-buttons">
+                        <button type="button" id="excluirPet" class="btn-excluir">
+                            <i class="fas fa-trash"></i> Excluir Pet
+                        </button>
+                        <button type="submit" class="btn-primario">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/detales-tutores.js"></script>
+</body>
+</html>

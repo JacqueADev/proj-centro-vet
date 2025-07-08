@@ -51,9 +51,13 @@
                         <input type="tel" id="telefoneTutor" required placeholder="(00) 00000-0000">
                     </div>
                     <div class="form-group">
-    <label for="emailTutor">Email</label>
-    <input type="email" id="emailTutor" placeholder="seu@email.com">
-</div>
+                        <label for="emailTutor">Email</label>
+                        <input type="email" id="emailTutor" placeholder="seu@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Data de Cadastro no Sistema</label>
+                        <input type="text" id="dataCadastroTutor" readonly>
+                    </div>
                 </fieldset>
                 
                 <fieldset class="fieldset-custom">
@@ -98,12 +102,12 @@
                     </div>
                 </div>
                 <div class="form-group">
-    <label for="adesaoPlano">Adesão de Plano</label>
-    <select id="adesaoPlano">
-        <option value="nao">Não</option>
-        <option value="sim">Sim</option>
-    </select>
-</div>
+                    <label for="adesaoPlano">Adesão de Plano</label>
+                    <select id="adesaoPlano">
+                        <option value="nao">Não</option>
+                        <option value="sim">Sim</option>
+                    </select>
+                </div>
                 
                 <div class="form-buttons">
                     <button type="button" class="btn-cancelar">Cancelar</button>
@@ -129,6 +133,11 @@
             <h2><i class="fas fa-paw"></i> Adicionar Novo Pet</h2>
             <form id="formPet" class="modal-form">
                 <input type="hidden" id="tutorId">
+                
+                <div class="form-group">
+                    <label>Data de Cadastro no Sistema</label>
+                    <input type="text" id="dataCadastroPet" readonly>
+                </div>
                 
                 <div class="form-group">
                     <label for="nomePet">Nome do Pet*</label>
@@ -201,6 +210,32 @@
                         <option value="Não">Não</option>
                         <option value="Sim">Sim</option>
                     </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="aderiuPlano">Pet aderiu ao plano?</label>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="aderiuPlano" name="aderiuPlano">
+                        <label for="aderiuPlano">Sim</label>
+                    </div>
+                </div>
+
+                <div id="planoPetContainer" style="display: none;">
+                    <div class="form-group">
+                        <label for="planoPet">Plano do Pet*</label>
+                        <select id="planoPet" required>
+                            <option value="">Selecione o plano</option>
+                            <option value="Plano Básico">Plano Básico</option>
+                            <option value="Plano Essencial">Plano Essencial</option>
+                            <option value="Plano Completo">Plano Completo</option>
+                            <option value="Plano Premium">Plano Premium</option>
+                            <option value="Plano Sênior">Plano Sênior</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dataAderiuPlano">Data de adesão ao plano*</label>
+                        <input type="date" id="dataAderiuPlano" required>
+                    </div>
                 </div>
                 
                 <div class="form-group">

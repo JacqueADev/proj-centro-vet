@@ -4,6 +4,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputPesquisa = document.getElementById('inputPesquisa');
     const botaoBuscar = document.getElementById('botaoBuscar');
     const tabelaCorpo = document.getElementById('tabelaCorpo');
+    const aderiuPlanoCheckbox = document.getElementById('aderiuPlano');
+    const planoPetContainer = document.getElementById('planoPetContainer');
+    const modalPet = document.getElementById('modalPet');
+    const btnCancelarPet = document.getElementById('cancelarPet');
+    const formPet = document.getElementById('formPet');
+    const spanClose = document.querySelector('.close');
+    const comoConheceu = document.getElementById('comoConheceu');
+    const containerIndicacao = document.getElementById('containerIndicacao');
+    const aderiuPlanoTutorCheckbox = document.getElementById('aderiuPlanoTutor');
+    const planoTutorContainer = document.getElementById('planoTutorContainer');
+
+    // Contador para IDs menores
+    let tutorIdCounter = JSON.parse(localStorage.getItem('tutorIdCounter')) || 1;
 
     // 2. Configuração do botão Voltar
     if (botaoVoltar) {
@@ -12,38 +25,77 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 3. Função para carregar tutores do localStorage
+    // 3. Função para gerar ID menor para tutores
+    function gerarTutorId() {
+        const novoId = tutorIdCounter++;
+        localStorage.setItem('tutorIdCounter', JSON.stringify(tutorIdCounter));
+        return `tut_${novoId}`;
+    }
+
+    // 4. Função para carregar tutores do localStorage
     function carregarTutores() {
         return JSON.parse(localStorage.getItem('tutores')) || [];
     }
 
-    // 4. Função para contar pets por tutor
+    // 5. Função para contar pets por tutor
     function contarPetsPorTutor(tutorId) {
         const pets = JSON.parse(localStorage.getItem('pets')) || [];
         return pets.filter(pet => pet.tutorId === tutorId).length;
     }
 
-    // 5. Função para formatar dados dos tutores para exibição
+    // 6. Função para verificar se o tutor tem pets no plano
+    function verificarPetsNoPlano(tutorId) {
+        const pets = JSON.parse(localStorage.getItem('pets')) || [];
+        return pets.some(pet => 
+            pet.tutorId === tutorId && pet.aderiuPlano === true
+        );
+    }
+
+    // 7. Função para formatar data
+    function formatarData(data) {
+        if (!data) return 'N/A';
+        
+        if (typeof data === 'string') {
+            data = new Date(data);
+        }
+        
+        if (!(data instanceof Date) || isNaN(data)) {
+            data = new Date();
+        }
+        
+        const dia = data.getDate().toString().padStart(2, '0');
+        const mes = (data.getMonth() + 1).toString().padStart(2, '0');
+        const ano = data.getFullYear();
+        
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    // 8. Função para formatar dados dos tutores para exibição
     function formatarTutoresParaExibicao(tutores) {
         return tutores.map(tutor => {
+            const temPetsNoPlano = verificarPetsNoPlano(tutor.id);
+            const idNumerico = tutor.id.split('_')[1];
+            
             return {
-                id: tutor.id.split('_')[1], // Extrai apenas o número do ID
+                id: idNumerico,
                 nome: tutor.nome,
                 telefone: tutor.telefone,
+                dataCadastro: tutor.dataCadastro || new Date().toISOString(),
                 pets: contarPetsPorTutor(tutor.id),
-                dadosCompletos: tutor // Mantém os dados completos para uso posterior
+                temPetsNoPlano: temPetsNoPlano,
+                dadosCompletos: tutor
             };
         });
     }
 
-    // 6. Função para renderizar a tabela
+    // 9. Função para renderizar a tabela (COM NOVO EVENTO DE CLIQUE NA LINHA)
     function renderizarTabela(tutoresFormatados) {
         tabelaCorpo.innerHTML = '';
         
         if (tutoresFormatados.length === 0) {
             tabelaCorpo.innerHTML = `
                 <tr>
-                    <td colspan="5" class="sem-resultados">
+                    <td colspan="7" class="sem-resultados">
                         Nenhum tutor encontrado
                     </td>
                 </tr>
@@ -57,7 +109,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td>#${tutor.id}</td>
                 <td>${tutor.nome}</td>
                 <td>${tutor.telefone}</td>
+                <td>${formatarData(tutor.dataCadastro)}</td>
                 <td><span class="pets">${tutor.pets}</span></td>
+                <td>
+                    ${tutor.temPetsNoPlano ? 
+                        '<i class="fas fa-check-circle" style="color: var(--cor-sucesso);" tooltip="Possui pets no plano"></i>' : 
+                        '<i class="fas fa-times-circle" style="color: var(--cor-erro);" tooltip="Não possui pets no plano"></i>'}
+                </td>
                 <td class="acoes">
                     <button class="btn-icon add" onclick="adicionarPet('${tutor.dadosCompletos.id}')">
                         <i class="fas fa-plus"></i>
@@ -70,14 +128,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     </button>
                 </td>
             `;
+            
+            // NOVO: Evento de clique na linha (exceto nos botões de ação)
+            tr.addEventListener('click', function(e) {
+                if (!e.target.closest('.acoes')) {
+                    window.location.href = `detales-tutores.html?id=${tutor.dadosCompletos.id}`;
+                }
+            });
+            
             tabelaCorpo.appendChild(tr);
         });
     }
 
-    // 7. Função para buscar tutores (com filtro opcional)
+    // 10. Função para buscar tutores
     function buscarTutores(termo = '') {
         const tutores = carregarTutores();
-        const tutoresFormatados = formatarTutoresParaExibicao(tutores);
+        const tutoresComData = tutores.map(tutor => {
+            if (!tutor.dataCadastro) {
+                tutor.dataCadastro = new Date().toISOString();
+            }
+            return tutor;
+        });
+        
+        if (tutoresComData.length !== tutores.length) {
+            localStorage.setItem('tutores', JSON.stringify(tutoresComData));
+        }
+        
+        const tutoresFormatados = formatarTutoresParaExibicao(tutoresComData);
         
         termo = termo.trim().toLowerCase();
         
@@ -93,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
         renderizarTabela(resultados);
     }
 
-    // 8. Configuração dos eventos de pesquisa
+    // 11. Configuração dos eventos de pesquisa
     botaoBuscar.addEventListener('click', function() {
         buscarTutores(inputPesquisa.value);
     });
@@ -110,12 +187,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 9. Configuração do modal de adicionar pet
-    const modalPet = document.getElementById('modalPet');
-    const btnCancelarPet = document.getElementById('cancelarPet');
-    const formPet = document.getElementById('formPet');
-    const spanClose = document.querySelector('.close');
+    // 12. Configuração do checkbox de plano do pet
+    aderiuPlanoCheckbox.addEventListener('change', function() {
+        planoPetContainer.style.display = this.checked ? 'block' : 'none';
+        document.getElementById('planoPet').required = this.checked;
+        document.getElementById('dataAderiuPlano').required = this.checked;
+        
+        if (this.checked) {
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            document.getElementById('dataAderiuPlano').value = formattedDate;
+        }
+    });
 
+    // Configuração do checkbox de plano do tutor
+    aderiuPlanoTutorCheckbox.addEventListener('change', function() {
+        planoTutorContainer.style.display = this.checked ? 'block' : 'none';
+        document.getElementById('planoTutor').required = this.checked;
+        document.getElementById('dataAderiuPlanoTutor').required = this.checked;
+        
+        if (this.checked) {
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            document.getElementById('dataAderiuPlanoTutor').value = formattedDate;
+        }
+    });
+
+    // 13. Funções para manipulação do modal de pet
     window.adicionarPet = function(idTutor) {
         const tutor = carregarTutores().find(t => t.id === idTutor);
         
@@ -124,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('#modalPet h2').textContent = `Adicionar Pet para ${tutor.nome}`;
             modalPet.style.display = 'block';
             formPet.reset();
+            modalPet.querySelector('.modal-content').scrollTop = 0;
         }
     };
 
@@ -142,45 +241,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // 10. Processamento do formulário de pet
+    // 14. Processamento do formulário de pet
     formPet.addEventListener('submit', function(e) {
         e.preventDefault();
         
         const tutorId = document.getElementById('tutorId').value;
-        const nomePet = document.getElementById('nomePet').value;
-        const idade = document.getElementById('idade').value;
-        const idadeTipo = document.getElementById('idadeTipo').value;
-        const sexo = document.getElementById('sexo').value;
+        const aderiuPlano = aderiuPlanoCheckbox.checked;
         
-        // Simular cadastro no localStorage
-        const pets = JSON.parse(localStorage.getItem('pets')) || [];
-        const novoPet = {
+        const petData = {
             id: `pet_${Date.now()}`,
             tutorId: tutorId,
-            nome: nomePet,
+            nome: document.getElementById('nomePet').value,
+            idade: document.getElementById('idade').value + ' ' + document.getElementById('idadeTipo').value,
+            sexo: document.getElementById('sexo').value,
+            castrado: document.getElementById('castrado').value,
             especie: document.getElementById('especie').value,
             raca: document.getElementById('raca').value,
-            idade: `${idade} ${idadeTipo}`,
-            peso: 0, // Será atualizado na primeira consulta
-            sexo: sexo,
-            castrado: document.getElementById('castrado').value,
             pelagem: document.getElementById('pelagem').value,
             cor: document.getElementById('cor').value,
             doencaExistente: document.getElementById('doencaExistente').value,
             observacao: document.getElementById('observacao').value,
             dataCadastro: new Date().toISOString(),
+            aderiuPlano: aderiuPlano,
+            planoPet: aderiuPlano ? document.getElementById('planoPet').value : null,
+            dataAderiuPlano: aderiuPlano ? document.getElementById('dataAderiuPlano').value : null,
             historico: []
         };
-        
-        pets.push(novoPet);
+
+        const pets = JSON.parse(localStorage.getItem('pets')) || [];
+        pets.push(petData);
         localStorage.setItem('pets', JSON.stringify(pets));
         
         buscarTutores(inputPesquisa.value);
         fecharModalPet();
-        alert(`Pet ${nomePet} cadastrado com sucesso!`);
+        alert(`Pet ${petData.nome} cadastrado com sucesso!`);
     });
 
-    // 11. Funções para edição de tutor
+    // 15. Funções para edição de tutor
     window.editarTutor = function(idTutor) {
         const tutor = carregarTutores().find(t => t.id === idTutor);
         
@@ -191,11 +288,22 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('cpfTutor').value = tutor.cpf || '';
         document.getElementById('rgTutor').value = tutor.rg || '';
         document.getElementById('telefoneTutor').value = tutor.telefone || '';
+        document.getElementById('emailTutor').value = tutor.email || '';
         document.getElementById('cepTutor').value = tutor.cep || '';
         document.getElementById('enderecoTutor').value = tutor.endereco || '';
         document.getElementById('bairroTutor').value = tutor.bairro || '';
         document.getElementById('cidadeTutor').value = tutor.cidade || '';
         document.getElementById('comoConheceu').value = tutor.comoConheceu || '';
+        
+        // Novos campos do plano
+        const aderiuPlano = tutor.aderiuPlano || false;
+        document.getElementById('aderiuPlanoTutor').checked = aderiuPlano;
+        planoTutorContainer.style.display = aderiuPlano ? 'block' : 'none';
+        
+        if (aderiuPlano) {
+            document.getElementById('planoTutor').value = tutor.planoTutor || '';
+            document.getElementById('dataAderiuPlanoTutor').value = tutor.dataAderiuPlano || '';
+        }
         
         if (tutor.comoConheceu === 'indicacao') {
             document.getElementById('containerIndicacao').style.display = 'block';
@@ -205,16 +313,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         document.getElementById('modalEditarTutor').style.display = 'block';
+        document.querySelector('#modalEditarTutor .modal-content').scrollTop = 0;
     };
 
     window.excluirTutor = function(idTutor) {
         if (confirm('Tem certeza que deseja excluir este tutor e todos os seus pets?')) {
-            // Remove o tutor
             let tutores = carregarTutores();
             tutores = tutores.filter(t => t.id !== idTutor);
             localStorage.setItem('tutores', JSON.stringify(tutores));
             
-            // Remove os pets associados
             let pets = JSON.parse(localStorage.getItem('pets')) || [];
             pets = pets.filter(pet => pet.tutorId !== idTutor);
             localStorage.setItem('pets', JSON.stringify(pets));
@@ -234,16 +341,19 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('modalEditarTutor').style.display = 'none';
     };
 
-    // 12. Processamento do formulário de edição
+    // 16. Processamento do formulário de edição
     document.getElementById('formEditarTutor').addEventListener('submit', function(e) {
         e.preventDefault();
         
         const tutorId = document.getElementById('tutorIdEditar').value;
+        const aderiuPlano = document.getElementById('aderiuPlanoTutor').checked;
+        
         const dadosAtualizados = {
             nome: document.getElementById('nomeTutor').value,
             cpf: document.getElementById('cpfTutor').value,
             rg: document.getElementById('rgTutor').value,
             telefone: document.getElementById('telefoneTutor').value,
+            email: document.getElementById('emailTutor').value,
             cep: document.getElementById('cepTutor').value,
             endereco: document.getElementById('enderecoTutor').value,
             bairro: document.getElementById('bairroTutor').value,
@@ -251,13 +361,17 @@ document.addEventListener('DOMContentLoaded', function() {
             comoConheceu: document.getElementById('comoConheceu').value,
             nomeIndicacao: document.getElementById('comoConheceu').value === 'indicacao' 
                           ? document.getElementById('nomeIndicacao').value 
-                          : ''
+                          : '',
+            aderiuPlano: aderiuPlano,
+            planoTutor: aderiuPlano ? document.getElementById('planoTutor').value : null,
+            dataAderiuPlano: aderiuPlano ? document.getElementById('dataAderiuPlanoTutor').value : null
         };
         
         let tutores = carregarTutores();
         const tutorIndex = tutores.findIndex(t => t.id === tutorId);
         
         if (tutorIndex !== -1) {
+            dadosAtualizados.dataCadastro = tutores[tutorIndex].dataCadastro || new Date().toISOString();
             tutores[tutorIndex] = { ...tutores[tutorIndex], ...dadosAtualizados };
             localStorage.setItem('tutores', JSON.stringify(tutores));
             buscarTutores(inputPesquisa.value);
@@ -267,6 +381,6 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('Dados do tutor atualizados com sucesso!');
     });
 
-    // 13. Carrega todos os tutores ao iniciar
+    // 17. Carrega todos os tutores ao iniciar
     buscarTutores();
 });

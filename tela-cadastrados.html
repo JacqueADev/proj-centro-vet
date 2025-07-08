@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Centro Veterinário Integrativo Jhonatan Silvestre</title>
+    <title>Sistema Centro Veterinário Integrativo</title>
     <link rel="stylesheet" href="css/style-tela-cadastrados.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -20,7 +20,6 @@
         </div>
     </div>
 
-    <!-- Conteúdo Principal -->
     <main class="content">
         <div class="top-bar">
             <input type="text" id="inputPesquisa" placeholder="Digite o nome do tutor aqui" class="barra-de-pesquisa">
@@ -29,14 +28,15 @@
             </button>
         </div>
 
-        <!-- Tabela de Tutores -->
         <table class="tabela-tutores">
             <thead>
                 <tr>
                     <th>Cod.</th>
                     <th>Tutor</th>
                     <th>Contato</th>
+                    <th>Cadastro</th>
                     <th>Pets</th>
+                    <th>Plano</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -50,18 +50,18 @@
     <div id="modalPet" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Adicionar Novo Pet</h2>
+            <h2><i class="fas fa-paw"></i> Adicionar Novo Pet</h2>
             <form id="formPet" class="modal-form">
                 <input type="hidden" id="tutorId">
                 
                 <div class="form-group">
-                    <label for="nomePet">Nome do Pet</label>
+                    <label for="nomePet">Nome do Pet*</label>
                     <input type="text" id="nomePet" required>
                 </div>
                 
                 <div class="form-group-duo">
                     <div class="form-group">
-                        <label for="idade">Idade</label>
+                        <label for="idade">Idade*</label>
                         <div class="idade-container">
                             <input type="number" id="idade" min="0" required>
                             <select id="idadeTipo">
@@ -72,7 +72,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="sexo">Sexo</label>
+                        <label for="sexo">Sexo*</label>
                         <select id="sexo" required>
                             <option value="">Selecione</option>
                             <option value="Fêmea">Fêmea</option>
@@ -83,7 +83,7 @@
                 
                 <div class="form-group-duo">
                     <div class="form-group">
-                        <label for="castrado">Castrado</label>
+                        <label for="castrado">Castrado*</label>
                         <select id="castrado" required>
                             <option value="">Selecione</option>
                             <option value="Sim">Sim</option>
@@ -92,7 +92,7 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="especie">Espécie</label>
+                        <label for="especie">Espécie*</label>
                         <select id="especie" required>
                             <option value="">Selecione</option>
                             <option value="Cachorro">Cachorro</option>
@@ -103,7 +103,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="raca">Raça</label>
+                    <label for="raca">Raça*</label>
                     <input type="text" id="raca" required>
                 </div>
                 
@@ -120,11 +120,37 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="doencaExistente">Doença pré-existente</label>
+                    <label for="doencaExistente">Doença pré-existente*</label>
                     <select id="doencaExistente" required>
                         <option value="Não">Não</option>
                         <option value="Sim">Sim</option>
                     </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="aderiuPlano">Pet aderiu ao plano?</label>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="aderiuPlano" name="aderiuPlano">
+                        <label for="aderiuPlano">Sim</label>
+                    </div>
+                </div>
+
+                <div id="planoPetContainer" style="display: none;">
+                    <div class="form-group">
+                        <label for="planoPet">Plano do Pet*</label>
+                        <select id="planoPet" required>
+                            <option value="">Selecione o plano</option>
+                            <option value="Plano Básico">Plano Básico</option>
+                            <option value="Plano Essencial">Plano Essencial</option>
+                            <option value="Plano Completo">Plano Completo</option>
+                            <option value="Plano Premium">Plano Premium</option>
+                            <option value="Plano Sênior">Plano Sênior</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dataAderiuPlano">Data de adesão ao plano*</label>
+                        <input type="date" id="dataAderiuPlano" required>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -133,23 +159,23 @@
                 </div>
                 
                 <div class="form-buttons">
-                    <button type="button" id="cancelarPet">Cancelar</button>
-                    <button type="submit">Registrar</button>
+                    <button type="button" id="cancelarPet" class="btn-cancelar">Cancelar</button>
+                    <button type="submit" class="btn-primario">Registrar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal para Editar Tutor -->
+    <!-- Modal para Editar Tutor (MODIFICADO) -->
     <div id="modalEditarTutor" class="modal">
         <div class="modal-content">
             <span class="close" onclick="fecharModalEditar()">&times;</span>
-            <h2>Editar Tutor</h2>
+            <h2><i class="fas fa-user-edit"></i> Editar Tutor</h2>
             <form id="formEditarTutor" class="modal-form">
                 <input type="hidden" id="tutorIdEditar">
                 
                 <fieldset>
-                    <legend>Dados Pessoais</legend>
+                    <legend><i class="fas fa-id-card"></i> Dados Pessoais</legend>
                     
                     <div class="form-group">
                         <label for="nomeTutor">Nome do Tutor*</label>
@@ -172,10 +198,15 @@
                         <label for="telefoneTutor">Telefone*</label>
                         <input type="tel" id="telefoneTutor" required placeholder="(00) 00000-0000">
                     </div>
+
+                    <div class="form-group">
+                        <label for="emailTutor">E-mail</label>
+                        <input type="email" id="emailTutor" placeholder="email@exemplo.com">
+                    </div>
                 </fieldset>
                 
                 <fieldset>
-                    <legend>Endereço</legend>
+                    <legend><i class="fas fa-map-marker-alt"></i> Endereço</legend>
                     
                     <div class="form-group">
                         <label for="cepTutor">CEP 
@@ -198,6 +229,36 @@
                         <div class="form-group">
                             <label for="cidadeTutor">Cidade</label>
                             <input type="text" id="cidadeTutor">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend><i class="fas fa-heart"></i> Plano de Saúde</legend>
+                    
+                    <div class="form-group">
+                        <label for="aderiuPlanoTutor">Tutor aderiu ao plano de saúde?</label>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="aderiuPlanoTutor" name="aderiuPlanoTutor">
+                            <label for="aderiuPlanoTutor">Sim</label>
+                        </div>
+                    </div>
+
+                    <div id="planoTutorContainer" style="display: none;">
+                        <div class="form-group">
+                            <label for="planoTutor">Plano do Tutor*</label>
+                            <select id="planoTutor" required>
+                                <option value="">Selecione o plano</option>
+                                <option value="Plano Básico">Plano Básico</option>
+                                <option value="Plano Essencial">Plano Essencial</option>
+                                <option value="Plano Completo">Plano Completo</option>
+                                <option value="Plano Premium">Plano Premium</option>
+                                <option value="Plano Sênior">Plano Sênior</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataAderiuPlanoTutor">Data de adesão ao plano*</label>
+                            <input type="date" id="dataAderiuPlanoTutor" required>
                         </div>
                     </div>
                 </fieldset>
@@ -225,6 +286,5 @@
     </div>
 
     <script src="js/cadastrados.js"></script>
-    <script src="js/dados-ficticios.js"></script>
 </body>
 </html>
