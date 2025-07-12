@@ -1,38 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
     if (!localStorage.getItem('tutores') || 
         !localStorage.getItem('pets') || 
-        !localStorage.getItem('anamneses') ||
-        !localStorage.getItem('planos')) {
+        !localStorage.getItem('anamneses')) {
         
         console.log("Carregando dados fictícios completos...");
-
-        /* ========== PLANOS DE SAÚDE ========== */
-        const planos = [
-            {
-                id: "plano_1",
-                nome: "Básico",
-                descricao: "Cobertura essencial para cuidados básicos",
-                valorMensal: 89.90,
-                beneficios: ["4 consultas/ano", "Vacinação básica"],
-                cobertura: ["Consultas", "Vacinas anuais"]
-            },
-            {
-                id: "plano_2",
-                nome: "Intermediário",
-                descricao: "Cobertura ampla para prevenção",
-                valorMensal: 129.90,
-                beneficios: ["6 consultas/ano", "1 exame anual"],
-                cobertura: ["Consultas", "Exames básicos"]
-            },
-            {
-                id: "plano_3",
-                nome: "Premium",
-                descricao: "Cobertura completa com atendimento 24h",
-                valorMensal: 199.90,
-                beneficios: ["Consultas ilimitadas", "Exames laboratoriais"],
-                cobertura: ["Emergências", "Cirurgias"]
-            }
-        ];
 
         /* ========== TUTORES ========== */
         const tutores = [
@@ -49,9 +20,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cep: "01001-000",
                 comoConheceu: "indicacao",
                 nomeIndicacao: "Carlos Santos",
-                adesaoPlano: "sim",
-                planoId: "plano_2",
-                statusPlano: "ativo",
                 dataCadastro: "2023-01-15T10:00:00"
             },
             {
@@ -67,9 +35,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cep: "22010-000",
                 comoConheceu: "rede-social",
                 nomeIndicacao: "",
-                adesaoPlano: "nao",
-                planoId: "",
-                statusPlano: "inativo",
                 dataCadastro: "2023-02-20T14:30:00"
             },
             {
@@ -85,9 +50,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cep: "30110-000",
                 comoConheceu: "outros",
                 nomeIndicacao: "",
-                adesaoPlano: "sim",
-                planoId: "plano_3",
-                statusPlano: "ativo",
                 dataCadastro: "2023-03-10T09:15:00"
             },
             {
@@ -103,9 +65,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cep: "80240-000",
                 comoConheceu: "indicacao",
                 nomeIndicacao: "Fernanda Lima",
-                adesaoPlano: "sim",
-                planoId: "plano_1",
-                statusPlano: "ativo",
                 dataCadastro: "2023-04-05T16:45:00"
             }
         ];
@@ -127,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cor: "Preto",
                 doencaExistente: "Não",
                 observacao: "Alergia a picada de pulga",
-                planoId: "plano_2",
                 dataCadastro: "2023-01-15T10:30:00",
                 historico: []
             },
@@ -145,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cor: "Marrom e branco",
                 doencaExistente: "Não",
                 observacao: "",
-                planoId: "",
                 dataCadastro: "2023-01-20T11:00:00",
                 historico: []
             },
@@ -165,7 +122,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cor: "Branco e preto",
                 doencaExistente: "Sim",
                 observacao: "Problemas respiratórios",
-                planoId: "",
                 dataCadastro: "2023-02-20T15:00:00",
                 historico: []
             },
@@ -185,7 +141,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cor: "Cinza",
                 doencaExistente: "Não",
                 observacao: "Necessita escovação diária",
-                planoId: "plano_3",
                 dataCadastro: "2023-03-10T09:30:00",
                 historico: []
             },
@@ -203,7 +158,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cor: "Branco",
                 doencaExistente: "Sim",
                 observacao: "Problemas dentários",
-                planoId: "plano_3",
                 dataCadastro: "2023-03-12T10:15:00",
                 historico: []
             },
@@ -223,7 +177,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 cor: "Caramelo",
                 doencaExistente: "Não",
                 observacao: "Adotada em abrigo",
-                planoId: "plano_1",
                 dataCadastro: "2023-04-05T17:00:00",
                 historico: []
             }
@@ -241,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 diagnostico: "Saudável",
                 tratamento: "Vacina V10",
                 observacoes: "Peso estável",
-                tipoAtendimento: "consulta_plano",
+                tipoAtendimento: "consulta_particular", // Alterado de consulta_plano para particular
                 status: "concluido"
             },
             {
@@ -253,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 diagnostico: "Dermatite alérgica",
                 tratamento: "Antihistamínico",
                 observacoes: "Trocar shampoo",
-                tipoAtendimento: "consulta_plano",
+                tipoAtendimento: "consulta_particular", // Alterado de consulta_plano para particular
                 status: "concluido"
             },
             
@@ -281,7 +234,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 diagnostico: "Tricobezoar",
                 tratamento: "Laxante felino",
                 observacoes: "Escovar diariamente",
-                tipoAtendimento: "consulta_plano",
+                tipoAtendimento: "consulta_particular", // Alterado de consulta_plano para particular
                 status: "concluido"
             },
             
@@ -295,13 +248,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 diagnostico: "Doença periodontal",
                 tratamento: "Limpeza dentária",
                 observacoes: "Agendar procedimento",
-                tipoAtendimento: "consulta_plano",
+                tipoAtendimento: "consulta_particular", // Alterado de consulta_plano para particular
                 status: "pendente"
             }
         ];
 
         // Salvando todos os dados no localStorage
-        localStorage.setItem('planos', JSON.stringify(planos));
         localStorage.setItem('tutores', JSON.stringify(tutores));
         localStorage.setItem('pets', JSON.stringify(pets));
         localStorage.setItem('anamneses', JSON.stringify(anamneses));

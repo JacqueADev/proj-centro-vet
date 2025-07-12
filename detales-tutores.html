@@ -28,6 +28,9 @@
                     <p><i class="fas fa-phone"></i> <span id="telefone-tutor"></span></p>
                     <p><i class="fas fa-envelope"></i> <span id="email-tutor"></span></p>
                     <p><i class="fas fa-map-marker-alt"></i> <span id="endereco-tutor"></span></p>
+                    <p><i class="fas fa-id-card"></i> <span id="cpf-tutor"></span></p>
+                    <p><i class="fas fa-calendar-alt"></i> <span id="data-cadastro-tutor"></span></p>
+                    <p id="plano-tutor-info"><i class="fas fa-heart"></i> <span id="status-plano-tutor"></span></p>
                 </div>
             </div>
             <button id="editar-tutor" class="btn-editar">
@@ -40,6 +43,9 @@
             <div id="lista-pets" class="cards-pets">
                 <!-- Cards serão preenchidos via JavaScript -->
             </div>
+            <div id="resumo-plano" class="resumo-plano">
+                <!-- Conteúdo será preenchido via JavaScript quando o botão for clicado -->
+            </div>
         </div>
 
         <!-- Modal de Edição do Pet -->
@@ -50,13 +56,109 @@
                 <form id="formPet" class="modal-form">
                     <input type="hidden" id="petId">
                     
-                    <!-- Os mesmos campos do formulário de pet, mas para edição -->
                     <div class="form-group">
                         <label for="nomePet">Nome do Pet*</label>
                         <input type="text" id="nomePet" required>
                     </div>
                     
-                    <!-- ... (todos os outros campos do formulário de pet) ... -->
+                    <div class="form-group-duo">
+                        <div class="form-group">
+                            <label for="idade">Idade*</label>
+                            <div class="idade-container">
+                                <input type="number" id="idade" min="0" required>
+                                <select id="idadeTipo">
+                                    <option value="meses">meses</option>
+                                    <option value="anos">anos</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sexo">Sexo*</label>
+                            <select id="sexo" required>
+                                <option value="">Selecione</option>
+                                <option value="Fêmea">Fêmea</option>
+                                <option value="Macho">Macho</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group-duo">
+                        <div class="form-group">
+                            <label for="castrado">Castrado*</label>
+                            <select id="castrado" required>
+                                <option value="">Selecione</option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="especie">Espécie*</label>
+                            <select id="especie" required>
+                                <option value="">Selecione</option>
+                                <option value="Cachorro">Cachorro</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="raca">Raça*</label>
+                        <input type="text" id="raca" required>
+                    </div>
+                    
+                    <div class="form-group-duo">
+                        <div class="form-group">
+                            <label for="pelagem">Pelagem</label>
+                            <input type="text" id="pelagem">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="cor">Cor</label>
+                            <input type="text" id="cor">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="doencaExistente">Doença pré-existente*</label>
+                        <select id="doencaExistente" required>
+                            <option value="Não">Não</option>
+                            <option value="Sim">Sim</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aderiuPlano">Pet aderiu ao plano?</label>
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="aderiuPlano" name="aderiuPlano">
+                            <label for="aderiuPlano">Sim</label>
+                        </div>
+                    </div>
+
+                    <div id="planoPetContainer" style="display: none;">
+                        <div class="form-group">
+                            <label for="planoPet">Plano do Pet*</label>
+                            <select id="planoPet" required>
+                                <option value="">Selecione o plano</option>
+                                <option value="Plano Básico 2.0">Plano Básico 2.0</option>
+                                <option value="Plano Intermediário 4.0">Plano Intermediário 4.0</option>
+                                <option value="Plano Premium 6.0">Plano Premium 6.0</option>
+                                <option value="Plano Super Premium 8.0">Plano Super Premium 8.0</option>
+                                <option value="Plano Silvestres 5.0">Plano Silvestres 5.0</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataAderiuPlano">Data de adesão ao plano*</label>
+                            <input type="date" id="dataAderiuPlano" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="observacao">Observação</label>
+                        <textarea id="observacao" rows="3"></textarea>
+                    </div>
                     
                     <div class="form-buttons">
                         <button type="button" id="excluirPet" class="btn-excluir">
@@ -65,6 +167,108 @@
                         <button type="submit" class="btn-primario">
                             <i class="fas fa-save"></i> Salvar Alterações
                         </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de Edição do Tutor -->
+        <div id="modalTutor" class="modal">
+            <div class="modal-content">
+                <span class="close" id="closeTutorModal">&times;</span>
+                <h2><i class="fas fa-user-edit"></i> Editar Tutor</h2>
+                <form id="formEditarTutor" class="modal-form">
+                    <input type="hidden" id="tutorIdEditar">
+                    
+                    <fieldset>
+                        <legend><i class="fas fa-id-card"></i> Dados Pessoais</legend>
+                        
+                        <div class="form-group">
+                            <label for="nomeTutorEditar">Nome do Tutor*</label>
+                            <input type="text" id="nomeTutorEditar" required>
+                        </div>
+                        
+                        <div class="form-group-duo">
+                            <div class="form-group">
+                                <label for="cpfTutorEditar">CPF*</label>
+                                <input type="text" id="cpfTutorEditar" required placeholder="000.000.000-00">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="rgTutorEditar">RG</label>
+                                <input type="text" id="rgTutorEditar">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="telefoneTutorEditar">Telefone*</label>
+                            <input type="tel" id="telefoneTutorEditar" required placeholder="(00) 00000-0000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="emailTutorEditar">Email</label>
+                            <input type="email" id="emailTutorEditar" placeholder="seu@email.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="dataCadastroTutorEditar">Data de Cadastro no Sistema</label>
+                            <input type="text" id="dataCadastroTutorEditar" readonly>
+                        </div>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend><i class="fas fa-map-marker-alt"></i> Endereço</legend>
+                        
+                        <div class="form-group">
+                            <label for="cepTutorEditar">CEP 
+                                <a href="https://buscacepinter.correios.com.br/" target="_blank" class="link-cep">(não sei o CEP)</a>
+                            </label>
+                            <input type="text" id="cepTutorEditar" placeholder="00000-000">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="enderecoTutorEditar">Endereço*</label>
+                            <input type="text" id="enderecoTutorEditar" required>
+                        </div>
+                        
+                        <div class="form-group-duo">
+                            <div class="form-group">
+                                <label for="bairroTutorEditar">Bairro</label>
+                                <input type="text" id="bairroTutorEditar">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="cidadeTutorEditar">Cidade</label>
+                                <input type="text" id="cidadeTutorEditar">
+                            </div>
+                        </div>
+                    </fieldset>
+                    
+                    <div class="form-group">
+                        <label for="comoConheceuEditar">Como nos conheceu?</label>
+                        <select id="comoConheceuEditar" onchange="mostrarCampoIndicacaoEditar()">
+                            <option value="">Selecione</option>
+                            <option value="rede-social">Rede Social</option>
+                            <option value="indicacao">Indicação</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                        <div id="containerIndicacaoEditar" style="display: none; margin-top: 10px;">
+                            <label for="nomeIndicacaoEditar">Nome de quem indicou:</label>
+                            <input type="text" id="nomeIndicacaoEditar">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="adesaoPlanoEditar">Adesão de Plano</label>
+                        <select id="adesaoPlanoEditar">
+                            <option value="nao">Não</option>
+                            <option value="sim">Sim</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-buttons">
+                        <button type="button" id="cancelarEdicaoTutor" class="btn-cancelar">Cancelar</button>
+                        <button type="submit" class="btn-primario">Salvar Alterações</button>
                     </div>
                 </form>
             </div>

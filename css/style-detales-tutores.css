@@ -16,9 +16,9 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: var(--cor-fonte);
-    background-color: var(--cor-branco);
+    background-color: #f5f5f5;
     line-height: 1.6;
 }
 
@@ -46,7 +46,7 @@ body {
     left: 0;
     width: 250px;
     height: 100vh;
-    padding-top: 120px; /* Espaço para a logo */
+    padding-top: 120px;
     background: linear-gradient(to bottom, 
         var(--cor-gradiente-mediano), 
         var(--cor-gradiente-claro));
@@ -112,6 +112,21 @@ body {
     color: var(--cor-gradiente-mediano);
     width: 20px;
     text-align: center;
+}
+
+#plano-tutor-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.plano-ativo {
+    color: var(--cor-sucesso);
+    font-weight: bold;
+}
+
+.plano-inativo {
+    color: #666;
 }
 
 .btn-editar {
@@ -202,92 +217,296 @@ body {
     border-top: 1px dashed #ddd;
 }
 
-/* Modal */
+.card-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.card-button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s;
+}
+
+.btn-atendimentos {
+    background-color: #3498db;
+    color: white;
+    border: none;
+}
+
+.btn-saldo-plano {
+    background-color: var(--cor-gradiente-mediano);
+    color: white;
+    border: none;
+}
+
+.card-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.resumo-plano {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: none;
+}
+
+.resumo-plano h3 {
+    color: var(--cor-gradiente-escuro);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.secoes-plano {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.secao-servicos {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid var(--cor-gradiente-mediano);
+}
+
+.secao-servicos h4 {
+    color: var(--cor-gradiente-escuro);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.secao-servicos ul {
+    list-style-type: none;
+    padding-left: 5px;
+}
+
+.secao-servicos li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+    font-size: 14px;
+}
+
+.secao-servicos li:before {
+    content: "•";
+    color: var(--cor-gradiente-mediano);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.observacoes-plano {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff8e1;
+    border-radius: 8px;
+    border-left: 4px solid #ffc107;
+}
+
+.observacoes-plano h4 {
+    color: var(--cor-gradiente-escuro);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.servico-plano {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.servico-utilizado {
+    color: var(--cor-sucesso);
+}
+
+.servico-disponivel {
+    color: var(--cor-gradiente-escuro);
+    font-weight: bold;
+}
+
+.sem-pets {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Modais */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+    overflow-y: auto;
 }
 
 .modal-content {
     background-color: white;
-    margin: 5% auto;
-    padding: 20px;
+    margin: 2% auto;
+    padding: 25px;
     border-radius: 8px;
-    width: 80%;
-    max-width: 600px;
+    width: 90%;
+    max-width: 700px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
-.close {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #aaa;
-}
-
-.close:hover {
-    color: var(--cor-erro);
+.modal h2 {
+    color: var(--cor-gradiente-escuro);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .modal-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+    margin-bottom: 15px;
 }
 
 .form-group label {
+    display: block;
+    margin-bottom: 8px;
     font-weight: 600;
-    color: var(--cor-gradiente-escuro);
+    color: #555;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-    padding: 10px;
+    width: 100%;
+    padding: 10px 12px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--cor-gradiente-mediano);
+    box-shadow: 0 0 0 2px rgba(199, 151, 74, 0.2);
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-group-duo {
+    display: flex;
+    gap: 15px;
+}
+
+.form-group-duo .form-group {
+    flex: 1;
+}
+
+.idade-container {
+    display: flex;
+    gap: 10px;
+}
+
+.idade-container input {
+    flex: 1;
+}
+
+.idade-container select {
+    width: auto;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-container input[type="checkbox"] {
+    width: auto;
 }
 
 .form-buttons {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    position: sticky;
+    bottom: 0;
+    background: white;
 }
 
 .btn-primario {
     background-color: var(--cor-gradiente-mediano);
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 12px 25px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .btn-primario:hover {
     background-color: var(--cor-gradiente-escuro);
 }
 
+.btn-cancelar {
+    background-color: #f0f0f0;
+    color: #333;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cancelar:hover {
+    background-color: #e0e0e0;
+}
+
 .btn-excluir {
     background-color: var(--cor-erro);
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 12px 25px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: 600;
@@ -301,8 +520,53 @@ body {
     background-color: #c0392b;
 }
 
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+}
+
+.close:hover {
+    color: #333;
+}
+
+fieldset {
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+legend {
+    padding: 0 10px;
+    font-weight: bold;
+    color: var(--cor-gradiente-escuro);
+}
+
+.link-cep {
+    color: var(--cor-gradiente-mediano);
+    text-decoration: none;
+    font-size: 0.85em;
+    margin-left: 5px;
+}
+
+.link-cep:hover {
+    text-decoration: underline;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
+    .container-logo {
+        width: 100%;
+        position: relative;
+        padding: 15px;
+    }
+    
     .container-lateral {
         width: 100%;
         height: auto;
@@ -312,6 +576,7 @@ body {
     
     .content {
         margin-left: 0;
+        padding: 15px;
     }
     
     .cabecalho-tutor {
@@ -321,5 +586,28 @@ body {
     
     .cards-pets {
         grid-template-columns: 1fr;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10px auto;
+        padding: 15px;
+    }
+    
+    .form-group-duo {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .form-buttons {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+    
+    .btn-primario,
+    .btn-cancelar,
+    .btn-excluir {
+        width: 100%;
+        justify-content: center;
     }
 }
