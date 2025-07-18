@@ -35,13 +35,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         nome: "Guia Prever (50% do valor)",
                         valor: 40.00,
                         categoria: "Documentação"
-                    },
-                    {
-                        id: "serv_atend_6",
-                        nome: "Plano de saúde",
-                        valor: 0.00,
-                        categoria: "Consulta"
                     }
+                    
                 ],
 
                 exames: [

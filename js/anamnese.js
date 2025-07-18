@@ -1,18 +1,141 @@
 document.addEventListener("DOMContentLoaded", function() {
     console.log("Anamnese script carregado!");
 
-    // Preços dos tipos de atendimento
-    const precosAtendimento = {
-        'consulta_clinica': 60.00,
-        'consulta_domiciliar': 80.00,
-        'retorno': 0.00,
-        'emergencia': 80.00,
-        'guia_prever': 30.00
-    };
+    // Variável para armazenar anexos temporários antes do envio
+    let anexosTemporarios = [];
 
     // Função para formatar valores como moeda (R$ 0,00)
     const formatarMoeda = (valor) => {
         return 'R$ ' + valor.toFixed(2).replace('.', ',').replace(/(\d)(?=(\d{3})+\,)/g, "$1.");
+    };
+
+    // Função para obter preço de serviço avulso
+    const obterPrecoServico = (servicoId) => {
+        const planosServicos = JSON.parse(localStorage.getItem('planosServicos')) || { servicosAvulsos: { atendimentos: [] } };
+        const servico = planosServicos.servicosAvulsos.atendimentos.find(s => s.id === servicoId);
+        return servico?.valor || 0;
+    };
+
+    // Função para verificar se o pet tem plano de saúde
+    const verificarPlanoPet = (petId) => {
+        const pets = JSON.parse(localStorage.getItem('pets')) || [];
+        const pet = pets.find(p => p.id === petId);
+        return pet?.planoId || null;
+    };
+
+    // Função para obter os detalhes do plano
+    const obterDetalhesPlano = (planoId) => {
+        const planosServicos = JSON.parse(localStorage.getItem('planosServicos')) || { planos: [] };
+        return planosServicos.planos.find(plano => plano.id === planoId) || null;
+    };
+
+    // Função para obter o histórico de uso do plano pelo pet
+    const obterHistoricoUsoPlano = (petId) => {
+        const anamneses = JSON.parse(localStorage.getItem('anamneses')) || [];
+        const historicoPet = anamneses.filter(a => a.petId === petId && a.tipoAtendimento === 'consulta_plano');
+        
+        // Calcular exames utilizados
+        const examesUtilizados = {};
+        historicoPet.forEach(anamnese => {
+            if (anamnese.exames) {
+                anamnese.exames.forEach(exame => {
+                    examesUtilizados[exame.nome] = (examesUtilizados[exame.nome] || 0) + 1;
+                });
+            }
+        });
+        
+        return {
+            consultasUtilizadas: historicoPet.length,
+            examesUtilizados: examesUtilizados,
+            ultimaConsulta: historicoPet.length > 0 ? 
+                historicoPet[historicoPet.length - 1].dataAtendimento : null
+        };
+    };
+
+    // Função para mostrar informações do plano
+    const mostrarInformacoesPlano = (petId) => {
+        const planoContainer = document.getElementById('plano-info');
+        const semPlanoDiv = planoContainer.querySelector('.sem-plano');
+        const comPlanoDiv = planoContainer.querySelector('.com-plano');
+        
+        const planoId = verificarPlanoPet(petId);
+        
+        if (!planoId) {
+            semPlanoDiv.style.display = 'block';
+            comPlanoDiv.style.display = 'none';
+            return;
+        }
+        
+        semPlanoDiv.style.display = 'none';
+        comPlanoDiv.style.display = 'block';
+        
+        const plano = obterDetalhesPlano(planoId);
+        const historicoUso = obterHistoricoUsoPlano(petId);
+        
+        if (!plano) {
+            semPlanoDiv.style.display = 'block';
+            comPlanoDiv.style.display = 'none';
+            return;
+        }
+        
+        // Preenche informações básicas do plano
+        document.getElementById('plano-nome').textContent = plano.nome;
+        document.getElementById('consultas-inclusas').textContent = plano.consultas.inclusas;
+        document.getElementById('consultas-utilizadas').textContent = historicoUso.consultasUtilizadas;
+        document.getElementById('consultas-restantes').textContent = plano.consultas.inclusas - historicoUso.consultasUtilizadas;
+        
+        // Calcula próxima consulta disponível
+        if (historicoUso.ultimaConsulta) {
+            const ultimaData = new Date(historicoUso.ultimaConsulta);
+            ultimaData.setDate(ultimaData.getDate() + plano.consultas.intervaloMinimo);
+            document.getElementById('proxima-consulta').textContent = ultimaData.toLocaleDateString();
+        } else {
+            document.getElementById('proxima-consulta').textContent = "Imediatamente";
+        }
+        
+        // Preenche benefícios do plano
+        const listaBeneficios = document.getElementById('lista-beneficios');
+        listaBeneficios.innerHTML = '';
+        
+        // Adiciona consultas
+        const consultasItem = document.createElement('li');
+        consultasItem.innerHTML = `
+            <span>${plano.consultas.inclusas} Consultas anuais</span>
+            <span class="beneficio-limite">(${historicoUso.consultasUtilizadas} utilizadas)</span>
+        `;
+        listaBeneficios.appendChild(consultasItem);
+        
+        // Adiciona vacinas
+        if (plano.vacinas && plano.vacinas.length > 0) {
+            const vacinasItem = document.createElement('li');
+            vacinasItem.innerHTML = `
+                <span>Vacinas inclusas (${plano.vacinas.length} tipos)</span>
+                <span class="beneficio-limite">(sem carência)</span>
+            `;
+            listaBeneficios.appendChild(vacinasItem);
+        }
+        
+        // Adiciona exames
+        if (plano.examesInclusos && plano.examesInclusos.length > 0) {
+            plano.examesInclusos.forEach(exame => {
+                const usado = historicoUso.examesUtilizados[exame.nome] || 0;
+                const exameItem = document.createElement('li');
+                exameItem.innerHTML = `
+                    <span>${exame.nome}</span>
+                    <span class="beneficio-limite">${usado}/${exame.limite || 'ilimitado'}</span>
+                `;
+                listaBeneficios.appendChild(exameItem);
+            });
+        }
+        
+        // Adiciona procedimentos
+        if (plano.procedimentosInclusos && plano.procedimentosInclusos.length > 0) {
+            const procedimentosItem = document.createElement('li');
+            procedimentosItem.innerHTML = `
+                <span>Procedimentos inclusos (${plano.procedimentosInclusos.length} tipos)</span>
+            `;
+            listaBeneficios.appendChild(procedimentosItem);
+        }
     };
 
     // Carrega tutores do localStorage
@@ -61,6 +184,56 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('info-pet').style.display = 'none';
     };
 
+    // Carrega tipos de atendimento disponíveis (COM A CORREÇÃO PARA O PLANO DE SAÚDE)
+    const carregarTiposAtendimento = () => {
+        const select = document.getElementById('tipoAtendimento');
+        const erroDiv = document.getElementById('erro-carregamento-servicos');
+        
+        try {
+            // Limpa o select
+            select.innerHTML = '<option value="">Selecione o tipo de atendimento</option>';
+            
+            // Carrega os serviços do localStorage
+            const planosServicos = JSON.parse(localStorage.getItem('planosServicos'));
+            
+            // Verifica se a estrutura de dados existe e está correta
+            if (!planosServicos) {
+                throw new Error('Dados de planos e serviços não encontrados no localStorage');
+            }
+
+            // Carrega apenas serviços avulsos que NÃO são "Plano de saúde"
+            const servicosAvulsos = (planosServicos.servicosAvulsos?.atendimentos || [])
+                .filter(servico => servico.nome !== 'Plano de saúde');
+            
+            // Adiciona serviços avulsos ao select
+            servicosAvulsos.forEach(servico => {
+                const option = document.createElement('option');
+                option.value = servico.id;
+                option.textContent = `${servico.nome} (${formatarMoeda(servico.valor)})`;
+                select.appendChild(option);
+            });
+            
+            // Adiciona a opção de plano de saúde SEPARADAMENTE (só se existirem planos)
+            if (planosServicos.planos && planosServicos.planos.length > 0) {
+                const optionPlano = document.createElement('option');
+                optionPlano.value = 'consulta_plano';
+                optionPlano.textContent = 'Plano de saúde';
+                select.appendChild(optionPlano);
+            }
+            
+            erroDiv.style.display = 'none';
+        } catch (error) {
+            console.error('Erro ao carregar serviços:', error);
+            erroDiv.style.display = 'block';
+            
+            // Opção de fallback caso os dados não estejam disponíveis
+            const optionParticular = document.createElement('option');
+            optionParticular.value = 'consulta_particular';
+            optionParticular.textContent = 'Consulta Particular';
+            select.appendChild(optionParticular);
+        }
+    };
+
     // Mostra os dados completos do pet
     const mostrarDadosPet = (petData) => {
         const infoSection = document.getElementById('info-pet');
@@ -99,6 +272,9 @@ document.addEventListener("DOMContentLoaded", function() {
         if (linkAtendimentos) {
             linkAtendimentos.href = `atendimentos-anteriores.html?petId=${petData.id}`;
         }
+        
+        // Mostra informações do plano de saúde
+        mostrarInformacoesPlano(petData.id);
         
         infoSection.style.display = 'block';
     };
@@ -152,10 +328,9 @@ document.addEventListener("DOMContentLoaded", function() {
         container.style.display = formaPagamento.value === 'outro' ? 'block' : 'none';
     };
 
-    // Atualiza valores do cartão de crédito (FUNÇÃO CORRIGIDA)
+    // Atualiza valores do cartão de crédito
     const atualizarValorCartao = (total) => {
         const valorFinalInput = document.getElementById('valorFinal');
-        // Remove formatação e converte para número
         const valorFinal = valorFinalInput.value ? 
             parseFloat(valorFinalInput.value.replace(/[^\d,]/g, '').replace(',', '.')) : 
             0;
@@ -181,9 +356,9 @@ document.addEventListener("DOMContentLoaded", function() {
         let total = 0;
         
         // Adiciona atendimento ao resumo
-        if (tipoAtendimento && precosAtendimento[tipoAtendimento] !== undefined) {
-            const valorAtendimento = precosAtendimento[tipoAtendimento];
-            if (valorAtendimento > 0) {
+        if (tipoAtendimento) {
+            const valorAtendimento = tipoAtendimento === 'consulta_plano' ? 0 : obterPrecoServico(tipoAtendimento);
+            if (valorAtendimento > 0 || tipoAtendimento === 'consulta_plano') {
                 const item = document.createElement('div');
                 item.textContent = `${document.getElementById('tipoAtendimento').selectedOptions[0].text}: ${formatarMoeda(valorAtendimento)}`;
                 listaServicos.appendChild(item);
@@ -214,14 +389,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // Salva a anamnese no localStorage
     const salvarAnamnese = (formData) => {
         const anamneses = JSON.parse(localStorage.getItem('anamneses')) || [];
-        
-        // Mapeia os valores antigos para os novos quando necessário
-        if (formData.tipoAtendimento === 'consulta_particular') {
-            formData.tipoAtendimento = 'consulta_clinica';
-        }
+        const anexos = JSON.parse(localStorage.getItem('anexos')) || [];
         
         const novaAnamnese = {
-            id: Date.now().toString(),
+            id: 'anamnese_' + Date.now().toString(),
             dataCriacao: new Date().toISOString(),
             ...formData,
             status: 'pendente'
@@ -230,14 +401,166 @@ document.addEventListener("DOMContentLoaded", function() {
         anamneses.push(novaAnamnese);
         localStorage.setItem('anamneses', JSON.stringify(anamneses));
         
+        // Salva os anexos associados a esta anamnese
+        if (anexosTemporarios.length > 0) {
+            anexosTemporarios.forEach(anexo => {
+                anexos.push({
+                    id: 'anexo_' + Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                    atendimentoId: novaAnamnese.id,
+                    nome: anexo.nome,
+                    tipo: anexo.tipo,
+                    conteudo: anexo.conteudo,
+                    dataUpload: new Date().toISOString()
+                });
+            });
+            
+            localStorage.setItem('anexos', JSON.stringify(anexos));
+            anexosTemporarios = []; // Limpa os anexos temporários
+        }
+        
         return novaAnamnese;
     };
+
+    // Função para visualizar anexo
+    window.visualizarAnexo = function(conteudo, tipo) {
+        if (tipo.startsWith('image/')) {
+            const novaAba = window.open('', '_blank');
+            novaAba.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Visualizar Imagem</title>
+                    <style>
+                        body { margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f5f5f5; }
+                        img { max-width: 90%; max-height: 90vh; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+                    </style>
+                </head>
+                <body>
+                    <img src="${conteudo}" alt="Imagem anexada">
+                </body>
+                </html>
+            `);
+        } else {
+            const novaAba = window.open('', '_blank');
+            novaAba.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Visualizar PDF</title>
+                    <style>
+                        body { margin: 0; padding: 0; }
+                        embed { width: 100%; height: 100vh; }
+                    </style>
+                </head>
+                <body>
+                    <embed src="${conteudo}" type="application/pdf" width="100%" height="100%">
+                </body>
+                </html>
+            `);
+        }
+    };
+
+    // Função para remover anexo temporário
+    window.removerAnexoTemporario = function(index) {
+        if (confirm('Tem certeza que deseja remover este anexo?')) {
+            anexosTemporarios.splice(index, 1);
+            atualizarListaAnexosPreview();
+        }
+    };
+
+    // Atualiza a visualização dos anexos
+    function atualizarListaAnexosPreview() {
+        const listaAnexos = document.getElementById('lista-anexos-preview');
+        listaAnexos.innerHTML = '';
+        
+        if (anexosTemporarios.length === 0) {
+            listaAnexos.innerHTML = '<p class="sem-anexos">Nenhum anexo adicionado ainda</p>';
+            return;
+        }
+        
+        anexosTemporarios.forEach((anexo, index) => {
+            const anexoDiv = document.createElement('div');
+            anexoDiv.className = 'anexo-preview';
+            
+            if (anexo.tipo.startsWith('image/')) {
+                anexoDiv.innerHTML = `
+                    <img src="${anexo.conteudo}" alt="${anexo.nome}">
+                    <span class="anexo-nome">${anexo.nome}</span>
+                    <button class="remove-anexo" onclick="removerAnexoTemporario(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+            } else {
+                anexoDiv.innerHTML = `
+                    <div class="anexo-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <span class="anexo-nome">${anexo.nome}</span>
+                    <button class="remove-anexo" onclick="removerAnexoTemporario(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+            }
+            
+            anexoDiv.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('remove-anexo')) {
+                    visualizarAnexo(anexo.conteudo, anexo.tipo);
+                }
+            });
+            
+            listaAnexos.appendChild(anexoDiv);
+        });
+    }
+
+    // Configura o upload de arquivos
+    function configurarUploadAnexos() {
+        const inputUpload = document.getElementById('upload-anexo-anamnese');
+        
+        inputUpload.addEventListener('change', function(e) {
+            const files = e.target.files;
+            if (!files || files.length === 0) return;
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`O arquivo "${file.name}" excede o tamanho máximo de 5MB e não será carregado.`);
+                    continue;
+                }
+                
+                if (!file.type.match('application/pdf') && !file.type.match('image.*')) {
+                    alert(`O arquivo "${file.name}" não é um PDF ou imagem e não será carregado.`);
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    anexosTemporarios.push({
+                        nome: file.name,
+                        tipo: file.type,
+                        conteudo: e.target.result,
+                        tamanho: file.size
+                    });
+                    
+                    atualizarListaAnexosPreview();
+                };
+                
+                reader.readAsDataURL(file);
+            }
+            
+            e.target.value = '';
+        });
+    }
 
     // Inicializa eventos
     const init = () => {
         carregarTutores();
+        carregarTiposAtendimento();
+        configurarUploadAnexos();
+        atualizarListaAnexosPreview();
         
-        // Configura o botão Voltar
+        // Botão Voltar
         document.getElementById('botao-voltar')?.addEventListener('click', function() {
             window.location.href = 'tela-pos-login.html';
         });
@@ -247,8 +570,8 @@ document.addEventListener("DOMContentLoaded", function() {
             const container = document.getElementById('valorAtendimentoContainer');
             const valorSpan = document.getElementById('valorAtendimento');
             
-            if (this.value && precosAtendimento[this.value] !== undefined) {
-                const valor = precosAtendimento[this.value];
+            if (this.value) {
+                const valor = this.value === 'consulta_plano' ? 0 : obterPrecoServico(this.value);
                 valorSpan.textContent = `Valor: ${formatarMoeda(valor)}`;
                 container.style.display = 'block';
             } else {
@@ -265,17 +588,15 @@ document.addEventListener("DOMContentLoaded", function() {
             atualizarResumoFinanceiro();
         });
         
-        // Configura eventos de exames (agora são checkboxes)
+        // Configura eventos de exames
         document.querySelectorAll('input[name="exames"]').forEach(checkbox => {
             checkbox.addEventListener('change', atualizarResumoFinanceiro);
         });
         
-        // Event listener para o campo Valor Final (CORRIGIDO)
+        // Event listener para o campo Valor Final
         document.getElementById('valorFinal').addEventListener('input', function(e) {
-            // Permite apenas números e vírgula
             let value = this.value.replace(/[^\d,]/g, '');
             
-            // Garante que há no máximo 2 dígitos após a vírgula
             if (value.includes(',')) {
                 const parts = value.split(',');
                 value = parts[0] + ',' + parts[1].slice(0, 2);
@@ -283,7 +604,6 @@ document.addEventListener("DOMContentLoaded", function() {
             
             this.value = 'R$ ' + value;
             
-            // Atualiza os juros
             const total = parseFloat(
                 document.getElementById('totalGeral').textContent
                     .replace(/[^\d,]/g, '')
@@ -317,11 +637,10 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
         
-        // Submit do formulário (ATUALIZADO COM TODOS OS CAMPOS)
+        // Submit do formulário
         document.getElementById('formAnamnese').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validação básica (incluindo o novo campo obrigatório)
             if (!document.getElementById('tutor').value || 
                 !document.getElementById('pet').value || 
                 !document.getElementById('dataAtendimento').value || 
@@ -347,31 +666,24 @@ document.addEventListener("DOMContentLoaded", function() {
                 nomeMedicacao: document.getElementById('nomeMedicacao').value,
                 
                 // Sistemas da Anamnese
-                // Sistema Digestório
                 digestorio: Array.from(document.querySelectorAll('input[name="digestorio"]:checked')).map(cb => cb.value),
                 outrosDigestorio: document.getElementById('outrosDigestorio').value,
                 
-                // Sistema Neurológico
                 neurologico: Array.from(document.querySelectorAll('input[name="neurologico"]:checked')).map(cb => cb.value),
                 outrosNeurologico: document.getElementById('outrosNeurologico').value,
                 
-                // Sistema Locomotor
                 locomotor: Array.from(document.querySelectorAll('input[name="locomotor"]:checked')).map(cb => cb.value),
                 outrosLocomotor: document.getElementById('outrosLocomotor').value,
                 
-                // Pele
                 pele: Array.from(document.querySelectorAll('input[name="pele"]:checked')).map(cb => cb.value),
                 outrosPele: document.getElementById('outrosPele').value,
                 
-                // Olhos
                 olhos: Array.from(document.querySelectorAll('input[name="olhos"]:checked')).map(cb => cb.value),
                 outrosOlhos: document.getElementById('outrosOlhos').value,
                 
-                // Ouvido
                 ouvido: Array.from(document.querySelectorAll('input[name="ouvido"]:checked')).map(cb => cb.value),
                 outrosOuvido: document.getElementById('outrosOuvido').value,
                 
-                // Sistema Cardiorespiratório
                 cardio: Array.from(document.querySelectorAll('input[name="cardio"]:checked')).map(cb => cb.value),
                 outrosCardio: document.getElementById('outrosCardio').value,
                 
@@ -392,7 +704,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Financeiro
                 exames: examesSelecionados,
                 tipoAtendimento: document.getElementById('tipoAtendimento').value,
-                valorAtendimento: precosAtendimento[document.getElementById('tipoAtendimento').value] || 0,
+                valorAtendimento: document.getElementById('tipoAtendimento').value === 'consulta_plano' ? 
+                    0 : obterPrecoServico(document.getElementById('tipoAtendimento').value) || 0,
                 formaPagamento: document.getElementById('formaPagamento').value,
                 parcelas: document.getElementById('formaPagamento').value === 'credito' ? 
                          parseInt(document.getElementById('parcelas').value) : 1,
@@ -413,7 +726,8 @@ document.addEventListener("DOMContentLoaded", function() {
                                .replace(/[^\d,]/g, '')
                                .replace(',', '.')
                        ) : 0,
-                observacoes: ""
+                observacoes: "",
+                temAnexos: anexosTemporarios.length > 0
             };
             
             const anamneseSalva = salvarAnamnese(formData);
@@ -422,6 +736,8 @@ document.addEventListener("DOMContentLoaded", function() {
             alert('Anamnese salva com sucesso!');
             this.reset();
             document.getElementById('info-pet').style.display = 'none';
+            anexosTemporarios = [];
+            atualizarListaAnexosPreview();
         });
     };
 

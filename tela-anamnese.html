@@ -82,6 +82,30 @@
                     <div class="link-atendimentos">
                         <a href="atendimentos-anteriores.html" id="link-atendimentos-anteriores" target="_blank">Acessar atendimentos anteriores</a>
                     </div>
+
+                    <!-- Nova seção de informações do plano -->
+                    <h3>Informações do Plano de Saúde</h3>
+                    <div id="plano-info" class="plano-info-container">
+                        <div class="sem-plano">Este pet não possui plano de saúde cadastrado</div>
+                        <div class="com-plano" style="display: none;">
+                            <div class="plano-header">
+                                <strong>Plano:</strong> <span id="plano-nome"></span>
+                                <span class="plano-status ativo">Ativo</span>
+                            </div>
+                            <div class="plano-detalhes">
+                                <div><strong>Consultas inclusas:</strong> <span id="consultas-inclusas"></span></div>
+                                <div><strong>Consultas utilizadas:</strong> <span id="consultas-utilizadas"></span></div>
+                                <div><strong>Consultas restantes:</strong> <span id="consultas-restantes"></span></div>
+                                <div><strong>Próxima consulta disponível:</strong> <span id="proxima-consulta"></span></div>
+                            </div>
+                            <div class="plano-beneficios">
+                                <h4>Benefícios Inclusos:</h4>
+                                <ul id="lista-beneficios">
+                                    <!-- Benefícios serão preenchidos via JS -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -304,7 +328,7 @@
                 </div>
             </section>
 
-            <!-- Seção 3.1: Conduta Clínica (NOVA SEÇÃO) -->
+            <!-- Seção 3.1: Conduta Clínica -->
             <section class="secao-anamnese">
                 <h2><i class="fas fa-notes-medical"></i> Conduta Clínica</h2>
                 
@@ -318,20 +342,18 @@
             <section class="secao-anamnese">
                 <h2><i class="fas fa-money-bill-wave"></i> Financeiro</h2>
                 
-                <div class="form-group">
-                    <label for="tipoAtendimento">Tipo de Atendimento*</label>
-                    <select id="tipoAtendimento" required>
-                        <option value="">Selecione</option>
-                        <option value="consulta_clinica">Consulta em clínica</option>
-                        <option value="consulta_domiciliar">Consulta domiciliar</option>
-                        <option value="retorno">Retorno</option>
-                        <option value="emergencia">Emergência</option>
-                        <option value="guia_prever">Guia Prever</option>
-                    </select>
-                    <div id="valorAtendimentoContainer" class="valor-atendimento-container" style="display: none;">
-                        <span id="valorAtendimento"></span>
-                    </div>
-                </div>
+        <div class="form-group">
+    <label for="tipoAtendimento">Tipo de Atendimento*</label>
+    <select id="tipoAtendimento" required>
+        <option value="">Selecione</option>
+    </select>
+    <div id="erro-carregamento-servicos" class="erro-mensagem" style="display: none;">
+        Não foi possível carregar os tipos de atendimento
+    </div>
+    <div id="valorAtendimentoContainer" class="valor-atendimento-container" style="display: none;">
+        <span id="valorAtendimento"></span>
+    </div>
+</div>
                 
                 <div class="form-group">
                     <label>Exames Solicitados</label>
@@ -392,13 +414,32 @@
                 </div>
             </section>
 
+            <!-- Seção 5: Anexos -->
+            <section class="secao-anamnese">
+                <h2><i class="fas fa-paperclip"></i> Anexos</h2>
+                
+                <div class="anexos-container">
+                    <div id="lista-anexos-preview" class="lista-anexos-preview">
+                        <!-- Anexos serão exibidos aqui em pré-visualização -->
+                    </div>
+                    
+                    <div class="upload-area">
+                        <input type="file" id="upload-anexo-anamnese" accept=".pdf,.jpg,.jpeg,.png" multiple>
+                        <label for="upload-anexo-anamnese" class="upload-btn">
+                            <i class="fas fa-cloud-upload-alt"></i> Adicionar Anexos (PDF ou Imagens)
+                        </label>
+                        <p class="upload-hint">Formatos aceitos: PDF, JPG, PNG (Máx. 5MB cada)</p>
+                    </div>
+                </div>
+            </section>
+
             <div class="form-buttons">
                 <button type="button" class="btn-cancelar" onclick="window.location.href='tela-pos-login.html'">Cancelar</button>
                 <button type="submit" class="btn-primario">Salvar Anamnese</button>
             </div>
         </form>
     </main>
-
+<script src="js/dados-plano-e-atendimento-avulso.js"></script>
     <script src="js/anamnese.js"></script>
 </body>
 </html>

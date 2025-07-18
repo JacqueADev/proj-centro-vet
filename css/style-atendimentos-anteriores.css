@@ -1,37 +1,51 @@
-:root {
-    --cor-gradiente-mediano: #c7974a;
-    --cor-gradiente-escuro: #a37628;
-    --cor-gradiente-claro: #ebc88f;
-    --cor-texto: #333;
-    --cor-borda: #ddd;
+/* Estilos para a página de atendimentos anteriores */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
 }
 
 .container-atendimentos {
-    max-width: 1000px;
-    margin: 30px auto;
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 20px;
     background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    min-height: 100vh;
 }
 
 .voltar-btn {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    padding: 10px 15px;
-    background-color: var(--cor-gradiente-mediano);
-    color: white;
+    gap: 5px;
+    color: #a37628;
     text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+    margin-bottom: 20px;
+    font-weight: 600;
 }
 
 .voltar-btn:hover {
-    background-color: var(--cor-gradiente-escuro);
+    text-decoration: underline;
 }
 
+h1 {
+    color: #a37628;
+    margin-bottom: 20px;
+}
+
+h2, h3, h4 {
+    color: #c7974a;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ebc88f;
+    margin: 15px 0;
+}
+
+/* Navegação entre atendimentos */
 .navegacao-atendimentos {
     display: flex;
     justify-content: center;
@@ -41,156 +55,171 @@
 }
 
 .nav-btn {
-    padding: 8px 16px;
-    background-color: var(--cor-gradiente-claro);
+    background-color: #c7974a;
+    color: white;
     border: none;
-    border-radius: 4px;
+    padding: 8px 15px;
+    border-radius: 5px;
     cursor: pointer;
+    font-weight: 600;
     transition: background-color 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
 
 .nav-btn:hover {
-    background-color: var(--cor-gradiente-mediano);
-    color: white;
+    background-color: #a37628;
+}
+
+.nav-btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
 }
 
 #contador-atendimentos {
     font-weight: bold;
-    min-width: 60px;
-    text-align: center;
 }
 
+/* Detalhes do atendimento */
 .atendimento-item {
-    margin-bottom: 30px;
-    padding: 20px;
     background-color: #f9f9f9;
-    border-radius: 8px;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.atendimento-item h3 {
-    color: var(--cor-gradiente-escuro);
-    margin-top: 0;
-    border-bottom: 1px solid var(--cor-borda);
-    padding-bottom: 10px;
-}
-
-.atendimento-item h4 {
-    color: var(--cor-gradiente-mediano);
-    margin: 15px 0 5px;
+.detalhes-atendimento {
+    margin-top: 15px;
 }
 
 .detalhes-atendimento p {
     margin: 8px 0;
-    line-height: 1.6;
+    line-height: 1.5;
+}
+
+.detalhes-atendimento strong {
+    color: #a37628;
 }
 
 /* Estilos para anexos */
 .anexos-container {
     margin-top: 30px;
     padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 8px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
 }
 
 .lista-anexos {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 15px;
     margin: 15px 0;
 }
 
 .anexo-item {
-    background: white;
-    padding: 10px;
+    width: 150px;
+    background-color: white;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.anexo-item:hover {
+    transform: translateY(-3px);
 }
 
 .anexo-item img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-    margin-bottom: 8px;
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
 }
 
-.anexo-item .anexo-acoes {
+.anexo-icon {
+    width: 100%;
+    height: 120px;
     display: flex;
-    justify-content: space-between;
-    margin-top: auto;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
 }
 
-.anexo-item .anexo-nome {
-    font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 8px;
+.anexo-icon i {
+    font-size: 48px;
+    color: #e74c3c;
+}
+
+.anexo-nome {
+    display: block;
+    padding: 8px;
+    font-size: 12px;
+    text-align: center;
+    word-break: break-word;
+}
+
+.anexo-acoes {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+}
+
+.btn-anexo {
+    background-color: #c7974a;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    padding: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.btn-anexo:hover {
+    background-color: #a37628;
+}
+
+.btn-remover {
+    background-color: #e74c3c !important;
 }
 
 .upload-area {
-    margin-top: 20px;
-    text-align: center;
+    margin-top: 15px;
+}
+
+.upload-btn {
+    display: inline-block;
+    background-color: #c7974a;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.upload-btn:hover {
+    background-color: #a37628;
 }
 
 #upload-anexo {
     display: none;
 }
 
-.upload-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    background-color: var(--cor-gradiente-mediano);
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.upload-btn:hover {
-    background-color: var(--cor-gradiente-escuro);
-}
-
-.btn-anexo {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--cor-gradiente-mediano);
-    font-size: 14px;
-}
-
-.btn-anexo:hover {
-    color: var(--cor-gradiente-escuro);
-}
-
 /* Responsividade */
 @media (max-width: 768px) {
     .container-atendimentos {
-        margin: 15px;
         padding: 15px;
     }
     
-    .atendimento-item {
-        padding: 15px;
+    .anexo-item {
+        width: 100%;
+        max-width: 200px;
     }
     
-    .lista-anexos {
-        grid-template-columns: 1fr;
-    }
-    
-    .navegacao-atendimentos {
-        gap: 10px;
-    }
-    
-    .nav-btn {
-        padding: 6px 12px;
-        font-size: 14px;
+    .anexo-acoes {
+        flex-direction: row;
+        justify-content: center;
     }
 }

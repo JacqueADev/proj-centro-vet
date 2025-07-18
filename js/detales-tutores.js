@@ -143,71 +143,153 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // 7. Exibir resumo do plano do pet
+    // 7. Exibir resumo do plano do pet - CORRIGIDA
     function exibirResumoPlano(petId) {
         const pets = JSON.parse(localStorage.getItem('pets')) || [];
         const pet = pets.find(p => p.id === petId);
         const planosServicos = JSON.parse(localStorage.getItem('planosServicos')) || {};
+        const anamneses = JSON.parse(localStorage.getItem('anamneses')) || [];
         
-        if (!pet || !pet.aderiuPlano || !pet.planoPet) return;
+        if (!pet || !pet.aderiuPlano || !pet.planoPet) {
+            mostrarFeedback('Este pet não possui um plano ativo', 'erro');
+            return;
+        }
+        
+        // Verificar se temos dados de planos
+        if (!planosServicos || !planosServicos.planos) {
+            mostrarFeedback('Dados de planos não encontrados', 'erro');
+            return;
+        }
         
         // Encontrar o plano específico do pet
         const plano = planosServicos.planos.find(p => p.nome === pet.planoPet);
         
-        if (!plano) return;
+        if (!plano) {
+            mostrarFeedback('Plano do pet não encontrado', 'erro');
+            return;
+        }
+        
+        // Filtrar atendimentos deste pet que usaram o plano
+        const atendimentosPlano = anamneses.filter(a => 
+            a.petId === petId && a.tipoAtendimento === 'consulta_plano');
+        
+        // Contar serviços utilizados por categoria
+        const servicosUtilizados = {
+            consultas: atendimentosPlano.length,
+            vacinas: 0,
+            procedimentos: 0,
+            exames: 0,
+            cirurgias: 0
+        };
         
         const resumoPlano = document.getElementById('resumo-plano');
         resumoPlano.innerHTML = `
-            <h3><i class="fas fa-file-invoice-dollar"></i> Resumo do Plano - ${pet.nome}</h3>
-            <p><strong>Plano:</strong> ${plano.nome}</p>
-            <p><strong>Descrição:</strong> ${plano.descricao}</p>
-            <p><strong>Data de adesão:</strong> ${formatarData(pet.dataAderiuPlano)}</p>
+            <h3><i class="fas fa-file-invoice-dollar"></i> Saldo do Plano - ${pet.nome}</h3>
+            <div class="info-plano">
+                <p><strong>Plano:</strong> ${plano.nome}</p>
+                <p><strong>Descrição:</strong> ${plano.descricao}</p>
+                <p><strong>Data de adesão:</strong> ${formatarData(pet.dataAderiuPlano)}</p>
+                <p><strong>Consultas realizadas:</strong> ${servicosUtilizados.consultas} de ${plano.consultas.inclusas}</p>
+            </div>
             
-            <div class="secoes-plano">
+            <div class="dashboard-servicos">
                 <!-- Consultas -->
-                <div class="secao-servicos">
-                    <h4><i class="fas fa-stethoscope"></i> Consultas Inclusas</h4>
-                    <p>${plano.consultas.inclusas} consultas ${plano.consultas.periodicidade}</p>
-                    <ul>
-                        ${plano.consultas.tipos.map(tipo => `
-                            <li>${tipo.nome} (carência: ${tipo.carencia} dias)</li>
-                        `).join('')}
-                    </ul>
+                <div class="dashboard-categoria">
+                    <h4><i class="fas fa-stethoscope"></i> Consultas</h4>
+                    <div class="barra-progresso">
+                        <div class="progresso" style="width: ${Math.min(100, (servicosUtilizados.consultas / plano.consultas.inclusas) * 100)}%"></div>
+                    </div>
+                    <p class="saldo">${plano.consultas.inclusas - servicosUtilizados.consultas} restantes de ${plano.consultas.inclusas}</p>
                 </div>
                 
                 <!-- Vacinas -->
                 ${plano.vacinas && plano.vacinas.length > 0 ? `
-                <div class="secao-servicos">
-                    <h4><i class="fas fa-syringe"></i> Vacinas Inclusas</h4>
-                    <ul>
+                <div class="dashboard-categoria">
+                    <h4><i class="fas fa-syringe"></i> Vacinas</h4>
+                    <div class="lista-servicos">
                         ${plano.vacinas.map(vacina => `
-                            <li>${vacina.nome} (carência: ${vacina.carencia} dias)</li>
+                            <div class="servico-item">
+                                <span class="servico-nome">${vacina.nome}</span>
+                                <span class="servico-status disponivel">Disponível</span>
+                            </div>
                         `).join('')}
-                    </ul>
+                    </div>
                 </div>
                 ` : ''}
                 
                 <!-- Procedimentos -->
                 ${plano.procedimentosInclusos && plano.procedimentosInclusos.length > 0 ? `
-                <div class="secao-servicos">
-                    <h4><i class="fas fa-procedures"></i> Procedimentos Inclusos</h4>
-                    <ul>
+                <div class="dashboard-categoria">
+                    <h4><i class="fas fa-procedures"></i> Procedimentos</h4>
+                    <div class="lista-servicos">
                         ${plano.procedimentosInclusos.map(proc => `
-                            <li>${proc.nome} (carência: ${proc.carencia} dias${proc.limite ? `, limite: ${proc.limite}` : ''})</li>
+                            <div class="servico-item">
+                                <span class="servico-nome">${proc.nome}</span>
+                                ${proc.limite ? `
+                                    <span class="servico-status disponivel">${proc.limite} disponíveis</span>
+                                ` : `
+                                    <span class="servico-status disponivel">Ilimitado</span>
+                                `}
+                            </div>
                         `).join('')}
-                    </ul>
+                    </div>
                 </div>
                 ` : ''}
                 
                 <!-- Exames -->
                 ${plano.examesInclusos && plano.examesInclusos.length > 0 ? `
-                <div class="secao-servicos">
-                    <h4><i class="fas fa-microscope"></i> Exames Inclusos</h4>
-                    <ul>
+                <div class="dashboard-categoria">
+                    <h4><i class="fas fa-microscope"></i> Exames</h4>
+                    <div class="lista-servicos">
                         ${plano.examesInclusos.map(exame => `
-                            <li>${exame.nome} (carência: ${exame.carencia} dias${exame.limite ? `, limite: ${exame.limite}` : ''})</li>
+                            <div class="servico-item">
+                                <span class="servico-nome">${exame.nome}</span>
+                                ${exame.limite ? `
+                                    <span class="servico-status disponivel">${exame.limite} disponíveis</span>
+                                ` : `
+                                    <span class="servico-status disponivel">Ilimitado</span>
+                                `}
+                            </div>
                         `).join('')}
-                    </ul>
+                    </div>
+                </div>
+                ` : ''}
+                
+                <!-- Exames de Imagem -->
+                ${plano.examesImagemInclusos && plano.examesImagemInclusos.length > 0 ? `
+                <div class="dashboard-categoria">
+                    <h4><i class="fas fa-x-ray"></i> Exames de Imagem</h4>
+                    <div class="lista-servicos">
+                        ${plano.examesImagemInclusos.map(exame => `
+                            <div class="servico-item">
+                                <span class="servico-nome">${exame.nome}</span>
+                                ${exame.limite ? `
+                                    <span class="servico-status disponivel">${exame.limite} disponíveis</span>
+                                ` : `
+                                    <span class="servico-status disponivel">Ilimitado</span>
+                                `}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <!-- Cirurgias -->
+                ${plano.cirurgiasInclusas && plano.cirurgiasInclusas.length > 0 ? `
+                <div class="dashboard-categoria">
+                    <h4><i class="fas fa-scalpel"></i> Cirurgias</h4>
+                    <div class="lista-servicos">
+                        ${plano.cirurgiasInclusas.map(cirurgia => `
+                            <div class="servico-item">
+                                <span class="servico-nome">${cirurgia.nome}</span>
+                                ${cirurgia.limite ? `
+                                    <span class="servico-status disponivel">${cirurgia.limite} disponíveis</span>
+                                ` : `
+                                    <span class="servico-status disponivel">Ilimitado</span>
+                                `}
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
                 ` : ''}
             </div>

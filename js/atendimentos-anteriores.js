@@ -99,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <p><strong>Juros:</strong> ${formatarMoeda(atendimento.juros)}</p>
                     ` : ''}
                     <p><strong>Valor Total:</strong> ${formatarMoeda(atendimento.valorTotal)}</p>
+                    ${atendimento.temAnexos ? '<p><strong>Anexos:</strong> Este atendimento possui arquivos anexados</p>' : ''}
                 </div>
             </div>
         `;
