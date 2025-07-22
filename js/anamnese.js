@@ -15,13 +15,25 @@ document.addEventListener("DOMContentLoaded", function() {
         const servico = planosServicos.servicosAvulsos.atendimentos.find(s => s.id === servicoId);
         return servico?.valor || 0;
     };
-
-    // Função para verificar se o pet tem plano de saúde
-    const verificarPlanoPet = (petId) => {
-        const pets = JSON.parse(localStorage.getItem('pets')) || [];
-        const pet = pets.find(p => p.id === petId);
-        return pet?.planoId || null;
-    };
+    
+    // Função para verificar se o pet tem plano de saúde (atualizada)
+  const verificarPlanoPet = (petId) => {
+    const pets = JSON.parse(localStorage.getItem('pets')) || [];
+    const pet = pets.find(p => p.id === petId);
+    
+    // Verifica primeiro pelo planoId (mais recente) e depois pelo planoPet (mais antigo)
+    if (pet) {
+        if (pet.planoId) {
+            return pet.planoId;
+        } else if (pet.planoPet) {
+            // Se não tiver planoId mas tiver planoPet, tenta encontrar o ID correspondente
+            const planosServicos = JSON.parse(localStorage.getItem('planosServicos')) || { planos: [] };
+            const plano = planosServicos.planos.find(p => p.nome === pet.planoPet);
+            return plano ? plano.id : null;
+        }
+    }
+    return null;
+};
 
     // Função para obter os detalhes do plano
     const obterDetalhesPlano = (planoId) => {
@@ -52,93 +64,309 @@ document.addEventListener("DOMContentLoaded", function() {
         };
     };
 
-    // Função para mostrar informações do plano
-    const mostrarInformacoesPlano = (petId) => {
-        const planoContainer = document.getElementById('plano-info');
-        const semPlanoDiv = planoContainer.querySelector('.sem-plano');
-        const comPlanoDiv = planoContainer.querySelector('.com-plano');
-        
-        const planoId = verificarPlanoPet(petId);
-        
-        if (!planoId) {
-            semPlanoDiv.style.display = 'block';
-            comPlanoDiv.style.display = 'none';
-            return;
-        }
-        
-        semPlanoDiv.style.display = 'none';
-        comPlanoDiv.style.display = 'block';
-        
-        const plano = obterDetalhesPlano(planoId);
-        const historicoUso = obterHistoricoUsoPlano(petId);
-        
-        if (!plano) {
-            semPlanoDiv.style.display = 'block';
-            comPlanoDiv.style.display = 'none';
-            return;
-        }
-        
-        // Preenche informações básicas do plano
-        document.getElementById('plano-nome').textContent = plano.nome;
-        document.getElementById('consultas-inclusas').textContent = plano.consultas.inclusas;
-        document.getElementById('consultas-utilizadas').textContent = historicoUso.consultasUtilizadas;
-        document.getElementById('consultas-restantes').textContent = plano.consultas.inclusas - historicoUso.consultasUtilizadas;
-        
-        // Calcula próxima consulta disponível
-        if (historicoUso.ultimaConsulta) {
-            const ultimaData = new Date(historicoUso.ultimaConsulta);
-            ultimaData.setDate(ultimaData.getDate() + plano.consultas.intervaloMinimo);
-            document.getElementById('proxima-consulta').textContent = ultimaData.toLocaleDateString();
-        } else {
-            document.getElementById('proxima-consulta').textContent = "Imediatamente";
-        }
-        
-        // Preenche benefícios do plano
-        const listaBeneficios = document.getElementById('lista-beneficios');
-        listaBeneficios.innerHTML = '';
-        
-        // Adiciona consultas
-        const consultasItem = document.createElement('li');
-        consultasItem.innerHTML = `
-            <span>${plano.consultas.inclusas} Consultas anuais</span>
-            <span class="beneficio-limite">(${historicoUso.consultasUtilizadas} utilizadas)</span>
-        `;
-        listaBeneficios.appendChild(consultasItem);
-        
-        // Adiciona vacinas
-        if (plano.vacinas && plano.vacinas.length > 0) {
-            const vacinasItem = document.createElement('li');
-            vacinasItem.innerHTML = `
-                <span>Vacinas inclusas (${plano.vacinas.length} tipos)</span>
-                <span class="beneficio-limite">(sem carência)</span>
-            `;
-            listaBeneficios.appendChild(vacinasItem);
-        }
-        
-        // Adiciona exames
-        if (plano.examesInclusos && plano.examesInclusos.length > 0) {
-            plano.examesInclusos.forEach(exame => {
-                const usado = historicoUso.examesUtilizados[exame.nome] || 0;
-                const exameItem = document.createElement('li');
-                exameItem.innerHTML = `
-                    <span>${exame.nome}</span>
-                    <span class="beneficio-limite">${usado}/${exame.limite || 'ilimitado'}</span>
-                `;
-                listaBeneficios.appendChild(exameItem);
-            });
-        }
-        
-        // Adiciona procedimentos
-        if (plano.procedimentosInclusos && plano.procedimentosInclusos.length > 0) {
-            const procedimentosItem = document.createElement('li');
-            procedimentosItem.innerHTML = `
-                <span>Procedimentos inclusos (${plano.procedimentosInclusos.length} tipos)</span>
-            `;
-            listaBeneficios.appendChild(procedimentosItem);
-        }
+
+ // Função para mostrar informações do plano (atualizada com todos os serviços detalhados)
+const mostrarInformacoesPlano = (petId) => {
+    const planoContainer = document.getElementById('plano-info');
+    const semPlanoDiv = planoContainer.querySelector('.sem-plano');
+    const comPlanoDiv = planoContainer.querySelector('.com-plano');
+    
+    const planoId = verificarPlanoPet(petId);
+    
+    if (!planoId) {
+        semPlanoDiv.style.display = 'block';
+        comPlanoDiv.style.display = 'none';
+        return;
+    }
+    
+    semPlanoDiv.style.display = 'none';
+    comPlanoDiv.style.display = 'block';
+    
+    const plano = obterDetalhesPlano(planoId);
+    const historicoUso = obterHistoricoUsoPlano(petId);
+    
+    if (!plano) {
+        semPlanoDiv.style.display = 'block';
+        comPlanoDiv.style.display = 'none';
+        return;
+    }
+    
+    // Função auxiliar para verificar se um serviço está esgotado
+    const isServicoEsgotado = (servico, usado = 0) => {
+        return servico.limite !== null && usado >= servico.limite;
     };
 
-    // Carrega tutores do localStorage
+    // Preenche informações básicas do plano
+    document.getElementById('plano-nome').textContent = plano.nome;
+    document.getElementById('consultas-inclusas').textContent = plano.consultas.inclusas;
+    document.getElementById('consultas-utilizadas').textContent = historicoUso.consultasUtilizadas;
+    
+    const consultasRestantes = plano.consultas.inclusas - historicoUso.consultasUtilizadas;
+    document.getElementById('consultas-restantes').textContent = consultasRestantes;
+    
+    // Calcula próxima consulta disponível
+    if (historicoUso.ultimaConsulta) {
+        const ultimaData = new Date(historicoUso.ultimaConsulta);
+        ultimaData.setDate(ultimaData.getDate() + plano.consultas.intervaloMinimo);
+        document.getElementById('proxima-consulta').textContent = ultimaData.toLocaleDateString();
+    } else {
+        document.getElementById('proxima-consulta').textContent = "Imediatamente";
+    }
+    
+    // Preenche benefícios do plano
+    const listaBeneficios = document.getElementById('lista-beneficios');
+    listaBeneficios.innerHTML = '';
+    
+    // Adiciona consultas
+    const consultasEsgotadas = historicoUso.consultasUtilizadas >= plano.consultas.inclusas;
+    const consultasItem = document.createElement('li');
+    consultasItem.innerHTML = `
+        <span class="${consultasEsgotadas ? 'beneficio-esgotado' : ''}">
+            ${plano.consultas.inclusas} Consultas anuais
+        </span>
+        <span class="beneficio-limite ${consultasEsgotadas ? 'esgotado' : ''}">
+            (${historicoUso.consultasUtilizadas} utilizadas)
+            ${consultasEsgotadas ? ' - ESGOTADO' : ''}
+        </span>
+    `;
+    listaBeneficios.appendChild(consultasItem);
+    
+    // Adiciona tipos de consulta disponíveis
+    if (plano.consultas.tipos && plano.consultas.tipos.length > 0) {
+        const tiposConsultaItem = document.createElement('li');
+        tiposConsultaItem.className = 'subitem';
+        tiposConsultaItem.innerHTML = '<strong>Tipos de Consulta:</strong>';
+        
+        const tiposLista = document.createElement('ul');
+        tiposLista.className = 'sublista';
+        
+        plano.consultas.tipos.forEach(tipo => {
+            const tipoItem = document.createElement('li');
+            tipoItem.innerHTML = `
+                <span>${tipo.nome}</span>
+                <span class="beneficio-limite">
+                    ${tipo.carencia ? `(Carencia: ${tipo.carencia} dias)` : '(Sem carência)'}
+                </span>
+            `;
+            tiposLista.appendChild(tipoItem);
+        });
+        
+        tiposConsultaItem.appendChild(tiposLista);
+        listaBeneficios.appendChild(tiposConsultaItem);
+    }
+    
+    // Adiciona vacinas detalhadas
+    if (plano.vacinas && plano.vacinas.length > 0) {
+        const vacinasHeader = document.createElement('li');
+        vacinasHeader.innerHTML = '<strong>Vacinas Inclusas:</strong>';
+        listaBeneficios.appendChild(vacinasHeader);
+        
+        const vacinasLista = document.createElement('ul');
+        vacinasLista.className = 'sublista';
+        
+        plano.vacinas.forEach(vacina => {
+            const vacinaItem = document.createElement('li');
+            vacinaItem.innerHTML = `
+                <span>${vacina.nome}</span>
+                <span class="beneficio-limite">
+                    ${vacina.carencia ? `(Carencia: ${vacina.carencia} dias)` : '(Sem carência)'}
+                </span>
+            `;
+            vacinasLista.appendChild(vacinaItem);
+        });
+        
+        listaBeneficios.appendChild(vacinasLista);
+    }
+    
+    // Adiciona exames detalhados
+    if (plano.examesInclusos && plano.examesInclusos.length > 0) {
+        const examesHeader = document.createElement('li');
+        examesHeader.innerHTML = '<strong>Exames Inclusos:</strong>';
+        listaBeneficios.appendChild(examesHeader);
+        
+        const examesLista = document.createElement('ul');
+        examesLista.className = 'sublista';
+        
+        plano.examesInclusos.forEach(exame => {
+            const usado = historicoUso.examesUtilizados[exame.nome] || 0;
+            const esgotado = isServicoEsgotado(exame, usado);
+            
+            const exameItem = document.createElement('li');
+            exameItem.innerHTML = `
+                <span class="${esgotado ? 'beneficio-esgotado' : ''}">${exame.nome}</span>
+                <span class="beneficio-limite ${esgotado ? 'esgotado' : ''}">
+                    ${usado}/${exame.limite || 'ilimitado'} 
+                    ${exame.carencia ? `(Carencia: ${exame.carencia} dias)` : ''}
+                    ${esgotado ? ' - ESGOTADO' : ''}
+                </span>
+            `;
+            examesLista.appendChild(exameItem);
+        });
+        
+        listaBeneficios.appendChild(examesLista);
+    }
+    
+    // Adiciona exames de imagem detalhados
+    if (plano.examesImagemInclusos && plano.examesImagemInclusos.length > 0) {
+        const examesImgHeader = document.createElement('li');
+        examesImgHeader.innerHTML = '<strong>Exames de Imagem Inclusos:</strong>';
+        listaBeneficios.appendChild(examesImgHeader);
+        
+        const examesImgLista = document.createElement('ul');
+        examesImgLista.className = 'sublista';
+        
+        plano.examesImagemInclusos.forEach(exame => {
+            const esgotado = isServicoEsgotado(exame);
+            
+            const exameItem = document.createElement('li');
+            exameItem.innerHTML = `
+                <span class="${esgotado ? 'beneficio-esgotado' : ''}">${exame.nome}</span>
+                <span class="beneficio-limite ${esgotado ? 'esgotado' : ''}">
+                    ${exame.limite ? `Limite: ${exame.limite}` : 'Ilimitado'} 
+                    ${exame.carencia ? `(Carencia: ${exame.carencia} dias)` : ''}
+                    ${esgotado ? ' - ESGOTADO' : ''}
+                </span>
+            `;
+            examesImgLista.appendChild(exameItem);
+        });
+        
+        listaBeneficios.appendChild(examesImgLista);
+    }
+    
+    // Adiciona procedimentos detalhados
+    if (plano.procedimentosInclusos && plano.procedimentosInclusos.length > 0) {
+        const procedimentosHeader = document.createElement('li');
+        procedimentosHeader.innerHTML = '<strong>Procedimentos Inclusos:</strong>';
+        listaBeneficios.appendChild(procedimentosHeader);
+        
+        const procedimentosLista = document.createElement('ul');
+        procedimentosLista.className = 'sublista';
+        
+        plano.procedimentosInclusos.forEach(proc => {
+            const esgotado = isServicoEsgotado(proc);
+            
+            const procItem = document.createElement('li');
+            procItem.innerHTML = `
+                <span class="${esgotado ? 'beneficio-esgotado' : ''}">${proc.nome}</span>
+                <span class="beneficio-limite ${esgotado ? 'esgotado' : ''}">
+                    ${proc.limite ? `Limite: ${proc.limite}` : 'Ilimitado'} 
+                    ${proc.carencia ? `(Carencia: ${proc.carencia} dias)` : ''}
+                    ${esgotado ? ' - ESGOTADO' : ''}
+                </span>
+            `;
+            procedimentosLista.appendChild(procItem);
+        });
+        
+        listaBeneficios.appendChild(procedimentosLista);
+    }
+    
+    // Adiciona anestesias detalhadas
+    if (plano.anestesiasInclusas && plano.anestesiasInclusas.length > 0) {
+        const anestesiasHeader = document.createElement('li');
+        anestesiasHeader.innerHTML = '<strong>Anestesias Inclusas:</strong>';
+        listaBeneficios.appendChild(anestesiasHeader);
+        
+        const anestesiasLista = document.createElement('ul');
+        anestesiasLista.className = 'sublista';
+        
+        plano.anestesiasInclusas.forEach(anestesia => {
+            const esgotado = isServicoEsgotado(anestesia);
+            
+            const anestesiaItem = document.createElement('li');
+            anestesiaItem.innerHTML = `
+                <span class="${esgotado ? 'beneficio-esgotado' : ''}">${anestesia.nome}</span>
+                <span class="beneficio-limite ${esgotado ? 'esgotado' : ''}">
+                    ${anestesia.limite ? `Limite: ${anestesia.limite}` : 'Ilimitado'} 
+                    ${anestesia.carencia ? `(Carencia: ${anestesia.carencia} dias)` : ''}
+                    ${esgotado ? ' - ESGOTADO' : ''}
+                </span>
+            `;
+            anestesiasLista.appendChild(anestesiaItem);
+        });
+        
+        listaBeneficios.appendChild(anestesiasLista);
+    }
+    
+    // Adiciona cirurgias detalhadas
+    if (plano.cirurgiasInclusas && plano.cirurgiasInclusas.length > 0) {
+        const cirurgiasHeader = document.createElement('li');
+        cirurgiasHeader.innerHTML = '<strong>Cirurgias Inclusas:</strong>';
+        listaBeneficios.appendChild(cirurgiasHeader);
+        
+        const cirurgiasLista = document.createElement('ul');
+        cirurgiasLista.className = 'sublista';
+        
+        // Agrupa cirurgias por categoria
+        const cirurgiasPorCategoria = {};
+        plano.cirurgiasInclusas.forEach(cirurgia => {
+            const categoria = cirurgia.nome.split(' ')[0] === 'Taxa' ? 'Taxas' : 
+                            cirurgia.nome.includes('Porte') ? 'Por Porte' : 'Outras';
+            
+            if (!cirurgiasPorCategoria[categoria]) {
+                cirurgiasPorCategoria[categoria] = [];
+            }
+            cirurgiasPorCategoria[categoria].push(cirurgia);
+        });
+        
+        // Adiciona cirurgias agrupadas
+        Object.entries(cirurgiasPorCategoria).forEach(([categoria, cirurgias]) => {
+            const categoriaItem = document.createElement('li');
+            categoriaItem.innerHTML = `<em>${categoria}:</em>`;
+            
+            const categoriaLista = document.createElement('ul');
+            categoriaLista.className = 'sublista';
+            
+            cirurgias.forEach(cirurgia => {
+                const esgotado = isServicoEsgotado(cirurgia);
+                
+                const cirurgiaItem = document.createElement('li');
+                cirurgiaItem.innerHTML = `
+                    <span class="${esgotado ? 'beneficio-esgotado' : ''}">${cirurgia.nome}</span>
+                    <span class="beneficio-limite ${esgotado ? 'esgotado' : ''}">
+                        ${cirurgia.limite ? `Limite: ${cirurgia.limite}` : 'Ilimitado'} 
+                        ${cirurgia.carencia ? `(Carencia: ${cirurgia.carencia} dias)` : ''}
+                        ${esgotado ? ' - ESGOTADO' : ''}
+                    </span>
+                `;
+                categoriaLista.appendChild(cirurgiaItem);
+            });
+            
+            categoriaItem.appendChild(categoriaLista);
+            cirurgiasLista.appendChild(categoriaItem);
+        });
+        
+        listaBeneficios.appendChild(cirurgiasLista);
+    }
+    
+    // Adiciona internações detalhadas
+    if (plano.internacoesInclusas && plano.internacoesInclusas.length > 0) {
+        const internacoesHeader = document.createElement('li');
+        internacoesHeader.innerHTML = '<strong>Internações Inclusas:</strong>';
+        listaBeneficios.appendChild(internacoesHeader);
+        
+        const internacoesLista = document.createElement('ul');
+        internacoesLista.className = 'sublista';
+        
+        plano.internacoesInclusas.forEach(internacao => {
+            const esgotado = isServicoEsgotado(internacao);
+            
+            const internacaoItem = document.createElement('li');
+            internacaoItem.innerHTML = `
+                <span class="${esgotado ? 'beneficio-esgotado' : ''}">${internacao.nome}</span>
+                <span class="beneficio-limite ${esgotado ? 'esgotado' : ''}">
+                    ${internacao.limite ? `Limite: ${internacao.limite} diárias` : 'Ilimitado'} 
+                    ${internacao.carencia ? `(Carencia: ${internacao.carencia} dias)` : ''}
+                    ${esgotado ? ' - ESGOTADO' : ''}
+                </span>
+            `;
+            internacoesLista.appendChild(internacaoItem);
+        });
+        
+        listaBeneficios.appendChild(internacoesLista);
+    }
+};
+
+    // Carrega tutores do localStorage (atualizada)
     const carregarTutores = () => {
         const tutores = JSON.parse(localStorage.getItem('tutores')) || [];
         const tutorSelect = document.getElementById('tutor');
@@ -148,12 +376,12 @@ document.addEventListener("DOMContentLoaded", function() {
         tutores.forEach(tutor => {
             const option = document.createElement('option');
             option.value = tutor.id;
-            option.textContent = `${tutor.nome}`;
+            option.textContent = `${tutor.nome}${tutor.cpf ? ' - ' + tutor.cpf : ''}`;
             tutorSelect.appendChild(option);
         });
     };
 
-    // Carrega pets de um tutor específico
+    // Carrega pets de um tutor específico (atualizada)
     const carregarPets = (tutorId) => {
         const pets = JSON.parse(localStorage.getItem('pets')) || [];
         const petSelect = document.getElementById('pet');
@@ -162,12 +390,12 @@ document.addEventListener("DOMContentLoaded", function() {
         petSelect.disabled = !tutorId;
         
         if (tutorId) {
-            const petsDoTutor = pets.filter(pet => pet.tutorId == tutorId);
+            const petsDoTutor = pets.filter(pet => pet.tutorId === tutorId);
             
             petsDoTutor.forEach(pet => {
                 const option = document.createElement('option');
                 option.value = pet.id;
-                option.textContent = pet.nome;
+                option.textContent = `${pet.nome} (${pet.especie})`;
                 option.dataset.info = JSON.stringify(pet);
                 petSelect.appendChild(option);
             });
@@ -634,6 +862,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (selectedOption.dataset.info) {
                 const petData = JSON.parse(selectedOption.dataset.info);
                 mostrarDadosPet(petData);
+                mostrarInformacoesPlano(petData.id);
             }
         });
         

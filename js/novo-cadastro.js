@@ -62,7 +62,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 5. Máscaras para os campos
     aplicarMascaras();
 
-    // 6. Controle do checkbox de adesão ao plano do pet
+    // 6. Carregar planos disponíveis ao iniciar
+    carregarPlanosDisponiveis();
+
+    // 7. Controle do checkbox de adesão ao plano do pet
     aderiuPlanoCheckbox.addEventListener('change', function() {
         planoPetContainer.style.display = this.checked ? 'block' : 'none';
         planoPetSelect.required = this.checked;
@@ -76,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 7. Submit do formulário de tutor
+    // 8. Submit do formulário de tutor
     formNovoTutor.addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -114,12 +117,21 @@ document.addEventListener('DOMContentLoaded', function() {
         alert('Tutor cadastrado com sucesso!');
     });
 
-    // 8. Submit do formulário de pet
+    // 9. Submit do formulário de pet
     formPet.addEventListener('submit', function(e) {
         e.preventDefault();
         
         const aderiuPlano = aderiuPlanoCheckbox.checked;
         const dataCadastro = new Date();
+        const planoSelecionadoId = document.getElementById('planoPet').value;
+        
+        // Obtém o nome do plano selecionado
+        let planoNome = '';
+        if (aderiuPlano && planoSelecionadoId) {
+            const planosServicos = JSON.parse(localStorage.getItem('planosServicos'));
+            const planoSelecionado = planosServicos.planos.find(p => p.id === planoSelecionadoId);
+            planoNome = planoSelecionado ? planoSelecionado.nome : '';
+        }
         
         const petData = {
             id: 'pet_' + Date.now(),
@@ -136,7 +148,8 @@ document.addEventListener('DOMContentLoaded', function() {
             observacao: document.getElementById('observacao').value,
             dataCadastro: dataCadastro.toISOString(),
             aderiuPlano: aderiuPlano,
-            planoPet: aderiuPlano ? document.getElementById('planoPet').value : null,
+            planoId: aderiuPlano ? planoSelecionadoId : null,
+            planoPet: aderiuPlano ? planoNome : null,
             dataAderiuPlano: aderiuPlano ? document.getElementById('dataAderiuPlano').value : null,
             historico: []
         };
@@ -151,11 +164,30 @@ document.addEventListener('DOMContentLoaded', function() {
         planoPetContainer.style.display = 'none';
     });
 
-    // 9. Botão iniciar atendimento
+    // 10. Botão iniciar atendimento
     iniciarAtendimentoBtn.addEventListener('click', function() {
         localStorage.setItem('currentTutorId', tutorIdAtual);
         window.location.href = 'tela-anamnese.html';
     });
+
+    // Função para carregar planos disponíveis do banco de dados
+    function carregarPlanosDisponiveis() {
+        const planosServicos = JSON.parse(localStorage.getItem('planosServicos'));
+        const selectPlano = document.getElementById('planoPet');
+        
+        if (planosServicos && planosServicos.planos) {
+            selectPlano.innerHTML = '<option value="">Selecione o plano</option>';
+            
+            planosServicos.planos.forEach(plano => {
+                const option = document.createElement('option');
+                option.value = plano.id;
+                option.textContent = plano.nome;
+                selectPlano.appendChild(option);
+            });
+        } else {
+            console.error('Não foi possível carregar os planos do banco de dados');
+        }
+    }
 
     // Funções auxiliares
     function fecharModalPet() {
@@ -168,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function salvarTutor(tutorData) {
         const tutores = JSON.parse(localStorage.getItem('tutores')) || [];
-        // Adiciona a data de cadastro se não existir
         if (!tutorData.dataCadastro) {
             tutorData.dataCadastro = new Date().toISOString();
         }
@@ -178,7 +209,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function salvarPet(petData) {
         const pets = JSON.parse(localStorage.getItem('pets')) || [];
-        // Garante que a data de cadastro está definida
         if (!petData.dataCadastro) {
             petData.dataCadastro = new Date().toISOString();
         }
