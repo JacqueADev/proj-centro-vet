@@ -873,3 +873,58 @@ textarea.valid {
     border-radius: 4px;
     margin: 10px 0;
 }
+
+/* Estilos para a mensagem de alerta */
+.alerta-sem-saldo {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    border-left: 4px solid #ffeeba;
+    font-size: 0.9em;
+}
+
+.alerta-sem-saldo i {
+    color: #ffc107;
+    margin-right: 8px;
+}
+
+/* Estilo para o container do tipo de consulta */
+#tipo-consulta-container {
+    background-color: #e8f5e9;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    border-left: 4px solid #4caf50;
+}
+
+#tipo-consulta-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #2e7d32;
+}
+
+#tipo-consulta-container select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #c8e6c9;
+    border-radius: 4px;
+    background-color: #f1f8e9;
+}
+
+/* Estilos para serviços esgotados */
+.beneficio-esgotado {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.beneficio-limite.esgotado {
+    color: #dc3545;
+    text-decoration: line-through;
+    background-color: #fff5f5;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
