@@ -958,6 +958,8 @@ const mostrarInformacoesPlano = (petId) => {
                 observacoes: "",
                 temAnexos: anexosTemporarios.length > 0
             };
+
+            
             
             const anamneseSalva = salvarAnamnese(formData);
             console.log('Anamnese salva:', anamneseSalva);
@@ -968,6 +970,52 @@ const mostrarInformacoesPlano = (petId) => {
             anexosTemporarios = [];
             atualizarListaAnexosPreview();
         });
+
+        // Adicionar botão de gerar receituário
+const btnReceituario = document.createElement('button');
+btnReceituario.className = 'btn-primario';
+btnReceituario.innerHTML = '<i class="fas fa-file-prescription"></i> Gerar Receituário';
+btnReceituario.style.marginTop = '10px';
+btnReceituario.addEventListener('click', function() {
+    const tutorId = document.getElementById('tutor').value;
+    const petId = document.getElementById('pet').value;
+    const anamneseId = document.getElementById('formAnamnese').dataset.id; // Novo: ID da anamnese
+    
+    if (!tutorId || !petId) {
+        alert('Por favor, selecione um tutor e um pet antes de gerar o receituário.');
+        return;
+    }
+    
+    // Abre o receituário e configura o salvamento automático
+    const receituarioWindow = window.open(`receituario.html?tutorId=${tutorId}&petId=${petId}`, '_blank');
+    
+    // Quando a janela do receituário fecha, salva como anexo
+    receituarioWindow.onbeforeunload = function() {
+        // Verifica se o receituário foi gerado (definido no receituario.html)
+        if (receituarioWindow.receituarioGerado && anamneseId) {
+            const anexos = JSON.parse(localStorage.getItem('anexos')) || [];
+            
+            anexos.push({
+                id: 'receituario_' + Date.now(),
+                atendimentoId: anamneseId,
+                nome: `Receituário_${pet.nome}_${new Date().toLocaleDateString()}.pdf`,
+                tipo: 'application/pdf',
+                conteudo: receituarioWindow.receituarioPDF, // Base64 do PDF
+                dataUpload: new Date().toISOString(),
+                isReceituario: true // Marca como receituário
+            });
+            
+            localStorage.setItem('anexos', JSON.stringify(anexos));
+            alert('Receituário salvo como anexo do atendimento!');
+        }
+    };
+});
+
+    // Adicionar o botão após a seção de anexos
+    const secaoAnexos = document.querySelector('.secao-anamnese:last-of-type');
+    if (secaoAnexos) {
+        secaoAnexos.insertAdjacentElement('afterend', btnReceituario);
+    }
     };
 
     init();

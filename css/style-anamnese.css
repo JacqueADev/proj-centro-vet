@@ -928,3 +928,75 @@ textarea.valid {
     border-radius: 4px;
     font-weight: bold;
 }
+
+/* Estilos para o botão de receituário */
+.btn-primario i.fas {
+    margin-right: 8px;
+}
+
+/* Estilos para o receituário */
+.receituario-container {
+    display: none;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.receituario-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.receituario-logo {
+    max-width: 150px;
+    height: auto;
+}
+
+.receituario-titulo {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.receituario-subtitulo {
+    font-size: 14px;
+    color: #555;
+}
+
+.receituario-paciente {
+    margin-bottom: 20px;
+}
+
+.medicamento-item {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.medicamento-item:last-child {
+    border-bottom: none;
+}
+
+.medicamento-tipo {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.medicamento-detalhes {
+    margin-left: 20px;
+}
+
+.receituario-footer {
+    margin-top: 30px;
+    text-align: right;
+}
+
+.receituario-assinatura {
+    border-top: 1px solid #000;
+    width: 200px;
+    margin-left: auto;
+    padding-top: 5px;
+    text-align: center;
+}

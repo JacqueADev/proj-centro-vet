@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receituário Médico</title>
+    <link rel="stylesheet" href="css/style-receituario.css">
+</head>
+<body>
+    <div class="logo-container">
+        <img src="assets/logo-sem-fundo.png" alt="Logo da Clínica" class="logo">
+        <div class="titulo-clinica">Cuidando da família multiespécie</div>
+    </div>
+    
+    <div class="titulo-receita">RECEITA</div>
+    
+    <div class="dados-paciente">
+        <div><strong>Tutor:</strong> <span id="tutor-nome"></span></div>
+        <div><strong>Pet:</strong> <span id="pet-nome"></span></div>
+        <div><strong>Data:</strong> <span id="data-receita"></span></div>
+    </div>
+    
+    <div id="medicamentos-container">
+        <!-- Os medicamentos serão adicionados aqui -->
+    </div>
+    
+    <button id="btn-adicionar-medicamento" class="btn-adicionar no-print">
+        <i class="fas fa-plus"></i> Adicionar Medicamento
+    </button>
+    
+    <div class="btn-container no-print">
+        <button id="btn-imprimir" class="btn btn-imprimir">
+            <i class="fas fa-print"></i> Imprimir
+        </button>
+        <button id="btn-salvar" class="btn btn-salvar">
+            <i class="fas fa-save"></i> Salvar na Ficha de Anamnese
+        </button>
+    </div>
+
+    <script src="js/receituario.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+</body>
+</html>

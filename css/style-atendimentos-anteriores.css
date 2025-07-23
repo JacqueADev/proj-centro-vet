@@ -207,6 +207,21 @@ hr {
     display: none;
 }
 
+/* Adicione ao seu style-atendimentos-anteriores.css */
+.receituario-badge {
+    background-color: #27ae60;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 10px;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+.anexo-item {
+    position: relative;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .container-atendimentos {
