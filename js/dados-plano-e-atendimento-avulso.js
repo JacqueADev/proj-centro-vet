@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const planosServicos = {
             // ========== SERVIÇOS AVULSOS ==========
-            servicosAvulsos: {
+           servicosAvulsos: {
                 atendimentos: [
                     {
                         id: "serv_atend_1",
@@ -51,12 +51,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     },
                     {
                         id: "serv_atend_8",
-                        nome: "Emergência",
-                        valor: 190.00,
-                        categoria: "Emergência"
-                    },
-                    {
-                        id: "serv_atend_9",
                         nome: "Guia Prever (50% do valor)",
                         valor: 40.00,
                         categoria: "Documentação"
@@ -3188,4 +3182,8 @@ document.addEventListener("DOMContentLoaded", function() {
         localStorage.setItem('planosServicos', JSON.stringify(planosServicos));
         console.log("Dados completos de planos e serviços carregados com sucesso!");
     }
+
+    // ADICIONE ESTA LINHA AQUI (antes do fechamento final)
+window.planosServicos = JSON.parse(localStorage.getItem('planosServicos')) || planosServicos;
+
 });

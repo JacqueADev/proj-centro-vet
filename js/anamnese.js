@@ -1,5 +1,13 @@
+// DEBUG: Verifica os dados no localStorage
+console.log('Dados carregados do localStorage:', JSON.parse(localStorage.getItem('planosServicos')));
+
 document.addEventListener("DOMContentLoaded", function() {
     console.log("Anamnese script carregado!");
+
+    // Acessa os dados globais dos arquivos importados
+    const servicosAvulsosGlobal = window.servicosAvulsos || { atendimentos: [] };
+    const tiposDePlanos = window.tiposDePlanos || [];
+
 
     // Variável para armazenar anexos temporários antes do envio
     let anexosTemporarios = [];
@@ -10,12 +18,18 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     // Função para obter preço de serviço avulso
-    const obterPrecoServico = (servicoId) => {
-        const planosServicos = JSON.parse(localStorage.getItem('planosServicos')) || { servicosAvulsos: { atendimentos: [] } };
-        const servico = planosServicos.servicosAvulsos.atendimentos.find(s => s.id === servicoId);
-        return servico?.valor || 0;
-    };
-    
+const obterPrecoServico = (servicoId) => {
+    try {
+        const dados = window.planosServicos || JSON.parse(localStorage.getItem('planosServicos'));
+        if (dados && dados.servicosAvulsos && dados.servicosAvulsos.atendimentos) {
+            const servico = dados.servicosAvulsos.atendimentos.find(s => s.id === servicoId);
+            return servico ? servico.valor : 0;
+        }
+    } catch (e) {
+        console.error('Erro ao obter preço:', e);
+    }
+    return 0;
+};
     // Função para verificar se o pet tem plano de saúde (atualizada)
   const verificarPlanoPet = (petId) => {
     const pets = JSON.parse(localStorage.getItem('pets')) || [];
@@ -413,54 +427,57 @@ const mostrarInformacoesPlano = (petId) => {
     };
 
     // Carrega tipos de atendimento disponíveis (COM A CORREÇÃO PARA O PLANO DE SAÚDE)
-    const carregarTiposAtendimento = () => {
-        const select = document.getElementById('tipoAtendimento');
-        const erroDiv = document.getElementById('erro-carregamento-servicos');
+const carregarTiposAtendimento = () => {
+    const select = document.getElementById('tipoAtendimento');
+    const erroDiv = document.getElementById('erro-carregamento-servicos');
+    
+    try {
+        // Limpa o select
+        select.innerHTML = '<option value="">Selecione o tipo de atendimento</option>';
         
-        try {
-            // Limpa o select
-            select.innerHTML = '<option value="">Selecione o tipo de atendimento</option>';
-            
-            // Carrega os serviços do localStorage
-            const planosServicos = JSON.parse(localStorage.getItem('planosServicos'));
-            
-            // Verifica se a estrutura de dados existe e está correta
-            if (!planosServicos) {
-                throw new Error('Dados de planos e serviços não encontrados no localStorage');
-            }
-
-            // Carrega apenas serviços avulsos que NÃO são "Plano de saúde"
-            const servicosAvulsos = (planosServicos.servicosAvulsos?.atendimentos || [])
-                .filter(servico => servico.nome !== 'Plano de saúde');
-            
-            // Adiciona serviços avulsos ao select
-            servicosAvulsos.forEach(servico => {
-                const option = document.createElement('option');
-                option.value = servico.id;
-                option.textContent = `${servico.nome} (${formatarMoeda(servico.valor)})`;
-                select.appendChild(option);
-            });
-            
-            // Adiciona a opção de plano de saúde SEPARADAMENTE (só se existirem planos)
-            if (planosServicos.planos && planosServicos.planos.length > 0) {
-                const optionPlano = document.createElement('option');
-                optionPlano.value = 'consulta_plano';
-                optionPlano.textContent = 'Plano de saúde';
-                select.appendChild(optionPlano);
-            }
-            
-            erroDiv.style.display = 'none';
-        } catch (error) {
-            console.error('Erro ao carregar serviços:', error);
-            erroDiv.style.display = 'block';
-            
-            // Opção de fallback caso os dados não estejam disponíveis
-            const optionParticular = document.createElement('option');
-            optionParticular.value = 'consulta_particular';
-            optionParticular.textContent = 'Consulta Particular';
-            select.appendChild(optionParticular);
+        // 1. Tenta acessar os dados de TRÊS maneiras diferentes
+        const dados = window.planosServicos || 
+                     JSON.parse(localStorage.getItem('planosServicos')) || 
+                     { servicosAvulsos: { atendimentos: [] }, planos: [] };
+        
+        // 2. Verifica se a estrutura de dados está correta
+        if (!dados.servicosAvulsos || !Array.isArray(dados.servicosAvulsos.atendimentos)) {
+            throw new Error('Estrutura de dados inválida');
         }
-    };
+        
+        console.log('Serviços carregados:', dados.servicosAvulsos.atendimentos);
+        
+        // 3. Adiciona cada serviço ao select
+        dados.servicosAvulsos.atendimentos.forEach(servico => {
+            const option = document.createElement('option');
+            option.value = servico.id;
+            const valorFormatado = servico.valor === 0 ? 'Grátis' : formatarMoeda(servico.valor);
+            option.textContent = `${servico.nome} (${valorFormatado})`;
+            option.dataset.valor = servico.valor;
+            select.appendChild(option);
+        });
+        
+        // 4. Adiciona opção de plano de saúde se existirem planos
+        if (dados.planos && dados.planos.length > 0) {
+            const optionPlano = document.createElement('option');
+            optionPlano.value = 'consulta_plano';
+            optionPlano.textContent = 'Plano de saúde (Grátis)';
+            optionPlano.dataset.valor = 0;
+            select.appendChild(optionPlano);
+        }
+        
+        erroDiv.style.display = 'none';
+    } catch (error) {
+        console.error('Erro ao carregar serviços:', error);
+        erroDiv.style.display = 'block';
+        erroDiv.innerHTML = `
+            <strong>Erro ao carregar serviços:</strong> ${error.message}<br>
+            <button onclick="window.location.reload(true)" class="btn-recarregar">
+                <i class="fas fa-sync-alt"></i> Recarregar Página
+            </button>
+        `;
+    }
+};
 
     // Mostra os dados completos do pet
     const mostrarDadosPet = (petData) => {
