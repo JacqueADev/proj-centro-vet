@@ -1,8 +1,8 @@
 :root {
     --cor-fonte: #333333;
-    --cor-primaria: #a37628;
-    --cor-secundaria: #c7974a;
-    --cor-destaque: #ebc88f;
+    --cor-primaria: #4a6fa5;
+    --cor-secundaria: #166088;
+    --cor-destaque: #4fc3a1;
     --cor-fundo: #f8f9fa;
     --cor-borda: #e0e0e0;
     --cor-branco: #FFFFFF;
@@ -237,23 +237,92 @@ select:focus, input:focus {
 
 /* Efeitos para impressão */
 @media print {
-    .no-print {
-        display: none;
-    }
-    
+    /* Reset geral para impressão */
     body {
         padding: 0;
         background: none;
+        font-size: 14pt;
+        line-height: 1.4;
     }
     
     .container {
-        box-shadow: none;
-        padding: 0;
         max-width: 100%;
+        padding: 0;
+        box-shadow: none;
+        background: none;
     }
     
+    /* Esconder elementos não necessários */
+    .no-print, 
+    .btn-container, 
+    .btn-adicionar,
+    .medicamento-header button,
+    select, 
+    input {
+        display: none !important;
+    }
+    
+    /* Estilo para os dados do paciente */
+    .dados-paciente {
+        border: none;
+        background: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+    
+    /* Estilo para os medicamentos */
     .medicamento-container {
+        border: none;
         box-shadow: none;
+        padding: 0;
+        margin-bottom: 25px;
         page-break-inside: avoid;
+    }
+    
+    .medicamento-header {
+        border: none;
+        padding: 0;
+    }
+    
+    .medicamento-header h3 {
+        color: black;
+        font-size: 16pt;
+    }
+    
+    /* Estilo para os campos preenchidos */
+    .form-row {
+        display: block;
+        margin: 0;
+    }
+    
+    /* Formatação específica para os dados dos medicamentos */
+    .medicamento-print {
+        margin-bottom: 15px;
+    }
+    
+    .medicamento-nome {
+        font-weight: bold;
+    }
+    
+    .medicamento-details {
+        display: inline;
+    }
+    
+    .medicamento-tipo {
+        font-style: italic;
+    }
+    
+    .instrucoes-uso {
+        margin-top: 5px;
+        margin-left: 20px;
+    }
+    
+    /* Rodapé da receita */
+    .clinica-footer {
+        margin-top: 40px;
+        font-size: 12pt;
+        text-align: center;
+        border-top: 1px solid #ccc;
+        padding-top: 15px;
     }
 }
