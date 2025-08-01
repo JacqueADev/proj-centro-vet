@@ -1,5 +1,6 @@
 // DEBUG: Verifica os dados no localStorage
 console.log('Dados carregados do localStorage:', JSON.parse(localStorage.getItem('planosServicos')));
+console.log('Dados completos carregados:', JSON.parse(localStorage.getItem('planosServicos')));
 
 document.addEventListener("DOMContentLoaded", function() {
     console.log("Anamnese script carregado!");
@@ -29,6 +30,111 @@ const obterPrecoServico = (servicoId) => {
         console.error('Erro ao obter preço:', e);
     }
     return 0;
+};
+
+// Função para carregar exames avulsos organizados por categoria
+const carregarExamesAvulsos = () => {
+    const container = document.getElementById('container-exames-avulsos');
+    
+    if (!container) {
+        console.error('Erro: Elemento #container-exames-avulsos não encontrado');
+        return;
+    }
+
+    container.innerHTML = '<div class="loading-exames"><i class="fas fa-spinner fa-spin"></i> Carregando exames...</div>';
+
+    try {
+        const dados = window.planosServicos || JSON.parse(localStorage.getItem('planosServicos')) || { servicosAvulsos: { exames: [] } };
+
+        console.log('Dados completos carregados:', dados); // Debug
+
+        // CORREÇÃO PRINCIPAL: Acessa exames diretamente em servicosAvulsos.exames
+        if (!dados.servicosAvulsos?.exames || !Array.isArray(dados.servicosAvulsos.exames)) {
+            throw new Error('Estrutura de exames inválida - servicosAvulsos.exames não encontrado ou não é array');
+        }
+
+        const exames = dados.servicosAvulsos.exames;
+
+        console.log('Total de exames encontrados:', exames.length); // Debug
+
+        if (exames.length === 0) {
+            container.innerHTML = '<div class="no-exams"><i class="fas fa-info-circle"></i> Nenhum exame cadastrado no sistema</div>';
+            return;
+        }
+
+        // Agrupa exames por categoria (usando a propriedade categoria ou padrão)
+        const examesPorCategoria = exames.reduce((acc, exame) => {
+            const categoria = exame.categoria || 'outros_exames';
+            if (!acc[categoria]) {
+                acc[categoria] = [];
+            }
+            acc[categoria].push(exame);
+            return acc;
+        }, {});
+
+        console.log('Exames agrupados por categoria:', examesPorCategoria); // Debug
+
+        container.innerHTML = '';
+
+        // Renderiza as categorias e exames
+        Object.entries(examesPorCategoria).forEach(([categoria, exames]) => {
+            const categoriaDiv = document.createElement('div');
+            categoriaDiv.className = 'exame-categoria';
+            
+            const tituloCategoria = document.createElement('h4');
+            tituloCategoria.innerHTML = `
+                <i class="fas fa-folder-open"></i>
+                ${categoria.replace('exame_', '').replace(/_/g, ' ').toUpperCase()}
+            `;
+            categoriaDiv.appendChild(tituloCategoria);
+            
+            const examesLista = document.createElement('div');
+            examesLista.className = 'exames-checkbox';
+            
+            exames.forEach(exame => {
+                const exameId = `exame_${exame.id}`;
+                const label = document.createElement('label');
+                label.className = 'exame-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'examesAvulsos';
+                checkbox.value = exame.id;
+                checkbox.id = exameId;
+                checkbox.dataset.valor = exame.valor || 0;
+                checkbox.addEventListener('change', atualizarResumoFinanceiro);
+                
+                const exameDesc = document.createElement('span');
+                exameDesc.className = 'exame-descricao';
+                const valorFormatado = exame.valor === 0 ? 'Grátis' : formatarMoeda(exame.valor);
+                exameDesc.innerHTML = `
+                    <strong>${exame.nome}</strong>
+                    <span class="exame-valor">${valorFormatado}</span>
+                    ${exame.descricao ? `<small>${exame.descricao}</small>` : ''}
+                `;
+                
+                label.appendChild(checkbox);
+                label.appendChild(exameDesc);
+                examesLista.appendChild(label);
+            });
+            
+            categoriaDiv.appendChild(examesLista);
+            container.appendChild(categoriaDiv);
+        });
+
+    } catch (error) {
+        console.error('Erro ao carregar exames:', error);
+        container.innerHTML = `
+            <div class="error-loading-exames">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h4>Erro ao carregar exames</h4>
+                <p>${error.message}</p>
+                <button onclick="carregarExamesAvulsos()" class="btn-reload">
+                    <i class="fas fa-sync-alt"></i> Tentar novamente
+                </button>
+            </div>
+        `;
+    }
 };
     // Função para verificar se o pet tem plano de saúde (atualizada)
   const verificarPlanoPet = (petId) => {
@@ -591,45 +697,45 @@ const carregarTiposAtendimento = () => {
     };
 
     // Calcula e atualiza o resumo financeiro
-    const atualizarResumoFinanceiro = () => {
-        const tipoAtendimento = document.getElementById('tipoAtendimento').value;
-        const examesSelecionados = Array.from(document.querySelectorAll('input[name="exames"]:checked'));
-        const listaServicos = document.getElementById('listaServicos');
-        const totalGeral = document.getElementById('totalGeral');
-        
-        listaServicos.innerHTML = '';
-        let total = 0;
-        
-        // Adiciona atendimento ao resumo
-        if (tipoAtendimento) {
-            const valorAtendimento = tipoAtendimento === 'consulta_plano' ? 0 : obterPrecoServico(tipoAtendimento);
-            if (valorAtendimento > 0 || tipoAtendimento === 'consulta_plano') {
-                const item = document.createElement('div');
-                item.textContent = `${document.getElementById('tipoAtendimento').selectedOptions[0].text}: ${formatarMoeda(valorAtendimento)}`;
-                listaServicos.appendChild(item);
-                total += valorAtendimento;
-            }
-        }
-        
-        // Adiciona exames ao resumo
-        examesSelecionados.forEach(exame => {
-            const valorExame = parseFloat(exame.dataset.valor);
+const atualizarResumoFinanceiro = () => {
+    const tipoAtendimento = document.getElementById('tipoAtendimento').value;
+    const examesSelecionados = Array.from(document.querySelectorAll('input[name="examesAvulsos"]:checked')); // Alterado para examesAvulsos
+    const listaServicos = document.getElementById('listaServicos');
+    const totalGeral = document.getElementById('totalGeral');
+    
+    listaServicos.innerHTML = '';
+    let total = 0;
+    
+    // Adiciona atendimento ao resumo
+    if (tipoAtendimento) {
+        const valorAtendimento = tipoAtendimento === 'consulta_plano' ? 0 : obterPrecoServico(tipoAtendimento);
+        if (valorAtendimento > 0 || tipoAtendimento === 'consulta_plano') {
             const item = document.createElement('div');
-            item.textContent = `${exame.parentElement.textContent.trim()}`;
+            item.textContent = `${document.getElementById('tipoAtendimento').selectedOptions[0].text}: ${formatarMoeda(valorAtendimento)}`;
             listaServicos.appendChild(item);
-            total += valorExame;
-        });
-        
-        // Atualiza total geral
-        totalGeral.textContent = formatarMoeda(total);
-        
-        // Atualiza campos de cartão de crédito se necessário
-        if (document.getElementById('formaPagamento').value === 'credito') {
-            atualizarValorCartao(total);
+            total += valorAtendimento;
         }
-        
-        return total;
-    };
+    }
+    
+    // Adiciona exames ao resumo
+    examesSelecionados.forEach(exame => {
+        const valorExame = parseFloat(exame.dataset.valor);
+        const item = document.createElement('div');
+        item.textContent = `${exame.parentElement.textContent.trim()}`;
+        listaServicos.appendChild(item);
+        total += valorExame;
+    });
+    
+    // Atualiza total geral
+    totalGeral.textContent = formatarMoeda(total);
+    
+    // Atualiza campos de cartão de crédito se necessário
+    if (document.getElementById('formaPagamento').value === 'credito') {
+        atualizarValorCartao(total);
+    }
+    
+    return total;
+};
 
     // Salva a anamnese no localStorage
     const salvarAnamnese = (formData) => {
@@ -802,6 +908,7 @@ const carregarTiposAtendimento = () => {
     const init = () => {
         carregarTutores();
         carregarTiposAtendimento();
+        carregarExamesAvulsos();
         configurarUploadAnexos();
         atualizarListaAnexosPreview();
         

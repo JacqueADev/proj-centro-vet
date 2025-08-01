@@ -585,25 +585,185 @@ textarea.valid {
 }
 
 /* Estilo para os checkboxes de exames (alinhados à esquerda) */
-.exames-checkbox {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
-    text-align: left;
-    margin-left: 0;
-    padding-left: 0;
+/* Estilos para carregamento de exames */
+.loading-exames {
+    text-align: center;
+    padding: 20px;
+    color: #666;
 }
 
-.exames-checkbox label {
+.loading-exames i {
+    margin-right: 10px;
+}
+
+.no-exams {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    color: #666;
+}
+
+.no-exams i {
+    color: #ffc107;
+    font-size: 24px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.error-loading-exames {
+    padding: 20px;
+    background-color: #f8d7da;
+    border-radius: 5px;
+    color: #721c24;
+    text-align: center;
+}
+
+.error-loading-exames i {
+    font-size: 24px;
+    color: #dc3545;
+    margin-bottom: 10px;
+}
+
+.error-loading-exames h4 {
+    margin: 10px 0;
+}
+
+.btn-reload {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+/* Estilos para os itens de exame */
+.exame-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    transition: all 0.2s;
+    border: 1px solid #eee;
+}
+
+.exame-item:hover {
+    background-color: #f8f9fa;
+    border-color: #ddd;
+}
+
+.exame-descricao {
+    flex: 1;
+}
+
+.exame-descricao small {
+    display: block;
+    color: #666;
+    font-size: 0.8em;
+    margin-top: 3px;
+}
+
+.exame-valor {
+    float: right;
+    color: var(--cor-gradiente-escuro);
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+/* Estilos para o acordeão de exames */
+.categoria-exame-btn {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 5px 0;
+    background-color: var(--cor-gradiente-mediano);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-align: left;
+    font-weight: bold;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    width: 100%;
-    justify-content: flex-start;
+    transition: all 0.3s;
 }
 
+.categoria-exame-btn:hover {
+    background-color: var(--cor-gradiente-escuro);
+}
+
+.categoria-exame-btn i {
+    margin-right: 10px;
+    transition: transform 0.3s;
+}
+
+.exames-lista {
+    display: none;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    border-radius: 0 0 5px 5px;
+    border: 1px solid #eee;
+    border-top: none;
+}
+
+.exames-lista.show {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.exame-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin: 5px 0;
+    background-color: white;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.exame-item:hover {
+    background-color: #f0f0f0;
+}
+
+.exame-descricao {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.exame-nome {
+    display: block;
+    font-weight: 500;
+}
+
+.exame-valor {
+    float: right;
+    color: var(--cor-gradiente-escuro);
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+.exame-descricao small {
+    display: block;
+    color: #666;
+    font-size: 0.8em;
+    margin-top: 3px;
+}
+
+/* Estilo para checkbox */
+.exame-item input[type="checkbox"] {
+    min-width: 18px;
+    min-height: 18px;
+    accent-color: var(--cor-gradiente-mediano);
+}
 .resumo-financeiro {
     margin-top: 20px;
     padding: 15px;
