@@ -486,6 +486,166 @@ const mostrarInformacoesPlano = (petId) => {
     }
 };
 
+// Adicionar esta função após a função mostrarInformacoesPlano
+const mostrarServicosPlanoParaSelecao = (petId) => {
+    const planoId = verificarPlanoPet(petId);
+    const plano = obterDetalhesPlano(planoId);
+    const historicoUso = obterHistoricoUsoPlano(petId);
+    const containerServicos = document.getElementById('container-exames-avulsos');
+    
+    if (!planoId || !plano) {
+        return; // Mantém os serviços avulsos se não tiver plano
+    }
+
+    containerServicos.innerHTML = '<div class="loading-exames"><i class="fas fa-spinner fa-spin"></i> Carregando serviços do plano...</div>';
+
+    try {
+        let html = '<div class="servicos-plano-container">';
+        
+        // Função auxiliar para criar checkboxes para cada tipo de serviço
+        const adicionarServicos = (servicos, titulo) => {
+            if (!servicos || servicos.length === 0) return '';
+            
+            let sectionHtml = `<div class="servico-plano-section"><h4>${titulo}</h4><div class="servicos-plano-list">`;
+            
+            servicos.forEach(servico => {
+                const usado = historicoUso.examesUtilizados[servico.nome] || 0;
+                const esgotado = servico.limite !== null && usado >= servico.limite;
+                
+                sectionHtml += `
+                    <div class="servico-plano-item ${esgotado ? 'servico-esgotado' : ''}">
+                        <label>
+                            <input type="checkbox" name="servicosPlano" value="${servico.id}" 
+                                   data-nome="${servico.nome}" 
+                                   data-valor="${esgotado ? servico.valor || 0 : 0}"
+                                   data-esgotado="${esgotado}"
+                                   ${esgotado ? 'disabled' : ''}>
+                            ${servico.nome}
+                            <span class="servico-limite">(${usado}/${servico.limite || 'ilimitado'})</span>
+                            ${esgotado ? '<span class="servico-esgotado-label">ESGOTADO</span>' : ''}
+                        </label>
+                        ${esgotado ? `
+                        <div class="servico-cobrado-container">
+                            <input type="text" class="servico-cobrado-nome" placeholder="Nome do serviço" value="${servico.nome}">
+                            <input type="number" class="servico-cobrado-valor" placeholder="Valor" step="0.01" min="0" value="${servico.valor || 0}">
+                            <button class="btn-adicionar-cobrado">Adicionar</button>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            sectionHtml += '</div></div>';
+            return sectionHtml;
+        };
+
+        // Adiciona cada tipo de serviço
+        if (plano.consultas && plano.consultas.tipos) {
+            html += adicionarServicos(plano.consultas.tipos, 'Tipos de Consulta');
+        }
+        
+        if (plano.examesInclusos) {
+            html += adicionarServicos(plano.examesInclusos, 'Exames Inclusos');
+        }
+        
+        if (plano.examesImagemInclusos) {
+            html += adicionarServicos(plano.examesImagemInclusos, 'Exames de Imagem');
+        }
+        
+        if (plano.procedimentosInclusos) {
+            html += adicionarServicos(plano.procedimentosInclusos, 'Procedimentos');
+        }
+        
+        if (plano.vacinas) {
+            html += adicionarServicos(plano.vacinas, 'Vacinas');
+        }
+        
+        if (plano.cirurgiasInclusas) {
+            html += adicionarServicos(plano.cirurgiasInclusas, 'Cirurgias');
+        }
+        
+        html += '</div>';
+        containerServicos.innerHTML = html;
+        
+        // Configurar eventos para os botões de adicionar serviços cobrados
+        document.querySelectorAll('.btn-adicionar-cobrado').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const container = this.closest('.servico-cobrado-container');
+                const nome = container.querySelector('.servico-cobrado-nome').value;
+                const valor = parseFloat(container.querySelector('.servico-cobrado-valor').value);
+                
+                if (!nome || isNaN(valor) || valor <= 0) {
+                    alert('Por favor, preencha o nome e um valor válido para o serviço');
+                    return;
+                }
+                
+                // Adiciona ao resumo financeiro
+                const listaServicos = document.getElementById('listaServicos');
+                const item = document.createElement('div');
+                item.textContent = `${nome}: ${formatarMoeda(valor)}`;
+                listaServicos.appendChild(item);
+                
+                // Atualiza o total
+                const totalAtual = parseFloat(
+                    document.getElementById('totalGeral').textContent
+                        .replace(/[^\d,]/g, '')
+                        .replace(',', '.')
+                ) || 0;
+                
+                document.getElementById('totalGeral').textContent = formatarMoeda(totalAtual + valor);
+                
+                // Atualiza campos de cartão de crédito se necessário
+                if (document.getElementById('formaPagamento').value === 'credito') {
+                    atualizarValorCartao(totalAtual + valor);
+                }
+            });
+        });
+        
+        // Configurar eventos para os checkboxes de serviços do plano
+        document.querySelectorAll('input[name="servicosPlano"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    const nome = this.dataset.nome;
+                    const valor = parseFloat(this.dataset.valor) || 0;
+                    
+                    // Adiciona ao resumo financeiro
+                    const listaServicos = document.getElementById('listaServicos');
+                    const item = document.createElement('div');
+                    item.textContent = `${nome} (Plano): ${formatarMoeda(valor)}`;
+                    listaServicos.appendChild(item);
+                    
+                    // Atualiza o total
+                    const totalAtual = parseFloat(
+                        document.getElementById('totalGeral').textContent
+                            .replace(/[^\d,]/g, '')
+                            .replace(',', '.')
+                    ) || 0;
+                    
+                    document.getElementById('totalGeral').textContent = formatarMoeda(totalAtual + valor);
+                    
+                    // Atualiza campos de cartão de crédito se necessário
+                    if (document.getElementById('formaPagamento').value === 'credito') {
+                        atualizarValorCartao(totalAtual + valor);
+                    }
+                }
+            });
+        });
+        
+    } catch (error) {
+        console.error('Erro ao carregar serviços do plano:', error);
+        containerServicos.innerHTML = `
+            <div class="error-loading-exames">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h4>Erro ao carregar serviços do plano</h4>
+                <p>${error.message}</p>
+                <button onclick="carregarExamesAvulsos()" class="btn-reload">
+                    <i class="fas fa-sync-alt"></i> Tentar novamente
+                </button>
+            </div>
+        `;
+    }
+};
+
     // Carrega tutores do localStorage (atualizada)
     const carregarTutores = () => {
         const tutores = JSON.parse(localStorage.getItem('tutores')) || [];
@@ -624,10 +784,23 @@ const carregarTiposAtendimento = () => {
             linkAtendimentos.href = `atendimentos-anteriores.html?petId=${petData.id}`;
         }
         
-        // Mostra informações do plano de saúde
-        mostrarInformacoesPlano(petData.id);
-        
-        infoSection.style.display = 'block';
+         // Mostra informações do plano de saúde
+    mostrarInformacoesPlano(petData.id);
+    
+    // Mostra serviços do plano para seleção (se tiver plano)
+    if (verificarPlanoPet(petData.id)) {
+        mostrarServicosPlanoParaSelecao(petData.id);
+        // Oculta o select de tipo de atendimento (já que será pelo plano)
+        document.getElementById('tipoAtendimento').style.display = 'none';
+        document.querySelector('label[for="tipoAtendimento"]').style.display = 'none';
+    } else {
+        // Mostra o select normal se não tiver plano
+        document.getElementById('tipoAtendimento').style.display = 'block';
+        document.querySelector('label[for="tipoAtendimento"]').style.display = 'block';
+        carregarExamesAvulsos(); // Carrega exames avulsos normais
+    }
+    
+    infoSection.style.display = 'block';
     };
 
     // Formata data para exibição
@@ -1096,6 +1269,7 @@ const atualizarResumoFinanceiro = () => {
         });
 
         // Adicionar botão de gerar receituário
+// Substitua a parte do código que cria o botão de receituário por este:
 const btnReceituario = document.createElement('button');
 btnReceituario.className = 'btn-primario';
 btnReceituario.innerHTML = '<i class="fas fa-file-prescription"></i> Gerar Receituário';
@@ -1103,44 +1277,47 @@ btnReceituario.style.marginTop = '10px';
 btnReceituario.addEventListener('click', function() {
     const tutorId = document.getElementById('tutor').value;
     const petId = document.getElementById('pet').value;
-    const anamneseId = document.getElementById('formAnamnese').dataset.id; // Novo: ID da anamnese
     
     if (!tutorId || !petId) {
         alert('Por favor, selecione um tutor e um pet antes de gerar o receituário.');
         return;
     }
     
-    // Abre o receituário e configura o salvamento automático
+    // Abre o receituário em uma nova janela
     const receituarioWindow = window.open(`receituario.html?tutorId=${tutorId}&petId=${petId}`, '_blank');
     
-    // Quando a janela do receituário fecha, salva como anexo
-    receituarioWindow.onbeforeunload = function() {
-        // Verifica se o receituário foi gerado (definido no receituario.html)
-        if (receituarioWindow.receituarioGerado && anamneseId) {
-            const anexos = JSON.parse(localStorage.getItem('anexos')) || [];
+    // Configura um event listener para receber mensagens da janela do receituário
+    window.addEventListener('message', function(event) {
+        // Verifica se a mensagem vem da janela do receituário e contém dados
+        if (event.data.type === 'RECEITUARIO_GERADO') {
+            const receituarioData = event.data.data;
             
-            anexos.push({
-                id: 'receituario_' + Date.now(),
-                atendimentoId: anamneseId,
-                nome: `Receituário_${pet.nome}_${new Date().toLocaleDateString()}.pdf`,
+            // Adiciona o receituário como anexo temporário
+            anexosTemporarios.push({
+                nome: `Receituário_${new Date().toLocaleDateString()}.pdf`,
                 tipo: 'application/pdf',
-                conteudo: receituarioWindow.receituarioPDF, // Base64 do PDF
-                dataUpload: new Date().toISOString(),
-                isReceituario: true // Marca como receituário
+                conteudo: receituarioData.pdfData,
+                tamanho: receituarioData.pdfData.length,
+                isReceituario: true
             });
             
-            localStorage.setItem('anexos', JSON.stringify(anexos));
-            alert('Receituário salvo como anexo do atendimento!');
+            // Atualiza a lista de anexos
+            atualizarListaAnexosPreview();
+            
+            // Mostra mensagem de sucesso
+            alert('Receituário adicionado como anexo!');
         }
-    };
+    });
 });
 
-    // Adicionar o botão após a seção de anexos
-    const secaoAnexos = document.querySelector('.secao-anamnese:last-of-type');
-    if (secaoAnexos) {
-        secaoAnexos.insertAdjacentElement('afterend', btnReceituario);
-    }
+// Adicionar o botão após a seção de anexos
+const secaoAnexos = document.querySelector('.secao-anamnese:last-of-type');
+if (secaoAnexos) {
+    secaoAnexos.insertAdjacentElement('afterend', btnReceituario);
+}
     };
+
+    
 
     init();
 });
